@@ -14,6 +14,33 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.ProjectsService.Application", "Services\Projects\EmployeesTasksTracker.ProjectsService.Application\EmployeesTasksTracker.ProjectsService.Application.csproj", "{2D71434E-CEC0-4948-8704-FD713DB85F91}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.ProjectsService.Core", "Services\Projects\EmployeesTasksTracker.ProjectsService.Core\EmployeesTasksTracker.ProjectsService.Core.csproj", "{D8FF4141-9F3D-439F-A1CB-F6B95C5DD045}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Employees", "Employees", "{E17C9100-E161-4AA3-81BC-50C0A2DFB0D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.EmployeesService.Api", "Services\Employees\EmployeesTasksTracker.EmployeesService.Api\EmployeesTasksTracker.EmployeesService.Api.csproj", "{F032CCBF-C0E2-4E94-8D93-202DE6AFD460}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.EmployeesService.Infrastructure", "Services\Employees\EmployeesTasksTracker.EmployeesService.Infrastructure\EmployeesTasksTracker.EmployeesService.Infrastructure.csproj", "{C87F6ECE-D015-4719-BCAB-94AEE013F735}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.EmployeesService.Application", "Services\Employees\EmployeesTasksTracker.EmployeesService.Application\EmployeesTasksTracker.EmployeesService.Application.csproj", "{00FCDCC6-82C0-49DC-AE07-93C0F097F32D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.EmployeesService.Core", "Services\Employees\EmployeesTasksTracker.EmployeesService.Core\EmployeesTasksTracker.EmployeesService.Core.csproj", "{FD5F9A90-8262-4816-A3C6-18D3F6BCABB3}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tasks", "Tasks", "{5C4277CA-3344-41A3-9497-E0D0F805358F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.TasksService.Api", "Services\Tasks\EmployeesTasksTracker.TasksService.Api\EmployeesTasksTracker.TasksService.Api.csproj", "{11A2E64B-253F-432B-AA34-9A8A04D8CF7D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.TasksService.Application", "Services\Tasks\EmployeesTasksTracker.TasksService.Application\EmployeesTasksTracker.TasksService.Application.csproj", "{29B81002-7FBC-434A-AF98-3A67EACF7A4F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.TasksService.Infrastructure", "Services\Tasks\EmployeesTasksTracker.TasksService.Infrastructure\EmployeesTasksTracker.TasksService.Infrastructure.csproj", "{51D6E95D-E4AA-4EA0-A388-09A4D9505BD5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.TasksService.Core", "Services\Tasks\EmployeesTasksTracker.TasksService.Core\EmployeesTasksTracker.TasksService.Core.csproj", "{16E706ED-4708-4D4A-A3BC-5409B27B4279}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TasksGroups", "TasksGroups", "{D8C236A8-A393-41CB-B7FC-C928A68B8F26}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.TasksGroupsService.Api", "Services\TasksGroups\EmployeesTasksTracker.TasksGroupsService.Api\EmployeesTasksTracker.TasksGroupsService.Api.csproj", "{314AF828-E36A-48A8-93C1-0713368609F0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.TasksGroupsService.Infrastructure", "Services\TasksGroups\EmployeesTasksTracker.TasksGroupsService.Infrastructure\EmployeesTasksTracker.TasksGroupsService.Infrastructure.csproj", "{72195270-9599-428C-95B8-B1A059EE242A}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.TasksGroupsService.Application", "Services\TasksGroups\EmployeesTasksTracker.TasksGroupsService.Application\EmployeesTasksTracker.TasksGroupsService.Application.csproj", "{BD3E9172-62C1-4178-A67F-202B3CE647F7}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.TasksGroupsService.Core", "Services\TasksGroups\EmployeesTasksTracker.TasksGroupsService.Core\EmployeesTasksTracker.TasksGroupsService.Core.csproj", "{9918B982-B777-4954-9A3B-F2B3D6FA8AED}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -37,6 +64,54 @@ Global
 		{D8FF4141-9F3D-439F-A1CB-F6B95C5DD045}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{D8FF4141-9F3D-439F-A1CB-F6B95C5DD045}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{D8FF4141-9F3D-439F-A1CB-F6B95C5DD045}.Release|Any CPU.Build.0 = Release|Any CPU
+		{F032CCBF-C0E2-4E94-8D93-202DE6AFD460}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F032CCBF-C0E2-4E94-8D93-202DE6AFD460}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F032CCBF-C0E2-4E94-8D93-202DE6AFD460}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F032CCBF-C0E2-4E94-8D93-202DE6AFD460}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C87F6ECE-D015-4719-BCAB-94AEE013F735}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C87F6ECE-D015-4719-BCAB-94AEE013F735}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C87F6ECE-D015-4719-BCAB-94AEE013F735}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C87F6ECE-D015-4719-BCAB-94AEE013F735}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00FCDCC6-82C0-49DC-AE07-93C0F097F32D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00FCDCC6-82C0-49DC-AE07-93C0F097F32D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00FCDCC6-82C0-49DC-AE07-93C0F097F32D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00FCDCC6-82C0-49DC-AE07-93C0F097F32D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD5F9A90-8262-4816-A3C6-18D3F6BCABB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD5F9A90-8262-4816-A3C6-18D3F6BCABB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD5F9A90-8262-4816-A3C6-18D3F6BCABB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD5F9A90-8262-4816-A3C6-18D3F6BCABB3}.Release|Any CPU.Build.0 = Release|Any CPU
+		{11A2E64B-253F-432B-AA34-9A8A04D8CF7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11A2E64B-253F-432B-AA34-9A8A04D8CF7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11A2E64B-253F-432B-AA34-9A8A04D8CF7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11A2E64B-253F-432B-AA34-9A8A04D8CF7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29B81002-7FBC-434A-AF98-3A67EACF7A4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29B81002-7FBC-434A-AF98-3A67EACF7A4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29B81002-7FBC-434A-AF98-3A67EACF7A4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29B81002-7FBC-434A-AF98-3A67EACF7A4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51D6E95D-E4AA-4EA0-A388-09A4D9505BD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51D6E95D-E4AA-4EA0-A388-09A4D9505BD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51D6E95D-E4AA-4EA0-A388-09A4D9505BD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51D6E95D-E4AA-4EA0-A388-09A4D9505BD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16E706ED-4708-4D4A-A3BC-5409B27B4279}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16E706ED-4708-4D4A-A3BC-5409B27B4279}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16E706ED-4708-4D4A-A3BC-5409B27B4279}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16E706ED-4708-4D4A-A3BC-5409B27B4279}.Release|Any CPU.Build.0 = Release|Any CPU
+		{314AF828-E36A-48A8-93C1-0713368609F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{314AF828-E36A-48A8-93C1-0713368609F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{314AF828-E36A-48A8-93C1-0713368609F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{314AF828-E36A-48A8-93C1-0713368609F0}.Release|Any CPU.Build.0 = Release|Any CPU
+		{72195270-9599-428C-95B8-B1A059EE242A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{72195270-9599-428C-95B8-B1A059EE242A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{72195270-9599-428C-95B8-B1A059EE242A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{72195270-9599-428C-95B8-B1A059EE242A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BD3E9172-62C1-4178-A67F-202B3CE647F7}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BD3E9172-62C1-4178-A67F-202B3CE647F7}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BD3E9172-62C1-4178-A67F-202B3CE647F7}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BD3E9172-62C1-4178-A67F-202B3CE647F7}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9918B982-B777-4954-9A3B-F2B3D6FA8AED}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9918B982-B777-4954-9A3B-F2B3D6FA8AED}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9918B982-B777-4954-9A3B-F2B3D6FA8AED}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9918B982-B777-4954-9A3B-F2B3D6FA8AED}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -47,6 +122,21 @@ Global
 		{67CB4AD8-EB0C-47A0-885C-D4FBE5A781EA} = {914EE489-ED55-437F-98F4-016160C0EFC0}
 		{2D71434E-CEC0-4948-8704-FD713DB85F91} = {914EE489-ED55-437F-98F4-016160C0EFC0}
 		{D8FF4141-9F3D-439F-A1CB-F6B95C5DD045} = {914EE489-ED55-437F-98F4-016160C0EFC0}
+		{E17C9100-E161-4AA3-81BC-50C0A2DFB0D4} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
+		{F032CCBF-C0E2-4E94-8D93-202DE6AFD460} = {E17C9100-E161-4AA3-81BC-50C0A2DFB0D4}
+		{C87F6ECE-D015-4719-BCAB-94AEE013F735} = {E17C9100-E161-4AA3-81BC-50C0A2DFB0D4}
+		{00FCDCC6-82C0-49DC-AE07-93C0F097F32D} = {E17C9100-E161-4AA3-81BC-50C0A2DFB0D4}
+		{FD5F9A90-8262-4816-A3C6-18D3F6BCABB3} = {E17C9100-E161-4AA3-81BC-50C0A2DFB0D4}
+		{5C4277CA-3344-41A3-9497-E0D0F805358F} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
+		{11A2E64B-253F-432B-AA34-9A8A04D8CF7D} = {5C4277CA-3344-41A3-9497-E0D0F805358F}
+		{29B81002-7FBC-434A-AF98-3A67EACF7A4F} = {5C4277CA-3344-41A3-9497-E0D0F805358F}
+		{51D6E95D-E4AA-4EA0-A388-09A4D9505BD5} = {5C4277CA-3344-41A3-9497-E0D0F805358F}
+		{16E706ED-4708-4D4A-A3BC-5409B27B4279} = {5C4277CA-3344-41A3-9497-E0D0F805358F}
+		{D8C236A8-A393-41CB-B7FC-C928A68B8F26} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
+		{314AF828-E36A-48A8-93C1-0713368609F0} = {D8C236A8-A393-41CB-B7FC-C928A68B8F26}
+		{72195270-9599-428C-95B8-B1A059EE242A} = {D8C236A8-A393-41CB-B7FC-C928A68B8F26}
+		{BD3E9172-62C1-4178-A67F-202B3CE647F7} = {D8C236A8-A393-41CB-B7FC-C928A68B8F26}
+		{9918B982-B777-4954-9A3B-F2B3D6FA8AED} = {D8C236A8-A393-41CB-B7FC-C928A68B8F26}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {341B74ED-0792-4146-AAFD-C8BEF49DBB82}
