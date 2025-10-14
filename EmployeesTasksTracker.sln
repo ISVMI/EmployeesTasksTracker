@@ -5,6 +5,15 @@ VisualStudioVersion = 17.14.36518.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Employees", "Employees", "{E17C9100-E161-4AA3-81BC-50C0A2DFB0D4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.EmployeesService.Api", "Services\Employees\EmployeesTasksTracker.EmployeesService.Api\EmployeesTasksTracker.EmployeesService.Api.csproj", "{F032CCBF-C0E2-4E94-8D93-202DE6AFD460}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.EmployeesService.Infrastructure", "Services\Employees\EmployeesTasksTracker.EmployeesService.Infrastructure\EmployeesTasksTracker.EmployeesService.Infrastructure.csproj", "{C87F6ECE-D015-4719-BCAB-94AEE013F735}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.EmployeesService.Application", "Services\Employees\EmployeesTasksTracker.EmployeesService.Application\EmployeesTasksTracker.EmployeesService.Application.csproj", "{00FCDCC6-82C0-49DC-AE07-93C0F097F32D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.EmployeesService.Core", "Services\Employees\EmployeesTasksTracker.EmployeesService.Core\EmployeesTasksTracker.EmployeesService.Core.csproj", "{FD5F9A90-8262-4816-A3C6-18D3F6BCABB3}"
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tasks", "Tasks", "{5C4277CA-3344-41A3-9497-E0D0F805358F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.TasksService.Api", "Services\Tasks\EmployeesTasksTracker.TasksService.Api\EmployeesTasksTracker.TasksService.Api.csproj", "{11A2E64B-253F-432B-AA34-9A8A04D8CF7D}"
@@ -30,6 +39,22 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{F032CCBF-C0E2-4E94-8D93-202DE6AFD460}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{F032CCBF-C0E2-4E94-8D93-202DE6AFD460}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{F032CCBF-C0E2-4E94-8D93-202DE6AFD460}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{F032CCBF-C0E2-4E94-8D93-202DE6AFD460}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C87F6ECE-D015-4719-BCAB-94AEE013F735}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C87F6ECE-D015-4719-BCAB-94AEE013F735}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C87F6ECE-D015-4719-BCAB-94AEE013F735}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C87F6ECE-D015-4719-BCAB-94AEE013F735}.Release|Any CPU.Build.0 = Release|Any CPU
+		{00FCDCC6-82C0-49DC-AE07-93C0F097F32D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{00FCDCC6-82C0-49DC-AE07-93C0F097F32D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{00FCDCC6-82C0-49DC-AE07-93C0F097F32D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{00FCDCC6-82C0-49DC-AE07-93C0F097F32D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FD5F9A90-8262-4816-A3C6-18D3F6BCABB3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FD5F9A90-8262-4816-A3C6-18D3F6BCABB3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FD5F9A90-8262-4816-A3C6-18D3F6BCABB3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FD5F9A90-8262-4816-A3C6-18D3F6BCABB3}.Release|Any CPU.Build.0 = Release|Any CPU
 		{11A2E64B-253F-432B-AA34-9A8A04D8CF7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{11A2E64B-253F-432B-AA34-9A8A04D8CF7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{11A2E64B-253F-432B-AA34-9A8A04D8CF7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -67,6 +92,11 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{E17C9100-E161-4AA3-81BC-50C0A2DFB0D4} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
+		{F032CCBF-C0E2-4E94-8D93-202DE6AFD460} = {E17C9100-E161-4AA3-81BC-50C0A2DFB0D4}
+		{C87F6ECE-D015-4719-BCAB-94AEE013F735} = {E17C9100-E161-4AA3-81BC-50C0A2DFB0D4}
+		{00FCDCC6-82C0-49DC-AE07-93C0F097F32D} = {E17C9100-E161-4AA3-81BC-50C0A2DFB0D4}
+		{FD5F9A90-8262-4816-A3C6-18D3F6BCABB3} = {E17C9100-E161-4AA3-81BC-50C0A2DFB0D4}
 		{5C4277CA-3344-41A3-9497-E0D0F805358F} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
 		{11A2E64B-253F-432B-AA34-9A8A04D8CF7D} = {5C4277CA-3344-41A3-9497-E0D0F805358F}
 		{29B81002-7FBC-434A-AF98-3A67EACF7A4F} = {5C4277CA-3344-41A3-9497-E0D0F805358F}
