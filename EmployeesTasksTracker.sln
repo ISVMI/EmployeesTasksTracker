@@ -5,6 +5,15 @@ VisualStudioVersion = 17.14.36518.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tasks", "Tasks", "{5C4277CA-3344-41A3-9497-E0D0F805358F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.TasksService.Api", "Services\Tasks\EmployeesTasksTracker.TasksService.Api\EmployeesTasksTracker.TasksService.Api.csproj", "{11A2E64B-253F-432B-AA34-9A8A04D8CF7D}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.TasksService.Application", "Services\Tasks\EmployeesTasksTracker.TasksService.Application\EmployeesTasksTracker.TasksService.Application.csproj", "{29B81002-7FBC-434A-AF98-3A67EACF7A4F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.TasksService.Infrastructure", "Services\Tasks\EmployeesTasksTracker.TasksService.Infrastructure\EmployeesTasksTracker.TasksService.Infrastructure.csproj", "{51D6E95D-E4AA-4EA0-A388-09A4D9505BD5}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.TasksService.Core", "Services\Tasks\EmployeesTasksTracker.TasksService.Core\EmployeesTasksTracker.TasksService.Core.csproj", "{16E706ED-4708-4D4A-A3BC-5409B27B4279}"
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TasksGroups", "TasksGroups", "{D8C236A8-A393-41CB-B7FC-C928A68B8F26}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.TasksGroupsService.Api", "Services\TasksGroups\EmployeesTasksTracker.TasksGroupsService.Api\EmployeesTasksTracker.TasksGroupsService.Api.csproj", "{314AF828-E36A-48A8-93C1-0713368609F0}"
@@ -21,6 +30,22 @@ Global
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{11A2E64B-253F-432B-AA34-9A8A04D8CF7D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{11A2E64B-253F-432B-AA34-9A8A04D8CF7D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{11A2E64B-253F-432B-AA34-9A8A04D8CF7D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{11A2E64B-253F-432B-AA34-9A8A04D8CF7D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{29B81002-7FBC-434A-AF98-3A67EACF7A4F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{29B81002-7FBC-434A-AF98-3A67EACF7A4F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{29B81002-7FBC-434A-AF98-3A67EACF7A4F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{29B81002-7FBC-434A-AF98-3A67EACF7A4F}.Release|Any CPU.Build.0 = Release|Any CPU
+		{51D6E95D-E4AA-4EA0-A388-09A4D9505BD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{51D6E95D-E4AA-4EA0-A388-09A4D9505BD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{51D6E95D-E4AA-4EA0-A388-09A4D9505BD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{51D6E95D-E4AA-4EA0-A388-09A4D9505BD5}.Release|Any CPU.Build.0 = Release|Any CPU
+		{16E706ED-4708-4D4A-A3BC-5409B27B4279}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{16E706ED-4708-4D4A-A3BC-5409B27B4279}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{16E706ED-4708-4D4A-A3BC-5409B27B4279}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{16E706ED-4708-4D4A-A3BC-5409B27B4279}.Release|Any CPU.Build.0 = Release|Any CPU
 		{314AF828-E36A-48A8-93C1-0713368609F0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{314AF828-E36A-48A8-93C1-0713368609F0}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{314AF828-E36A-48A8-93C1-0713368609F0}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -42,6 +67,11 @@ Global
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{5C4277CA-3344-41A3-9497-E0D0F805358F} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
+		{11A2E64B-253F-432B-AA34-9A8A04D8CF7D} = {5C4277CA-3344-41A3-9497-E0D0F805358F}
+		{29B81002-7FBC-434A-AF98-3A67EACF7A4F} = {5C4277CA-3344-41A3-9497-E0D0F805358F}
+		{51D6E95D-E4AA-4EA0-A388-09A4D9505BD5} = {5C4277CA-3344-41A3-9497-E0D0F805358F}
+		{16E706ED-4708-4D4A-A3BC-5409B27B4279} = {5C4277CA-3344-41A3-9497-E0D0F805358F}
 		{D8C236A8-A393-41CB-B7FC-C928A68B8F26} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
 		{314AF828-E36A-48A8-93C1-0713368609F0} = {D8C236A8-A393-41CB-B7FC-C928A68B8F26}
 		{72195270-9599-428C-95B8-B1A059EE242A} = {D8C236A8-A393-41CB-B7FC-C928A68B8F26}
