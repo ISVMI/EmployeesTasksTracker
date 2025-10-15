@@ -5,6 +5,16 @@ VisualStudioVersion = 17.14.36518.9
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projects", "Projects", "{914EE489-ED55-437F-98F4-016160C0EFC0}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.ProjectsService.Api", "Services\Projects\EmployeesTasksTracker.ProjectsService.Api\EmployeesTasksTracker.ProjectsService.Api.csproj", "{0B519EF2-99E3-4494-8B0F-1338675A51FE}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.ProjectsService.Infrastructure", "Services\Projects\EmployeesTasksTracker.ProjectsService.Infrastructure\EmployeesTasksTracker.ProjectsService.Infrastructure.csproj", "{67CB4AD8-EB0C-47A0-885C-D4FBE5A781EA}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.ProjectsService.Application", "Services\Projects\EmployeesTasksTracker.ProjectsService.Application\EmployeesTasksTracker.ProjectsService.Application.csproj", "{2D71434E-CEC0-4948-8704-FD713DB85F91}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.ProjectsService.Core", "Services\Projects\EmployeesTasksTracker.ProjectsService.Core\EmployeesTasksTracker.ProjectsService.Core.csproj", "{D8FF4141-9F3D-439F-A1CB-F6B95C5DD045}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Employees", "Employees", "{E17C9100-E161-4AA3-81BC-50C0A2DFB0D4}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.EmployeesService.Api", "Services\Employees\EmployeesTasksTracker.EmployeesService.Api\EmployeesTasksTracker.EmployeesService.Api.csproj", "{F032CCBF-C0E2-4E94-8D93-202DE6AFD460}"
@@ -14,6 +24,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.EmployeesService.Application", "Services\Employees\EmployeesTasksTracker.EmployeesService.Application\EmployeesTasksTracker.EmployeesService.Application.csproj", "{00FCDCC6-82C0-49DC-AE07-93C0F097F32D}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.EmployeesService.Core", "Services\Employees\EmployeesTasksTracker.EmployeesService.Core\EmployeesTasksTracker.EmployeesService.Core.csproj", "{FD5F9A90-8262-4816-A3C6-18D3F6BCABB3}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tasks", "Tasks", "{5C4277CA-3344-41A3-9497-E0D0F805358F}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.TasksService.Api", "Services\Tasks\EmployeesTasksTracker.TasksService.Api\EmployeesTasksTracker.TasksService.Api.csproj", "{11A2E64B-253F-432B-AA34-9A8A04D8CF7D}"
@@ -23,6 +34,7 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.TasksService.Infrastructure", "Services\Tasks\EmployeesTasksTracker.TasksService.Infrastructure\EmployeesTasksTracker.TasksService.Infrastructure.csproj", "{51D6E95D-E4AA-4EA0-A388-09A4D9505BD5}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.TasksService.Core", "Services\Tasks\EmployeesTasksTracker.TasksService.Core\EmployeesTasksTracker.TasksService.Core.csproj", "{16E706ED-4708-4D4A-A3BC-5409B27B4279}"
+EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TasksGroups", "TasksGroups", "{D8C236A8-A393-41CB-B7FC-C928A68B8F26}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.TasksGroupsService.Api", "Services\TasksGroups\EmployeesTasksTracker.TasksGroupsService.Api\EmployeesTasksTracker.TasksGroupsService.Api.csproj", "{314AF828-E36A-48A8-93C1-0713368609F0}"
@@ -33,12 +45,32 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.Tasks
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.TasksGroupsService.Core", "Services\TasksGroups\EmployeesTasksTracker.TasksGroupsService.Core\EmployeesTasksTracker.TasksGroupsService.Core.csproj", "{9918B982-B777-4954-9A3B-F2B3D6FA8AED}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{973C095C-6BED-4DFB-A20A-AA08425AF967}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Common\Shared\Shared.csproj", "{DDDDA788-AFC7-4AB9-A0FF-04BCFC023130}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
 		Release|Any CPU = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{0B519EF2-99E3-4494-8B0F-1338675A51FE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0B519EF2-99E3-4494-8B0F-1338675A51FE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0B519EF2-99E3-4494-8B0F-1338675A51FE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0B519EF2-99E3-4494-8B0F-1338675A51FE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{67CB4AD8-EB0C-47A0-885C-D4FBE5A781EA}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{67CB4AD8-EB0C-47A0-885C-D4FBE5A781EA}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{67CB4AD8-EB0C-47A0-885C-D4FBE5A781EA}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{67CB4AD8-EB0C-47A0-885C-D4FBE5A781EA}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D71434E-CEC0-4948-8704-FD713DB85F91}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D71434E-CEC0-4948-8704-FD713DB85F91}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D71434E-CEC0-4948-8704-FD713DB85F91}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D71434E-CEC0-4948-8704-FD713DB85F91}.Release|Any CPU.Build.0 = Release|Any CPU
+		{D8FF4141-9F3D-439F-A1CB-F6B95C5DD045}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{D8FF4141-9F3D-439F-A1CB-F6B95C5DD045}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{D8FF4141-9F3D-439F-A1CB-F6B95C5DD045}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{D8FF4141-9F3D-439F-A1CB-F6B95C5DD045}.Release|Any CPU.Build.0 = Release|Any CPU
 		{F032CCBF-C0E2-4E94-8D93-202DE6AFD460}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
 		{F032CCBF-C0E2-4E94-8D93-202DE6AFD460}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F032CCBF-C0E2-4E94-8D93-202DE6AFD460}.Release|Any CPU.ActiveCfg = Release|Any CPU
@@ -87,11 +119,20 @@ Global
 		{9918B982-B777-4954-9A3B-F2B3D6FA8AED}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9918B982-B777-4954-9A3B-F2B3D6FA8AED}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9918B982-B777-4954-9A3B-F2B3D6FA8AED}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DDDDA788-AFC7-4AB9-A0FF-04BCFC023130}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DDDDA788-AFC7-4AB9-A0FF-04BCFC023130}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DDDDA788-AFC7-4AB9-A0FF-04BCFC023130}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DDDDA788-AFC7-4AB9-A0FF-04BCFC023130}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
 	EndGlobalSection
 	GlobalSection(NestedProjects) = preSolution
+		{914EE489-ED55-437F-98F4-016160C0EFC0} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
+		{0B519EF2-99E3-4494-8B0F-1338675A51FE} = {914EE489-ED55-437F-98F4-016160C0EFC0}
+		{67CB4AD8-EB0C-47A0-885C-D4FBE5A781EA} = {914EE489-ED55-437F-98F4-016160C0EFC0}
+		{2D71434E-CEC0-4948-8704-FD713DB85F91} = {914EE489-ED55-437F-98F4-016160C0EFC0}
+		{D8FF4141-9F3D-439F-A1CB-F6B95C5DD045} = {914EE489-ED55-437F-98F4-016160C0EFC0}
 		{E17C9100-E161-4AA3-81BC-50C0A2DFB0D4} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
 		{F032CCBF-C0E2-4E94-8D93-202DE6AFD460} = {E17C9100-E161-4AA3-81BC-50C0A2DFB0D4}
 		{C87F6ECE-D015-4719-BCAB-94AEE013F735} = {E17C9100-E161-4AA3-81BC-50C0A2DFB0D4}
@@ -107,6 +148,7 @@ Global
 		{72195270-9599-428C-95B8-B1A059EE242A} = {D8C236A8-A393-41CB-B7FC-C928A68B8F26}
 		{BD3E9172-62C1-4178-A67F-202B3CE647F7} = {D8C236A8-A393-41CB-B7FC-C928A68B8F26}
 		{9918B982-B777-4954-9A3B-F2B3D6FA8AED} = {D8C236A8-A393-41CB-B7FC-C928A68B8F26}
+		{DDDDA788-AFC7-4AB9-A0FF-04BCFC023130} = {973C095C-6BED-4DFB-A20A-AA08425AF967}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {341B74ED-0792-4146-AAFD-C8BEF49DBB82}
