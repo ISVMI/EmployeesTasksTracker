@@ -1,6 +1,6 @@
 ﻿namespace EmployeesTasksTracker.EmployeesService.Core.Enums
 {
-    public enum Role
+    public enum EmployeeRole
     {
         Manager,
         Analyst,
