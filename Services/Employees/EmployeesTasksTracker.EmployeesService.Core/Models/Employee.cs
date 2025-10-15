@@ -11,6 +11,6 @@ namespace EmployeesTasksTracker.EmployeesService.Core.Models
         public string Surname { get; set; }
         public string Patronymic { get; set; }
         public string UserName { get; set; }
-        public Role Role { get; set; }
+        public EmployeeRole Role { get; set; }
     }
 }
