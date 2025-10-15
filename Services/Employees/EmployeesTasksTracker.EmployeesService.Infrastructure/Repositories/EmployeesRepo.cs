@@ -1,6 +1,7 @@
 ﻿using EmployeesTasksTracker.EmployeesService.Core.Interfaces;
 using EmployeesTasksTracker.EmployeesService.Core.Models;
 using EmployeesTasksTracker.EmployeesService.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 
 namespace EmployeesTasksTracker.EmployeesService.Infrastructure.Repositories
 {
@@ -13,29 +14,74 @@ namespace EmployeesTasksTracker.EmployeesService.Infrastructure.Repositories
             _context = context;
         }
 
-        public Task<Guid> CreateAsync(Employee entity, CancellationToken token = default)
+        public async Task<Guid> CreateAsync(Employee employee, CancellationToken token = default)
         {
-            throw new NotImplementedException();
+            if (employee == null)
+            {
+                throw new ArgumentNullException(nameof(employee), "Given employee was null!");
+            }
+
+            if (await _context.Employees.AnyAsync(e => e.UserName  == employee.UserName, token))
+            {
+                throw new Exception("Employee already exists");
+            }
+
+            await _context.Employees.AddAsync(employee, token);
+            await _context.SaveChangesAsync(token);
+            return employee.Id;
         }
 
-        public Task<bool> DeleteAsync(Guid id, CancellationToken token = default)
+        public async Task<bool> DeleteAsync(Guid id, CancellationToken token = default)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var employeeToDelete = await GetByIdAsync(id, token);
+
+                _context.Employees.Remove(employeeToDelete);
+                await _context.SaveChangesAsync(token);
+                return true;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"Could not delete Employee with the given id {id} : {ex.Message}");
+                return false;
+            }
         }
 
-        public Task<IEnumerable<Employee>> GetAllAsync(CancellationToken token = default)
+        public async Task<IEnumerable<Employee>> GetAllAsync(CancellationToken token = default)
         {
-            throw new NotImplementedException();
+            var query = _context.Employees.AsNoTracking();
+            var employees = await query.ToListAsync(token);
+
+            return employees;
         }
 
-        public Task<Employee> GetByIdAsync(Guid id, CancellationToken token = default)
+        public async Task<Employee> GetByIdAsync(Guid id, CancellationToken token = default)
         {
-            throw new NotImplementedException();
+            var employeeToFind = await _context.Employees.FindAsync(id, token);
+
+            if (employeeToFind == null)
+            {
+                throw new Exception($"Employee with id: {id} not found!");
+            }
+
+            return employeeToFind;
         }
 
-        public Task<Employee> UpdateAsync(Employee entity, CancellationToken token = default)
+        public async Task<Employee> UpdateAsync(Employee employee, CancellationToken token = default)
         {
-            throw new NotImplementedException();
+            try
+            {
+                var existingEmployee = await GetByIdAsync(employee.Id, token);
+
+                _context.Entry(existingEmployee).CurrentValues.SetValues(employee);
+                await _context.SaveChangesAsync(token);
+                return employee;
+            }
+            catch (Exception ex)
+            {
+                throw new Exception($"Could not update employee with username: {employee.UserName}", ex);
+            }
         }
     }
 }
