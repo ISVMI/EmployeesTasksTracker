@@ -13,6 +13,11 @@ namespace EmployeesTasksTracker.EmployeesService.Infrastructure.DataSeeding
 
             var employees = await EmployeesGenerator.GenerateEmployeesAsync(20);
 
+            if (!employees.Any()) 
+            {
+                return;
+            }
+
             await context.Employees.AddRangeAsync(employees);
             await context.SaveChangesAsync();
         }
