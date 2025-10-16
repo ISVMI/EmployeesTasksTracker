@@ -15,6 +15,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\..\..\Common\Shared\Shared.csproj" />
     <ProjectReference Include="..\EmployeesTasksTracker.EmployeesService.Core\EmployeesTasksTracker.EmployeesService.Core.csproj" />
   </ItemGroup>
 
