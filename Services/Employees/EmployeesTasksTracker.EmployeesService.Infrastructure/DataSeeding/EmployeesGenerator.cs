@@ -1,4 +1,5 @@
-﻿using System.Text.Json;
+﻿using System.Reflection;
+using System.Text.Json;
 using Bogus;
 using Bogus.DataSets;
 using EmployeesTasksTracker.EmployeesService.Core.Enums;
@@ -16,43 +17,93 @@ namespace EmployeesTasksTracker.EmployeesService.Infrastructure.DataSeeding
             var employeeGender = _faker.PickRandom(Name.Gender.Male, Name.Gender.Female);
             var patronymics = await GetPatronymics(employeeGender.ToString());
 
-            for (int i = 0; i < count; i++)
+            if (patronymics != null)
             {
-                var employee = new Employee
+                for (int i = 0; i < count; i++)
                 {
-                    Name = _faker.Name.FirstName(employeeGender),
-                    Surname = _faker.Name.LastName(employeeGender),
-                    Patronymic = _faker.PickRandom(patronymics),
-                    Role = _faker.PickRandom<EmployeeRole>(),
-                    UserName = _faker.Person.UserName + _faker.Random.AlphaNumeric(4)
-                };
+                    var employee = new Employee
+                    {
+                        Name = _faker.Name.FirstName(employeeGender),
+                        Surname = _faker.Name.LastName(employeeGender),
+                        Patronymic = _faker.PickRandom(patronymics),
+                        Role = _faker.PickRandom<EmployeeRole>(),
+                        UserName = _faker.Random.AlphaNumeric(14)
+                    };
 
-                employees.Add(employee);
+                    employees.Add(employee);
+                }
             }
+
             return employees;
         }
 
-        private static async Task<string[]> GetPatronymics(string gender)
+        private static async Task<string[]?> GetPatronymics(string gender)
         {
             if (gender == null)
             {
                 throw new ArgumentNullException(nameof(gender), "gender parameter was null!");
             }
+
+            var assembly = Assembly.GetExecutingAssembly();
+
+            string fileName = "";
+
             if (gender == "Male")
             {
-                await using (FileStream fs = new("DataSeeding\\MalePatronymics.json", FileMode.Open))
-                {
-                    var malePatronymics = JsonSerializer.Deserialize<string[]>(fs);
-
-                    return malePatronymics;
-                }
+                fileName = "MalePatronymics.json";
             }
-
-            await using (FileStream fs = new("DataSeeding\\FemalePatronymics.json", FileMode.Open))
+            else
             {
-                var femalePatronymics = JsonSerializer.Deserialize<string[]>(fs);
-                return femalePatronymics;
+                fileName = "FemalePatronymics.json";
             }
+
+            try
+            {
+                var json = await GetJsonContentAsync(assembly, fileName);
+
+                var patronymics = JsonSerializer.Deserialize<string[]>(json);
+
+                return patronymics;
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine(ex.Message);
+                return null;
+            }
+
+        }
+
+        private static string GetResourceName(Assembly assembly, string fileName)
+        {
+            var resourceNames = assembly.GetManifestResourceNames();
+            var resourceName = resourceNames.FirstOrDefault(rn => rn.EndsWith(fileName));
+            if (resourceName == null)
+            {
+                throw new FileNotFoundException($"Resource '{fileName} not found!");
+            }
+
+            return resourceName;
+        }
+
+        private static async Task<string> GetJsonContentAsync(Assembly assembly, string fileName)
+        {
+            try
+            {
+                var resourceName = GetResourceName(assembly, fileName);
+
+                await using var stream = assembly.GetManifestResourceStream(resourceName);
+
+                using var reader = new StreamReader(stream);
+
+                var json = await reader.ReadToEndAsync();
+
+                return json;
+            }
+            catch (Exception ex)
+            {
+                throw new KeyNotFoundException($"Could not read json content : {ex.Message}");
+            }
+
         }
     }
 }
