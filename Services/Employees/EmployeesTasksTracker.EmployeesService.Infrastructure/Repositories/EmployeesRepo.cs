@@ -23,7 +23,7 @@ namespace EmployeesTasksTracker.EmployeesService.Infrastructure.Repositories
 
             if (await _context.Employees.AnyAsync(e => e.UserName  == employee.UserName, token))
             {
-                throw new Exception("Employee already exists");
+                throw new Exception("Such employee already exists");
             }
 
             await _context.Employees.AddAsync(employee, token);
@@ -43,7 +43,7 @@ namespace EmployeesTasksTracker.EmployeesService.Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Could not delete Employee with the given id {id} : {ex.Message}");
+                Console.WriteLine($"Could not delete employee with the given id {id} : {ex.Message}");
                 return false;
             }
         }
