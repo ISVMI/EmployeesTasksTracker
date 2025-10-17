@@ -9,8 +9,6 @@ namespace EmployeesTasksTracker.ProjectsService.Infrastructure.Data
 
         public DbSet<Project> Projects { get; set; }
 
-        public DbSet<ProjectsEmployees> ProjectsEmployees { get; set; }
-
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
@@ -32,13 +30,6 @@ namespace EmployeesTasksTracker.ProjectsService.Infrastructure.Data
             modelBuilder.Entity<Project>()
                 .Property(p => p.Manager)
                 .HasColumnName("Manager");
-
-            modelBuilder.Entity<ProjectsEmployees>()
-                .HasKey(pe => new { pe.ProjectId, pe.EmployeeId });
-
-            modelBuilder.Entity<ProjectsEmployees>()
-                .Property(pe => pe.IsSupervisor)
-                .HasColumnName("IsSupervisor");
 
             base.OnModelCreating(modelBuilder);
         }
