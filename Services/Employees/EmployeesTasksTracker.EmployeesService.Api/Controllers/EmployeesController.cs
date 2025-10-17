@@ -49,9 +49,9 @@ namespace EmployeesTasksTracker.EmployeesService.Api.Controllers
         {
             try
             {
-                var employeeId = await _mediator.Send(command, token);
+                var id = await _mediator.Send(command, token);
 
-                return CreatedAtAction(nameof(Index), new { employeeId }, command);
+                return CreatedAtAction(nameof(GetEmployeeById), new { id }, command);
             }
             catch (Exception ex)
             {
