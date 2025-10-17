@@ -3,5 +3,5 @@ using MediatR;
 
 namespace EmployeesTasksTracker.EmployeesService.Application.Commands
 {
-    public record CreateEmployeeCommand(CreateEmployeeDTO Employee) : IRequest<Guid>;
+    public record CreateEmployeeCommand(EmployeeDTO Employee) : IRequest<Guid>;
 }

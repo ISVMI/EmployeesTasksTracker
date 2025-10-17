@@ -4,5 +4,5 @@ using MediatR;
 
 namespace EmployeesTasksTracker.EmployeesService.Application.Commands
 {
-    public record EditEmployeeCommand(EditEmployeeDto EmployeeToEdit) : IRequest<EmployeeDTO>;
+    public record EditEmployeeCommand(EditEmployeeDTO EmployeeToEdit) : IRequest<EmployeeDTO>;
 }

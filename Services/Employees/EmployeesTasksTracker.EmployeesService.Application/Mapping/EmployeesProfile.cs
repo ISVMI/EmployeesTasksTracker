@@ -9,8 +9,7 @@ namespace EmployeesTasksTracker.EmployeesService.Application.Mapping
         public EmployeesProfile()
         {
             CreateMap<Employee, EmployeeDTO>();
-            CreateMap<CreateEmployeeDTO, Employee>();
-            CreateMap<EditEmployeeDto, Employee>();
+            CreateMap<EditEmployeeDTO, Employee>();
         }
     }
 }
