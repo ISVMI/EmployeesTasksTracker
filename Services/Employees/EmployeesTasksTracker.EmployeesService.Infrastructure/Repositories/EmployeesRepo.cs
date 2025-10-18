@@ -56,6 +56,13 @@ namespace EmployeesTasksTracker.EmployeesService.Infrastructure.Repositories
             return employees;
         }
 
+        public async Task<IEnumerable<Guid>> GetAllIdsAsync()
+        {
+            return await _context.Database.
+                SqlQueryRaw<Guid>("SELECT Id FROM Employees")
+                .ToListAsync();
+        }
+
         public async Task<Employee> GetByIdAsync(Guid id, CancellationToken token = default)
         {
             var employeeToFind = await _context.Employees.FindAsync(id, token);
