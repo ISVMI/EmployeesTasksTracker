@@ -102,7 +102,7 @@ namespace EmployeesTasksTracker.EmployeesService.Api.Controllers
             return Ok($"Successfully deleted employee with id {id}");
         }
 
-        [HttpGet("/getallids")]
+        [HttpGet("/GetAllIds")]
         public async Task<IActionResult> GetAllIds(CancellationToken token)
         {
             var result = await _mediator.Send(new GetAllEmployeesIdsQuery(), token);
