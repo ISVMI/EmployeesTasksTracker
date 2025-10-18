@@ -51,7 +51,9 @@ namespace EmployeesTasksTracker.EmployeesService.Api.Controllers
             {
                 var id = await _mediator.Send(command, token);
 
-                return CreatedAtAction(nameof(GetEmployeeById), new { id }, command);
+                var employee = new { id, command };
+
+                return CreatedAtAction(nameof(GetEmployeeById), new { id }, employee);
             }
             catch (Exception ex)
             {
@@ -63,14 +65,11 @@ namespace EmployeesTasksTracker.EmployeesService.Api.Controllers
             }
         }
 
-        [HttpPost("Edit")]
-        public async Task<IActionResult> EditEmployee(Guid id, EditEmployeeDto editEmployeeDto, CancellationToken token)
+        [HttpPost("Edit/{id}")]
+        public async Task<IActionResult> EditEmployee(Guid id, EditEmployeeDTO editEmployeeDto, CancellationToken token)
         {
 
-            if(id != editEmployeeDto.Id)
-            {
-                return NotFound();
-            }
+            editEmployeeDto.Id = id;
 
             try
             {
@@ -78,9 +77,9 @@ namespace EmployeesTasksTracker.EmployeesService.Api.Controllers
 
                 return Ok(editEmployeeDto);
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
-                var message = $"Could not edit employee : {ex.Message} / {ex.InnerException.Message}";
+                var message = $"Could not edit employee : {ex.Message} / {ex.InnerException?.Message}";
 
                 Console.WriteLine(message);
 
@@ -88,12 +87,12 @@ namespace EmployeesTasksTracker.EmployeesService.Api.Controllers
             }
         }
 
-        [HttpPost("Delete")]
+        [HttpPost("Delete/{id}")]
         public async Task<IActionResult> DeleteEmployee(Guid id, CancellationToken token)
         {
             var result = await _mediator.Send(new DeleteEmployeeCommand(id), token);
 
-            if(result == false)
+            if (result == false)
             {
                 var message = $"Could not delete employee with id {id}";
 
@@ -101,6 +100,14 @@ namespace EmployeesTasksTracker.EmployeesService.Api.Controllers
             }
 
             return Ok($"Successfully deleted employee with id {id}");
+        }
+
+        [HttpGet("/getallids")]
+        public async Task<IActionResult> GetAllIds(CancellationToken token)
+        {
+            var result = await _mediator.Send(new GetAllEmployeesIdsQuery(), token);
+
+            return Ok(result);
         }
 
     }

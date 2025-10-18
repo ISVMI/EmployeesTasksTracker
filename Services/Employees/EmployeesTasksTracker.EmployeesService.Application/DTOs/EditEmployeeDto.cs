@@ -1,8 +1,8 @@
 ﻿namespace EmployeesTasksTracker.EmployeesService.Application.DTOs
 {
-    public record EditEmployeeDto
+    public record EditEmployeeDTO
     {
-        public Guid Id { get; }
+        public Guid Id { get; set; }
         public string Name { get; init; }
         public string Surname { get; init; }
         public string Patronymic { get; init; }
