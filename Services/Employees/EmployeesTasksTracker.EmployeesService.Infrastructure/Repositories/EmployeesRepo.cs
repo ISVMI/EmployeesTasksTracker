@@ -59,7 +59,7 @@ namespace EmployeesTasksTracker.EmployeesService.Infrastructure.Repositories
         public async Task<IEnumerable<Guid>> GetAllIdsAsync()
         {
             return await _context.Database.
-                SqlQueryRaw<Guid>("SELECT Id FROM Employees")
+                SqlQueryRaw<Guid>("SELECT \"Id\" FROM public.\"Employees\"")
                 .ToListAsync();
         }
 
