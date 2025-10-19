@@ -16,8 +16,13 @@ builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
 
 
-builder.Services.AddScoped<IEmployeesClient, EmployeesClient>();
+builder.Services.AddHttpClient<IEmployeesClient, EmployeesClient>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["ServiceUrls:Employees"]);
+});
+
 builder.Services.AddScoped<ProjectsGenerator>();
+
 builder.Services.AddScoped<DbInitializer>();
 
 var app = builder.Build();
