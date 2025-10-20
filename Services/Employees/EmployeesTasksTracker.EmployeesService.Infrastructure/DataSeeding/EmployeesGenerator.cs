@@ -14,18 +14,22 @@ namespace EmployeesTasksTracker.EmployeesService.Infrastructure.DataSeeding
         public static async Task<List<Employee>> GenerateEmployeesAsync(int count)
         {
             var employees = new List<Employee>();
-            var employeeGender = _faker.PickRandom(Name.Gender.Male, Name.Gender.Female);
-            var patronymics = await GetPatronymics(employeeGender.ToString());
+            var malePatronymics = await GetPatronymics("Male");
+            var femalePatronymics = await GetPatronymics("Female");
 
-            if (patronymics != null)
+            if (malePatronymics != null && femalePatronymics != null)
             {
                 for (int i = 0; i < count; i++)
                 {
+                    var employeeGender = _faker.PickRandom(Name.Gender.Male, Name.Gender.Female);
+                    var stringGender = employeeGender.ToString();
                     var employee = new Employee
                     {
                         Name = _faker.Name.FirstName(employeeGender),
                         Surname = _faker.Name.LastName(employeeGender),
-                        Patronymic = _faker.PickRandom(patronymics),
+                        Patronymic = stringGender == "Male" ?
+                        _faker.PickRandom(malePatronymics) :
+                        _faker.PickRandom(femalePatronymics),
                         Role = _faker.PickRandom<EmployeeRole>(),
                         UserName = _faker.Random.AlphaNumeric(14)
                     };
