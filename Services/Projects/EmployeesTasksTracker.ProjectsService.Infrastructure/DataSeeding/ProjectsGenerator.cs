@@ -34,10 +34,13 @@ namespace EmployeesTasksTracker.ProjectsService.Infrastructure.DataSeeding
             {
                 var manager = employeesShuffled.Dequeue();
                 var supervisor = employeesShuffled.Dequeue();
+                var name = _faker.Hacker.Adjective();
+                var capitalizedName = char.ToUpper(name[0]) + name[1..];
+
                 var project = new Project
                 {
-                    Name = _faker.Name.JobTitle(),
-                    Description = _faker.Name.JobDescriptor(),
+                    Name = $"{capitalizedName} {_faker.Hacker.Noun()}",
+                    Description = $"Проект позволяет {_faker.Hacker.Verb()} {_faker.Hacker.Noun()} и {_faker.Hacker.Verb()} {_faker.Hacker.Noun()}",
                     Supervisor = supervisor,
                     Manager = manager
                 };
@@ -52,7 +55,7 @@ namespace EmployeesTasksTracker.ProjectsService.Infrastructure.DataSeeding
         {
             var random = new Random();
 
-            for (int i = employees.Count - 1; i >= 0; i--)
+            for (int i = employees.Count - 1; i > 0; i--)
             {
                 int j = random.Next(0, i - 1);
 
