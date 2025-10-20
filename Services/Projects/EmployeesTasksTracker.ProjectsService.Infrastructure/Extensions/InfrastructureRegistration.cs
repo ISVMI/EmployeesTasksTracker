@@ -17,17 +17,21 @@ namespace EmployeesTasksTracker.ProjectsService.Infrastructure.Extensions
         }
         public static async Task AddDatabaseInitialization(this IServiceProvider services)
         {
-                try
-                {
-                    var context = services.GetRequiredService<ProjectsContext>();
-                    var initializer = services.GetRequiredService<DbInitializer>();
 
-                    await initializer.InitializeAsync(context);
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"An error occurred while seeding the database : {ex.Message}");
-                }
+            using var scope = services.CreateScope();
+            var serviceProvider = scope.ServiceProvider;
+
+            try
+            {
+                var context = serviceProvider.GetRequiredService<ProjectsContext>();
+                var initializer = serviceProvider.GetRequiredService<DbInitializer>();
+
+                await initializer.InitializeAsync(context);
+            }
+            catch (Exception ex)
+            {
+                Console.WriteLine($"An error occurred while seeding the database : {ex.Message}");
+            }
         }
     }
 }
