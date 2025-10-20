@@ -19,21 +19,28 @@ namespace EmployeesTasksTracker.ProjectsService.Infrastructure.DataSeeding
             var projects = new List<Project>();
             var employees = await _employeesClient.GetAllEmployeesIds();
 
-            if (employees == null) 
+            if (employees == null)
             {
                 throw new ArgumentNullException(nameof(employees), "There were no employees!");
             }
 
             var employeesList = employees.ToList();
 
+            Shuffle(employeesList);
+
+            var employeesShuffled = new Queue<Guid>(employeesList);
+
             for (int i = 0; i < count; i++)
             {
-                var manager = GetEmployees(employeesList);
-                var supervisor = GetEmployees(employeesList);
+                var manager = employeesShuffled.Dequeue();
+                var supervisor = employeesShuffled.Dequeue();
+                var name = _faker.Hacker.Adjective();
+                var capitalizedName = char.ToUpper(name[0]) + name[1..];
+
                 var project = new Project
                 {
-                    Name = _faker.Name.JobTitle(),
-                    Description = _faker.Name.JobDescriptor(),
+                    Name = $"{capitalizedName} {_faker.Hacker.Noun()}",
+                    Description = $"Проект позволяет {_faker.Hacker.Verb()} {_faker.Hacker.Noun()} и {_faker.Hacker.Verb()} {_faker.Hacker.Noun()}",
                     Supervisor = supervisor,
                     Manager = manager
                 };
@@ -44,11 +51,16 @@ namespace EmployeesTasksTracker.ProjectsService.Infrastructure.DataSeeding
             return projects;
         }
 
-        private Guid GetEmployees(List<Guid> employees)
+        private static void Shuffle(List<Guid> employees)
         {
-            var employee = _faker.PickRandom(employees);
-            employees.Remove(employee);
-            return employee;
+            var random = new Random();
+
+            for (int i = employees.Count - 1; i > 0; i--)
+            {
+                int j = random.Next(0, i - 1);
+
+                (employees[i], employees[j]) = (employees[j], employees[i]);
+            }
         }
     }
 }
