@@ -4,7 +4,6 @@ using EmployeesTasksTracker.ProjectsService.Infrastructure.DataSeeding;
 using EmployeesTasksTracker.ProjectsService.Infrastructure.Repositories;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Logging;
 using Shared.Extensions;
 
 namespace EmployeesTasksTracker.ProjectsService.Infrastructure.Extensions
@@ -29,7 +28,6 @@ namespace EmployeesTasksTracker.ProjectsService.Infrastructure.Extensions
                 {
                     Console.WriteLine($"An error occurred while seeding the database : {ex.Message}");
                 }
-            }
         }
     }
 }
