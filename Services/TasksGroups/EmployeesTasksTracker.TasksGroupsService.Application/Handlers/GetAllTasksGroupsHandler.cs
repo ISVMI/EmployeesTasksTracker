@@ -19,8 +19,8 @@ namespace EmployeesTasksTracker.TasksGroupsService.Application.Handlers
 
         public async Task<IEnumerable<TasksGroupDTO>> Handle(GetAllTasksGroupsQuery request, CancellationToken cancellationToken)
         {
-            var taskGroups = await _repo.GetAllAsync(cancellationToken);
-            return _mapper.Map<IEnumerable<TasksGroupDTO>>(taskGroups);
+            var tasksGroups = await _repo.GetAllAsync(cancellationToken);
+            return _mapper.Map<IEnumerable<TasksGroupDTO>>(tasksGroups);
         }
     }
 }

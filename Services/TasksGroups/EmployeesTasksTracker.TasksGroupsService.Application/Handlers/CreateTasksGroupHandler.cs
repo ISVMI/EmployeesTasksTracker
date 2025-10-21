@@ -21,13 +21,13 @@ namespace EmployeesTasksTracker.TasksGroupsService.Application.Handlers
         {
             try
             {
-                var newTaskGroup = _mapper.Map<TasksGroup>(request.TaskGroup);
-                await _repo.CreateAsync(newTaskGroup, cancellationToken);
-                return newTaskGroup.Id;
+                var newTasksGroup = _mapper.Map<TasksGroup>(request.TasksGroup);
+                await _repo.CreateAsync(newTasksGroup, cancellationToken);
+                return newTasksGroup.Id;
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Could not create new task group: {ex.Message}");
+                Console.WriteLine($"Could not create new tasks group: {ex.Message}");
 
                 return Guid.Empty;
             }

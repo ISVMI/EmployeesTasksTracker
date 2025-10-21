@@ -10,4 +10,9 @@
     <PackageReference Include="Swashbuckle.AspNetCore" Version="6.6.2" />
   </ItemGroup>
 
+  <ItemGroup>
+    <ProjectReference Include="..\EmployeesTasksTracker.TasksGroupsService.Application\EmployeesTasksTracker.TasksGroupsService.Application.csproj" />
+    <ProjectReference Include="..\EmployeesTasksTracker.TasksGroupsService.Infrastructure\EmployeesTasksTracker.TasksGroupsService.Infrastructure.csproj" />
+  </ItemGroup>
+
 </Project>

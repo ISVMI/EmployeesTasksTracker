@@ -18,12 +18,12 @@ namespace EmployeesTasksTracker.TasksGroupsService.Infrastructure.Repositories
         {
             if (tasksGroup == null)
             {
-                throw new ArgumentNullException(nameof(tasksGroup), "Given project was null!");
+                throw new ArgumentNullException(nameof(tasksGroup), "Given tasks group was null!");
             }
 
             if (await _context.TasksGroups.AnyAsync(tg => tg.Name == tasksGroup.Name))
             {
-                throw new Exception("Such task group already exists");
+                throw new Exception("Such tasks group already exists");
             }
 
             await _context.TasksGroups.AddAsync(tasksGroup, token);
@@ -43,7 +43,7 @@ namespace EmployeesTasksTracker.TasksGroupsService.Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Could not delete task group with the given id {id} : {ex.Message}");
+                Console.WriteLine($"Could not delete tasks group with the given id {id} : {ex.Message}");
                 return false;
             }
         }
@@ -62,7 +62,7 @@ namespace EmployeesTasksTracker.TasksGroupsService.Infrastructure.Repositories
 
             if (taskGroupToFind == null)
             {
-                throw new Exception($"Task group with id: {id} not found!");
+                throw new Exception($"Tasks group with id: {id} not found!");
             }
 
             return taskGroupToFind;
@@ -80,7 +80,7 @@ namespace EmployeesTasksTracker.TasksGroupsService.Infrastructure.Repositories
             }
             catch (Exception ex)
             {
-                throw new Exception($"Could not update task group named: {taskGroup.Name}", ex);
+                throw new Exception($"Could not update tasks group named: {taskGroup.Name}", ex);
             }
         }
     }

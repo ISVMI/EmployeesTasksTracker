@@ -9,7 +9,9 @@ namespace EmployeesTasksTracker.TasksGroupsService.Application.Mapping
         public TasksGroupsProfile()
         {
             CreateMap<TasksGroup, TasksGroupDTO>();
-            CreateMap<EditTaskGroupDTO, TasksGroup>();
+            CreateMap<TasksGroupDTO, TasksGroup>();
+            CreateMap<EditTasksGroupDTO, TasksGroup>();
+            CreateMap<TasksGroup, EditTasksGroupDTO>();
         }
     }
 }
