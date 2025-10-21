@@ -10,6 +10,7 @@ namespace EmployeesTasksTracker.ProjectsService.Application.Mapping
         {
             CreateMap<Project, ProjectDTO>();
             CreateMap<ProjectDTO, Project>();
+            CreateMap<EditProjectDTO, Project>();
         }
     }
 }

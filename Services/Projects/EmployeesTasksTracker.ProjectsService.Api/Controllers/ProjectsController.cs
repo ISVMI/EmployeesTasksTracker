@@ -63,14 +63,11 @@ namespace ProjectsTasksTracker.ProjectsService.Api.Controllers
             }
         }
 
-        [HttpPost("Edit")]
+        [HttpPost("Edit/{id}")]
         public async Task<IActionResult> EditProject(Guid id, EditProjectDTO editProjectDto, CancellationToken token)
         {
 
-            if (id != editProjectDto.Id)
-            {
-                return NotFound();
-            }
+            editProjectDto.Id = id;
 
             try
             {
@@ -80,7 +77,7 @@ namespace ProjectsTasksTracker.ProjectsService.Api.Controllers
             }
             catch (Exception ex)
             {
-                var message = $"Could not edit project : {ex.Message} / {ex.InnerException.Message}";
+                var message = $"Could not edit project : {ex.Message} / {ex.InnerException?.Message}";
 
                 Console.WriteLine(message);
 
@@ -88,7 +85,7 @@ namespace ProjectsTasksTracker.ProjectsService.Api.Controllers
             }
         }
 
-        [HttpPost("Delete")]
+        [HttpPost("Delete/{id}")]
         public async Task<IActionResult> DeleteProject(Guid id, CancellationToken token)
         {
             var result = await _mediator.Send(new DeleteProjectCommand(id), token);
