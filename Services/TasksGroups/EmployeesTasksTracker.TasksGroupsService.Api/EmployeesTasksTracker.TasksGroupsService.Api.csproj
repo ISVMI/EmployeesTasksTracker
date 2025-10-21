@@ -11,8 +11,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\..\Employees\EmployeesTasksTracker.EmployeesService.Application\EmployeesTasksTracker.EmployeesService.Application.csproj" />
-    <ProjectReference Include="..\..\Employees\EmployeesTasksTracker.EmployeesService.Infrastructure\EmployeesTasksTracker.EmployeesService.Infrastructure.csproj" />
+    <ProjectReference Include="..\EmployeesTasksTracker.TasksGroupsService.Application\EmployeesTasksTracker.TasksGroupsService.Application.csproj" />
+    <ProjectReference Include="..\EmployeesTasksTracker.TasksGroupsService.Infrastructure\EmployeesTasksTracker.TasksGroupsService.Infrastructure.csproj" />
   </ItemGroup>
 
 </Project>

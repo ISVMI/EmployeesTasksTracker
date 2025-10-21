@@ -1,5 +1,5 @@
-using EmployeesTasksTracker.EmployeesService.Application.Extensions;
-using EmployeesTasksTracker.EmployeesService.Infrastructure.Extensions;
+using EmployeesTasksTracker.TasksGroupsService.Application.Extensions;
+using EmployeesTasksTracker.TasksGroupsService.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
