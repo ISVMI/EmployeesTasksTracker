@@ -21,13 +21,13 @@ namespace EmployeesTasksTracker.TasksGroupsService.Application.Handlers
         {
             try
             {
-                var taskGroup = await _repo.GetByIdAsync(request.Id, cancellationToken);
+                var tasksGroup = await _repo.GetByIdAsync(request.Id, cancellationToken);
 
-                return _mapper.Map<TasksGroupDTO>(taskGroup);
+                return _mapper.Map<TasksGroupDTO>(tasksGroup);
             }
             catch (Exception ex)
             {
-                throw new Exception($"Could not get task group: {ex.Message}");
+                throw new Exception($"Could not get tasks group: {ex.Message}");
             }
         }
     }

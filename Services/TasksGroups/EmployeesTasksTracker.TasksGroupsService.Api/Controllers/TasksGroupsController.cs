@@ -7,7 +7,7 @@ using EmployeesTasksTracker.TasksGroupsService.Application.DTOs;
 namespace EmployeesTasksTracker.TasksGroupsService.Api.Controllers
 {
     [ApiController]
-    [Route("[controller]")]
+    [Route("api/[controller]")]
     public class TasksGroupsController : ControllerBase
     {
         private readonly IMediator _mediator;

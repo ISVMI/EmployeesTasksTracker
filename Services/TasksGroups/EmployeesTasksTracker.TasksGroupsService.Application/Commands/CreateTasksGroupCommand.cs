@@ -3,5 +3,5 @@ using MediatR;
 
 namespace EmployeesTasksTracker.TasksGroupsService.Application.Commands
 {
-    public record CreateTasksGroupCommand(TasksGroupDTO TaskGroup) : IRequest<Guid>;
+    public record CreateTasksGroupCommand(TasksGroupDTO TasksGroup) : IRequest<Guid>;
 }
