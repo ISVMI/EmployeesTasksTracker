@@ -1,6 +1,6 @@
 ﻿namespace EmployeesTasksTracker.TasksGroupsService.Application.DTOs
 {
-    public record TaskGroupDto
+    public record TasksGroupDTO
     {
         public string Name { get; init; }
     }

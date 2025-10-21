@@ -3,5 +3,5 @@ using MediatR;
 
 namespace EmployeesTasksTracker.TasksGroupsService.Application.Queries
 {
-    public record GetAllTaskGroupsQuery : IRequest<IEnumerable<TaskGroupDto>>;
+    public record GetAllTasksGroupsQuery : IRequest<IEnumerable<TasksGroupDTO>>;
 }

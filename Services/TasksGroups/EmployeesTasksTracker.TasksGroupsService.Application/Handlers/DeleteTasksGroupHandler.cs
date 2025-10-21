@@ -4,16 +4,16 @@ using MediatR;
 
 namespace EmployeesTasksTracker.TasksGroupsService.Application.Handlers
 {
-    public class DeleteTaskGroupHandler : IRequestHandler<DeleteTaskGroupCommand, bool>
+    public class DeleteTasksGroupHandler : IRequestHandler<DeleteTasksGroupCommand, bool>
     {
-        private readonly ITaskGroupsRepo _repo;
+        private readonly ITasksGroupsRepo _repo;
 
-        public DeleteTaskGroupHandler(ITaskGroupsRepo repo)
+        public DeleteTasksGroupHandler(ITasksGroupsRepo repo)
         {
             _repo = repo;
         }
 
-        public async Task<bool> Handle(DeleteTaskGroupCommand request, CancellationToken cancellationToken)
+        public async Task<bool> Handle(DeleteTasksGroupCommand request, CancellationToken cancellationToken)
         {
             return await _repo.DeleteAsync(request.Id, cancellationToken);
         }

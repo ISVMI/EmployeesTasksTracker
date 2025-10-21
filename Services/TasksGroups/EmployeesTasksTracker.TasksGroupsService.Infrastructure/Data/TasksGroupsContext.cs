@@ -3,19 +3,19 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EmployeesTasksTracker.TasksGroupsService.Infrastructure.Data
 {
-    public class TaskGroupsContext : DbContext
+    public class TasksGroupsContext : DbContext
     {
-        public TaskGroupsContext(DbContextOptions<TaskGroupsContext> options) : base(options) { }
+        public TasksGroupsContext(DbContextOptions<TasksGroupsContext> options) : base(options) { }
 
-        public DbSet<TaskGroup> TaskGroups { get; set; }
+        public DbSet<TasksGroup> TasksGroups { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
 
-            modelBuilder.Entity<TaskGroup>()
+            modelBuilder.Entity<TasksGroup>()
                 .HasKey(tg => tg.Id);
 
-            modelBuilder.Entity<TaskGroup>()
+            modelBuilder.Entity<TasksGroup>()
                 .Property(tg => tg.Name)
                 .HasColumnName("Name");
 

@@ -2,5 +2,5 @@
 
 namespace EmployeesTasksTracker.TasksGroupsService.Application.Commands
 {
-    public record DeleteTaskGroupCommand(Guid Id) : IRequest<bool>;
+    public record DeleteTasksGroupCommand(Guid Id) : IRequest<bool>;
 }

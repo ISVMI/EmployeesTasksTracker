@@ -5,30 +5,30 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EmployeesTasksTracker.TasksGroupsService.Infrastructure.Repositories
 {
-    public class TaskGroupsRepo : ITaskGroupsRepo
+    public class TasksGroupsRepo : ITasksGroupsRepo
     {
-        private readonly TaskGroupsContext _context;
+        private readonly TasksGroupsContext _context;
 
-        public TaskGroupsRepo(TaskGroupsContext context)
+        public TasksGroupsRepo(TasksGroupsContext context)
         {
             _context = context;
         }
 
-        public async Task<Guid> CreateAsync(TaskGroup taskGroup, CancellationToken token = default)
+        public async Task<Guid> CreateAsync(TasksGroup tasksGroup, CancellationToken token = default)
         {
-            if (taskGroup == null)
+            if (tasksGroup == null)
             {
-                throw new ArgumentNullException(nameof(taskGroup), "Given project was null!");
+                throw new ArgumentNullException(nameof(tasksGroup), "Given project was null!");
             }
 
-            if (await _context.TaskGroups.AnyAsync(tg => tg.Name == taskGroup.Name))
+            if (await _context.TasksGroups.AnyAsync(tg => tg.Name == tasksGroup.Name))
             {
                 throw new Exception("Such task group already exists");
             }
 
-            await _context.TaskGroups.AddAsync(taskGroup, token);
+            await _context.TasksGroups.AddAsync(tasksGroup, token);
             await _context.SaveChangesAsync(token);
-            return taskGroup.Id;
+            return tasksGroup.Id;
         }
 
         public async Task<bool> DeleteAsync(Guid id, CancellationToken token = default)
@@ -37,7 +37,7 @@ namespace EmployeesTasksTracker.TasksGroupsService.Infrastructure.Repositories
             {
                 var taskGroupToDelete = await GetByIdAsync(id, token);
 
-                _context.TaskGroups.Remove(taskGroupToDelete);
+                _context.TasksGroups.Remove(taskGroupToDelete);
                 await _context.SaveChangesAsync(token);
                 return true;
             }
@@ -48,17 +48,17 @@ namespace EmployeesTasksTracker.TasksGroupsService.Infrastructure.Repositories
             }
         }
 
-        public async Task<IEnumerable<TaskGroup>> GetAllAsync(CancellationToken token = default)
+        public async Task<IEnumerable<TasksGroup>> GetAllAsync(CancellationToken token = default)
         {
-            var query = _context.TaskGroups.AsNoTracking();
-            var taskGroups = await query.ToListAsync(token);
+            var query = _context.TasksGroups.AsNoTracking();
+            var tasksGroups = await query.ToListAsync(token);
 
-            return taskGroups;
+            return tasksGroups;
         }
 
-        public async Task<TaskGroup> GetByIdAsync(Guid id, CancellationToken token = default)
+        public async Task<TasksGroup> GetByIdAsync(Guid id, CancellationToken token = default)
         {
-            var taskGroupToFind = await _context.TaskGroups.FindAsync(id, token);
+            var taskGroupToFind = await _context.TasksGroups.FindAsync(id, token);
 
             if (taskGroupToFind == null)
             {
@@ -68,7 +68,7 @@ namespace EmployeesTasksTracker.TasksGroupsService.Infrastructure.Repositories
             return taskGroupToFind;
         }
 
-        public async Task<TaskGroup> UpdateAsync(TaskGroup taskGroup, CancellationToken token = default)
+        public async Task<TasksGroup> UpdateAsync(TasksGroup taskGroup, CancellationToken token = default)
         {
             try
             {

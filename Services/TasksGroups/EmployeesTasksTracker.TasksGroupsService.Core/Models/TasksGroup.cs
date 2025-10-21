@@ -2,7 +2,7 @@
 
 namespace EmployeesTasksTracker.TasksGroupsService.Core.Models
 {
-    public class TaskGroup
+    public class TasksGroup
     {
         [Key]
         public Guid Id { get; set; } = Guid.NewGuid();
