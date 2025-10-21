@@ -21,7 +21,7 @@ namespace EmployeesTasksTracker.TasksGroupsService.Application.Handlers
         {
             try
             {
-                var newTaskGroup = _mapper.Map<TaskGroup>(request.TaskGroup);
+                var newTaskGroup = _mapper.Map<TasksGroup>(request.TaskGroup);
                 await _repo.CreateAsync(newTaskGroup, cancellationToken);
                 return newTaskGroup.Id;
             }

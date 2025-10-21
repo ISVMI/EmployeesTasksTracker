@@ -4,11 +4,11 @@ using Microsoft.Extensions.Configuration;
 
 namespace EmployeesTasksTracker.TasksGroupsService.Infrastructure.Data
 {
-    public class TaskGroupsContextFactory : IDesignTimeDbContextFactory<TaskGroupsContext>
+    public class TasksGroupsContextFactory : IDesignTimeDbContextFactory<TasksGroupsContext>
     {
-        public TaskGroupsContext CreateDbContext(string[] args)
+        public TasksGroupsContext CreateDbContext(string[] args)
         {
-            var optionsBuilder = new DbContextOptionsBuilder<TaskGroupsContext>();
+            var optionsBuilder = new DbContextOptionsBuilder<TasksGroupsContext>();
 
             var configuration = new ConfigurationBuilder()
                 .AddEnvironmentVariables()
@@ -16,7 +16,7 @@ namespace EmployeesTasksTracker.TasksGroupsService.Infrastructure.Data
 
             optionsBuilder.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
 
-            return new TaskGroupsContext(optionsBuilder.Options);
+            return new TasksGroupsContext(optionsBuilder.Options);
         }
     }
 }

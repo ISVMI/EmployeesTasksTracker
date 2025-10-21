@@ -20,7 +20,7 @@ namespace EmployeesTasksTracker.TasksGroupsService.Application.Handlers
 
         public async Task<TaskGroupDto> Handle(EditTaskGroupCommand request, CancellationToken cancellationToken)
         {
-            var taskGroupToEdit = _mapper.Map<TaskGroup>(request.TaskGRoupToEdit);
+            var taskGroupToEdit = _mapper.Map<TasksGroup>(request.TaskGRoupToEdit);
             await _repo.UpdateAsync(taskGroupToEdit,cancellationToken);
             return _mapper.Map<TaskGroupDto>(taskGroupToEdit);
         }
