@@ -51,6 +51,8 @@ namespace ProjectsTasksTracker.ProjectsService.Api.Controllers
             {
                 var id = await _mediator.Send(command, token);
 
+                var project = new { id, command };
+
                 return CreatedAtAction(nameof(GetProjectById), new { id }, command);
             }
             catch (Exception ex)
