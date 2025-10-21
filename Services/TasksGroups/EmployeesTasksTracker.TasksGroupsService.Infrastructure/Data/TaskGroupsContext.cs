@@ -7,7 +7,7 @@ namespace EmployeesTasksTracker.TasksGroupsService.Infrastructure.Data
     {
         public TaskGroupsContext(DbContextOptions<TaskGroupsContext> options) : base(options) { }
 
-        DbSet<TaskGroup> TaskGroups { get; set; }
+        public DbSet<TaskGroup> TaskGroups { get; set; }
 
         protected override void OnModelCreating(ModelBuilder modelBuilder)
         {
