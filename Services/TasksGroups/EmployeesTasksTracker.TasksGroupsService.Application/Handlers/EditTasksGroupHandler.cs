@@ -7,22 +7,22 @@ using MediatR;
 
 namespace EmployeesTasksTracker.TasksGroupsService.Application.Handlers
 {
-    public class EditTaskGroupHandler : IRequestHandler<EditTaskGroupCommand, TaskGroupDto>
+    public class EditTasksGroupHandler : IRequestHandler<EditTasksGroupCommand, TasksGroupDTO>
     {
-        private readonly ITaskGroupsRepo _repo;
+        private readonly ITasksGroupsRepo _repo;
         private readonly IMapper _mapper;
 
-        public EditTaskGroupHandler(ITaskGroupsRepo repo, IMapper mapper)
+        public EditTasksGroupHandler(ITasksGroupsRepo repo, IMapper mapper)
         {
             _repo = repo;
             _mapper = mapper;
         }
 
-        public async Task<TaskGroupDto> Handle(EditTaskGroupCommand request, CancellationToken cancellationToken)
+        public async Task<TasksGroupDTO> Handle(EditTasksGroupCommand request, CancellationToken cancellationToken)
         {
             var taskGroupToEdit = _mapper.Map<TasksGroup>(request.TaskGRoupToEdit);
             await _repo.UpdateAsync(taskGroupToEdit,cancellationToken);
-            return _mapper.Map<TaskGroupDto>(taskGroupToEdit);
+            return _mapper.Map<TasksGroupDTO>(taskGroupToEdit);
         }
     }
 }

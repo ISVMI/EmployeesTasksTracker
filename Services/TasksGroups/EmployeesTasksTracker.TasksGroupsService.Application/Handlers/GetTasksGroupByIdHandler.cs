@@ -6,24 +6,24 @@ using MediatR;
 
 namespace EmployeesTasksTracker.TasksGroupsService.Application.Handlers
 {
-    public class GetTaskGroupByIdHandler : IRequestHandler<GetTaskGroupByIdQuery, TaskGroupDto>
+    public class GetTasksGroupByIdHandler : IRequestHandler<GetTasksGroupByIdQuery, TasksGroupDTO>
     {
-        private readonly ITaskGroupsRepo _repo;
+        private readonly ITasksGroupsRepo _repo;
         private readonly IMapper _mapper;
 
-        public GetTaskGroupByIdHandler(ITaskGroupsRepo repo, IMapper mapper)
+        public GetTasksGroupByIdHandler(ITasksGroupsRepo repo, IMapper mapper)
         {
             _repo = repo;
             _mapper = mapper;
         }
 
-        public async Task<TaskGroupDto> Handle(GetTaskGroupByIdQuery request, CancellationToken cancellationToken)
+        public async Task<TasksGroupDTO> Handle(GetTasksGroupByIdQuery request, CancellationToken cancellationToken)
         {
             try
             {
                 var taskGroup = await _repo.GetByIdAsync(request.Id, cancellationToken);
 
-                return _mapper.Map<TaskGroupDto>(taskGroup);
+                return _mapper.Map<TasksGroupDTO>(taskGroup);
             }
             catch (Exception ex)
             {

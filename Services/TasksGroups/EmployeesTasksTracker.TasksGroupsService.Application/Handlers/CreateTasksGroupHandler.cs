@@ -6,18 +6,18 @@ using MediatR;
 
 namespace EmployeesTasksTracker.TasksGroupsService.Application.Handlers
 {
-    public class CreateTaskGroupHandler : IRequestHandler<CreateTaskGroupCommand, Guid>
+    public class CreateTasksGroupHandler : IRequestHandler<CreateTasksGroupCommand, Guid>
     {
-        private readonly ITaskGroupsRepo _repo;
+        private readonly ITasksGroupsRepo _repo;
         private readonly IMapper _mapper;
 
-        public CreateTaskGroupHandler(ITaskGroupsRepo repo, IMapper mapper)
+        public CreateTasksGroupHandler(ITasksGroupsRepo repo, IMapper mapper)
         {
             _repo = repo;
             _mapper = mapper;
         }
 
-        public async Task<Guid> Handle(CreateTaskGroupCommand request, CancellationToken cancellationToken)
+        public async Task<Guid> Handle(CreateTasksGroupCommand request, CancellationToken cancellationToken)
         {
             try
             {

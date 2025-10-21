@@ -5,11 +5,11 @@ using Microsoft.EntityFrameworkCore;
 
 namespace EmployeesTasksTracker.TasksGroupsService.Infrastructure.Repositories
 {
-    public class TaskGroupsRepo : ITaskGroupsRepo
+    public class TasksGroupsRepo : ITasksGroupsRepo
     {
         private readonly TasksGroupsContext _context;
 
-        public TaskGroupsRepo(TasksGroupsContext context)
+        public TasksGroupsRepo(TasksGroupsContext context)
         {
             _context = context;
         }

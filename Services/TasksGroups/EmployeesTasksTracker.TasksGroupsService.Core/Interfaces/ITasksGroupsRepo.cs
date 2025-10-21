@@ -3,7 +3,7 @@ using Shared.Interfaces;
 
 namespace EmployeesTasksTracker.TasksGroupsService.Core.Interfaces
 {
-    public interface ITaskGroupsRepo : IRepository<TasksGroup>
+    public interface ITasksGroupsRepo : IRepository<TasksGroup>
     {
     }
 }

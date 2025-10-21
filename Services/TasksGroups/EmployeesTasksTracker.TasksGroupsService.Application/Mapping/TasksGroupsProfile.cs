@@ -4,11 +4,11 @@ using EmployeesTasksTracker.TasksGroupsService.Core.Models;
 
 namespace EmployeesTasksTracker.TasksGroupsService.Application.Mapping
 {
-    public class TaskGroupsProfile : Profile
+    public class TasksGroupsProfile : Profile
     {
-        public TaskGroupsProfile()
+        public TasksGroupsProfile()
         {
-            CreateMap<TasksGroup, TaskGroupDto>();
+            CreateMap<TasksGroup, TasksGroupDTO>();
             CreateMap<EditTaskGroupDTO, TasksGroup>();
         }
     }
