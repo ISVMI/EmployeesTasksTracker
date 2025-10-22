@@ -11,7 +11,7 @@ namespace EmployeesTasksTracker.EmployeesService.Infrastructure.DataSeeding
                 return;
             }
 
-            var employees = await EmployeesGenerator.GenerateEmployeesAsync(50);
+            var employees = await EmployeesGenerator.GenerateEmployeesAsync(600);
 
             if (!employees.Any()) 
             {
