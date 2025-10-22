@@ -12,7 +12,7 @@ namespace EmployeesTasksTracker.ProjectsService.Infrastructure.Clients
             _httpClient = httpClient;
         }
 
-        public async Task<IEnumerable<Guid>?> GetAllEmployeesIds(CancellationToken token = default)
+        public async Task<IEnumerable<Guid>> GetAllIds(CancellationToken token = default)
         {
             var responce = await _httpClient.GetAsync("api/Employees/GetAllEmployeesIds", token);
 
