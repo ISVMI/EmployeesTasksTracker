@@ -1,7 +1,8 @@
-﻿namespace EmployeesTasksTracker.ProjectsService.Application.Interfaces
+﻿using Shared.Interfaces;
+
+namespace EmployeesTasksTracker.ProjectsService.Application.Interfaces
 {
-    public interface IEmployeesClient
+    public interface IEmployeesClient : IIdsGetter
     {
-        Task<IEnumerable<Guid>?> GetAllEmployeesIds(CancellationToken token = default);
     }
 }
