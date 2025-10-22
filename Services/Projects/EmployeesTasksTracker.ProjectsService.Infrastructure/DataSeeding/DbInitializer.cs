@@ -21,14 +21,14 @@ namespace EmployeesTasksTracker.ProjectsService.Infrastructure.DataSeeding
 
             var generator = new ProjectsGenerator(_employeesClient);
 
-            var employees = await generator.GenerateProjectsAsync(20);
+            var projects = await generator.GenerateProjectsAsync(20);
 
-            if (!employees.Any())
+            if (!projects.Any())
             {
                 return;
             }
 
-            await context.Projects.AddRangeAsync(employees);
+            await context.Projects.AddRangeAsync(projects);
             await context.SaveChangesAsync();
         }
     }
