@@ -1,6 +1,5 @@
 ﻿using AutoMapper;
 using EmployeesTasksTracker.TasksService.Application.DTOs;
-using EmployeesTasksTracker.TasksService.Core.Enums;
 
 namespace EmployeesTasksTracker.TasksService.Application.Mapping
 {
@@ -12,8 +11,6 @@ namespace EmployeesTasksTracker.TasksService.Application.Mapping
             CreateMap<TaskDTO, Core.Models.Task>();
             CreateMap<EditTaskDTO, Core.Models.Task>();
             CreateMap<CreateTaskDTO, Core.Models.Task>();
-            CreateMap<Status, string>();
-            CreateMap<string, Status>();
         }
     }
 }
