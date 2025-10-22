@@ -21,7 +21,7 @@ namespace EmployeesTasksTracker.ProjectsService.Infrastructure.DataSeeding
 
             var generator = new ProjectsGenerator(_employeesClient);
 
-            var employees = await generator.GenerateProjectsAsync(600);
+            var employees = await generator.GenerateProjectsAsync(20);
 
             if (!employees.Any())
             {
