@@ -32,6 +32,11 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.Repositories
                 throw new Exception($"Observer with id {observerId} already exists!");
             }
 
+            if (taskToEdit.Performers.Contains(observerId))
+            {
+                throw new Exception($"Employee with id {observerId} already assigned as performer!");
+            }
+
             taskToEdit.Observers.Add(observerId);
 
             await _context.SaveChangesAsync(cancellationToken);
@@ -54,6 +59,11 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.Repositories
             if (taskToEdit.Performers.Contains(performerId))
             {
                 throw new Exception($"Performer with id {performerId} already exists!");
+            }
+
+            if (taskToEdit.Observers.Contains(performerId))
+            {
+                throw new Exception($"Employee with id {performerId} already assigned as observer!");
             }
 
             taskToEdit.Performers.Add(performerId);
