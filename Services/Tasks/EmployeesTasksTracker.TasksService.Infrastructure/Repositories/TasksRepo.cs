@@ -61,31 +61,32 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.Repositories
             await _context.SaveChangesAsync(cancellationToken);
         }
 
-        public async Task ChangeStatusAsync(Core.Models.Task task, CancellationToken cancellationToken = default)
+        public async Task ChangeStatusAsync(Guid taskId, string newStatus, CancellationToken cancellationToken = default)
         {
 
-            if (task == null)
+            if (newStatus == null)
             {
-                throw new ArgumentNullException(nameof(task), "Given task was null!");
+                throw new ArgumentNullException(nameof(newStatus), "Given task was null!");
             }
 
-            if (task.Status != Core.Enums.Status.Canceled)
+            var existingTask = await GetByIdAsync(taskId, cancellationToken);
+
+            if (newStatus != "Canceled")
             {
                 try
                 {
-                    var existingTask = await GetByIdAsync(task.Id, cancellationToken);
 
-                    if (existingTask.Status == task.Status)
+                    if (existingTask.Status.ToString() == newStatus)
                     {
                         Console.WriteLine("Task status has not changed, because it were the same as before");
                         return;
                     }
 
-                    var exMessage = $"Task can not change from {existingTask.Status} to {task.Status}!";
+                    var exMessage = $"Task can not change from {existingTask.Status} to {newStatus}!";
 
-                    switch (task.Status)
+                    switch (newStatus)
                     {
-                        case Core.Enums.Status.Backlog:
+                        case "Backlog":
                             {
                                 if (existingTask.Status != Core.Enums.Status.Backlog)
                                 {
@@ -95,41 +96,48 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.Repositories
                                 return;
                             }
 
-                        case Core.Enums.Status.Current:
+                        case "Current":
                             {
                                 if (existingTask.Status != Core.Enums.Status.Backlog)
                                 {
                                     throw new ArgumentException(exMessage);
                                 }
+                                existingTask.Status = Core.Enums.Status.Current;
                                 break;
                             }
 
-                        case Core.Enums.Status.Active:
+                        case "Active":
                             {
                                 if (existingTask.Status != Core.Enums.Status.Current ||
                                     existingTask.Status != Core.Enums.Status.Testing)
                                 {
                                     throw new ArgumentException(exMessage);
                                 }
+                                existingTask.Status = Core.Enums.Status.Active;
                                 break;
                             }
 
-                        case Core.Enums.Status.Testing:
+                        case "Testing":
                             {
                                 if (existingTask.Status != Core.Enums.Status.Active)
                                 {
                                     throw new ArgumentException(exMessage);
                                 }
+                                existingTask.Status = Core.Enums.Status.Testing;
                                 break;
                             }
 
-                        case Core.Enums.Status.Completed:
+                        case "Completed":
                             {
                                 if (existingTask.Status != Core.Enums.Status.Testing)
                                 {
                                     throw new ArgumentException(exMessage);
                                 }
                                 break;
+                            }
+                        default:
+                            {
+                                throw new ArgumentException($"Unknown status : {newStatus}!");
                             }
                     }
                 }
@@ -138,8 +146,11 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.Repositories
                     Console.WriteLine($"Could not change status : {ex.Message}");
                 }
             }
-
-            await UpdateAsync(task, cancellationToken);
+            else
+            {
+                existingTask.Status = Core.Enums.Status.Canceled;
+            }
+                await _context.SaveChangesAsync(cancellationToken);
         }
 
         public async Task<Guid> CreateAsync(Core.Models.Task task, CancellationToken token = default)
