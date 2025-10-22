@@ -1,6 +1,8 @@
-﻿namespace EmployeesTasksTracker.TasksService.Application.Interfaces
+﻿using Shared.Interfaces;
+
+namespace EmployeesTasksTracker.TasksService.Application.Interfaces
 {
-    public interface IEmployeesClient
+    public interface IEmployeesClient : IIdsGetter
     {
     }
 }

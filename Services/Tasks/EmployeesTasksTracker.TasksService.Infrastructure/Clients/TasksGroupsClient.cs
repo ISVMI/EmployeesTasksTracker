@@ -1,12 +1,24 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using EmployeesTasksTracker.TasksService.Application.Interfaces;
+using System.Net.Http.Json;
 
 namespace EmployeesTasksTracker.TasksService.Infrastructure.Clients
 {
-    internal class TasksGroupsClient
+    public class TasksGroupsClient : ITasksGroupsClient
     {
+        private readonly HttpClient _httpClient;
+
+        public TasksGroupsClient(HttpClient httpClient)
+        {
+            _httpClient = httpClient;
+        }
+
+        public async Task<IEnumerable<Guid>> GetAllIds(CancellationToken cancellationToken = default)
+        {
+            var responce = await _httpClient.GetAsync($"api/TaskGroups/GetAllTaskGroupsIds", cancellationToken);
+
+            responce.EnsureSuccessStatusCode();
+
+            return await responce.Content.ReadFromJsonAsync<IEnumerable<Guid>>();
+        }
     }
 }

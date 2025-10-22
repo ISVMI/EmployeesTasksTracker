@@ -23,6 +23,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EmployeesTasksTracker.TasksService.Application\EmployeesTasksTracker.TasksService.Application.csproj" />
     <ProjectReference Include="..\EmployeesTasksTracker.TasksService.Core\EmployeesTasksTracker.TasksService.Core.csproj" />
   </ItemGroup>
 
