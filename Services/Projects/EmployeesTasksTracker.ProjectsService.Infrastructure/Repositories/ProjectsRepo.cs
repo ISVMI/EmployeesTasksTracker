@@ -21,7 +21,7 @@ namespace EmployeesTasksTracker.ProjectsService.Infrastructure.Repositories
                 throw new ArgumentNullException(nameof(project), "Given project was null!");
             }
 
-            if (await _context.Projects.AnyAsync(e => e.Name == project.Name, token))
+            if (await _context.Projects.AnyAsync(p => p.Name == project.Name, token))
             {
                 throw new Exception("Such project already exists");
             }
@@ -35,9 +35,9 @@ namespace EmployeesTasksTracker.ProjectsService.Infrastructure.Repositories
         {
             try
             {
-                var employeeToDelete = await GetByIdAsync(id, token);
+                var projectToDelete = await GetByIdAsync(id, token);
 
-                _context.Projects.Remove(employeeToDelete);
+                _context.Projects.Remove(projectToDelete);
                 await _context.SaveChangesAsync(token);
                 return true;
             }
@@ -58,23 +58,25 @@ namespace EmployeesTasksTracker.ProjectsService.Infrastructure.Repositories
 
         public async Task<Project> GetByIdAsync(Guid id, CancellationToken token = default)
         {
-            var employeeToFind = await _context.Projects.FindAsync(id, token);
+            var projectToFind = await _context.Projects
+                .Where(p => p.Id == id)
+                .SingleOrDefaultAsync(token);
 
-            if (employeeToFind == null)
+            if (projectToFind == null)
             {
                 throw new Exception($"Project with id: {id} not found!");
             }
 
-            return employeeToFind;
+            return projectToFind;
         }
 
         public async Task<Project> UpdateAsync(Project project, CancellationToken token = default)
         {
             try
             {
-                var existingEmployee = await GetByIdAsync(project.Id, token);
+                var existingProject = await GetByIdAsync(project.Id, token);
 
-                _context.Entry(existingEmployee).CurrentValues.SetValues(project);
+                _context.Entry(existingProject).CurrentValues.SetValues(project);
                 await _context.SaveChangesAsync(token);
                 return project;
             }

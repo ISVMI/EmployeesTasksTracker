@@ -17,7 +17,7 @@ namespace EmployeesTasksTracker.ProjectsService.Infrastructure.DataSeeding
         public async Task<List<Project>> GenerateProjectsAsync(int count)
         {
             var projects = new List<Project>();
-            var employees = await _employeesClient.GetAllEmployeesIds();
+            var employees = await _employeesClient.GetAllIds();
 
             if (employees == null)
             {
