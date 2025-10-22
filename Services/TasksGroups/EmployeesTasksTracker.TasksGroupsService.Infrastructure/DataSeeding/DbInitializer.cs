@@ -11,7 +11,7 @@ namespace EmployeesTasksTracker.TasksGroupsService.Infrastructure.DataSeeding
                 return;
             }
 
-            var tasksGroups = TasksGroupsGenerator.GenerateTasksGroupsAsync(20);
+            var tasksGroups = TasksGroupsGenerator.GenerateTasksGroupsAsync(40);
 
             if (!tasksGroups.Any()) 
             {
