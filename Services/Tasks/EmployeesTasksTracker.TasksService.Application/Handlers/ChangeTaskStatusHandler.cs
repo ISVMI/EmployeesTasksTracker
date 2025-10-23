@@ -21,7 +21,7 @@ namespace EmployeesTasksTracker.TasksService.Application.Handlers
             }
             catch (Exception ex) 
             {
-                Console.WriteLine($"Could not change task's status: {ex.Message}");
+                throw new Exception($"Could not change task's status: {ex.Message}");
             }
         }
     }

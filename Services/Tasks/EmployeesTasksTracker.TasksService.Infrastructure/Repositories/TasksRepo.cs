@@ -83,13 +83,10 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.Repositories
 
             if (newStatus != "Canceled")
             {
-                try
-                {
 
                     if (existingTask.Status.ToString() == newStatus)
                     {
-                        Console.WriteLine("Task status has not changed, because it were the same as before");
-                        return;
+                        throw new Exception("Task status has not changed, because it were the same as before");
                     }
 
                     var exMessage = $"Task can not change from {existingTask.Status} to {newStatus}!";
@@ -118,7 +115,7 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.Repositories
 
                         case "Active":
                             {
-                                if (existingTask.Status != Core.Enums.Status.Current ||
+                                if (existingTask.Status != Core.Enums.Status.Current &&
                                     existingTask.Status != Core.Enums.Status.Testing)
                                 {
                                     throw new ArgumentException(exMessage);
@@ -150,11 +147,6 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.Repositories
                                 throw new ArgumentException($"Unknown status : {newStatus}!");
                             }
                     }
-                }
-                catch (Exception ex)
-                {
-                    Console.WriteLine($"Could not change status : {ex.Message}");
-                }
             }
             else
             {
@@ -170,7 +162,7 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.Repositories
                 throw new ArgumentNullException(nameof(task), "Given task was null!");
             }
 
-            if (task.Status != Core.Enums.Status.Backlog || task.Status != Core.Enums.Status.Current)
+            if (task.Status != Core.Enums.Status.Backlog && task.Status != Core.Enums.Status.Current)
             {
                 throw new Exception($"Could not create task with the given status - {task.Status}");
             }

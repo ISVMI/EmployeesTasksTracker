@@ -21,7 +21,7 @@ namespace EmployeesTasksTracker.TasksService.Application.Handlers
             }
             catch (Exception ex) 
             {
-                Console.WriteLine($"Could not add performer: {ex.Message}");
+                throw new Exception($"Could not add performer: {ex.Message}");
             }
         }
     }

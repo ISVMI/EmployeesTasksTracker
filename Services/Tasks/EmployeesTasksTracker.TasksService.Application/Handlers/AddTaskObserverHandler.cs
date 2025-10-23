@@ -21,7 +21,7 @@ namespace EmployeesTasksTracker.TasksService.Application.Handlers
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Could not add observer: {ex.Message}");
+                throw new Exception($"Could not add observer: {ex.Message}");
             }
         }
     }

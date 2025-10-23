@@ -26,8 +26,7 @@ namespace EmployeesTasksTracker.TasksService.Application.Handlers
             }
             catch (Exception ex) 
             {
-                Console.WriteLine($"Could not create new task: {ex.Message}");
-                return Guid.Empty;
+                throw new Exception($"Could not create new task: {ex.Message}");
             }
         }
     }
