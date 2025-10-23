@@ -101,5 +101,13 @@ namespace ProjectsTasksTracker.ProjectsService.Api.Controllers
 
             return Ok($"Successfully deleted project with id {id}");
         }
+
+        [HttpGet("GetAllProjectsIds")]
+        public async Task<IActionResult> GetAllIds(CancellationToken token)
+        {
+            var result = await _mediator.Send(new GetAllProjectsIdsQuery(), token);
+
+            return Ok(result);
+        }
     }
 }
