@@ -30,7 +30,7 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.Extensions
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"--> An error occurred while seeding the database : {ex.Message}");
+                Console.WriteLine($"--> An error occurred while seeding the database : {ex.Message} / {ex.InnerException?.Message}");
             }
         }
     }

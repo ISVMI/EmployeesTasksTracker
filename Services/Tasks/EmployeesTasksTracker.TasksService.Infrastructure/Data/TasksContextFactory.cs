@@ -1,9 +1,10 @@
 ﻿using Microsoft.EntityFrameworkCore;
+using Microsoft.EntityFrameworkCore.Design;
 using Microsoft.Extensions.Configuration;
 
 namespace EmployeesTasksTracker.TasksService.Infrastructure.Data
 {
-    public class TasksContextFactory
+    public class TasksContextFactory : IDesignTimeDbContextFactory<TasksContext>
     {
         public TasksContext CreateDbContext(string[] args)
         {

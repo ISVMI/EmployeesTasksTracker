@@ -31,12 +31,12 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.DataSeeding
 
             if (tasksGroups == null)
             {
-                throw new ArgumentNullException(nameof(employees), "There were no tasks groups!");
+                throw new ArgumentNullException(nameof(tasksGroups), "There were no tasks groups!");
             }
 
             if (projects == null)
             {
-                throw new ArgumentNullException(nameof(employees), "There were no projects!");
+                throw new ArgumentNullException(nameof(projects), "There were no projects!");
             }
 
             var employeesList = employees.ToList();
@@ -51,23 +51,51 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.DataSeeding
             var tasksGroupsShuffled = new Queue<Guid>(tasksGroupsList);
             var projectsShuffled = new Queue<Guid>(projectsList);
 
+            var tasksGroup = tasksGroupsShuffled.Dequeue();
+            var project = projectsShuffled.Dequeue();
+
             for (int i = 0; i < count; i++)
             {
-                var performers = GetFewEmployees(_faker.Random.Int(0, 5), employeesShuffled);
-                var observers = GetFewEmployees(_faker.Random.Int(0, 3), employeesShuffled);
-                var tasksGroup = tasksGroupsShuffled.Dequeue();
-                var project = projectsShuffled.Dequeue();
-                var name = _faker.Hacker.Adjective();
-                var capitalizedName = char.ToUpper(name[0]) + name[1..];
+
+                if (employeesShuffled.Count == 0)
+                {
+                    employeesList.ForEach(employeesShuffled.Enqueue);
+                }
+
+                if (tasksGroupsShuffled.Count == 0)
+                {
+                    tasksGroupsList.ForEach(tasksGroupsShuffled.Enqueue);
+                }
+
+                var performers = GetFewEmployees(_faker.Random.Int(1, 5), employeesShuffled);
+                var observers = GetFewEmployees(_faker.Random.Int(1, 2), employeesShuffled);
+
+                if (projectsShuffled.Count == 0)
+                {
+                    projectsList.ForEach(projectsShuffled.Enqueue);
+                }
+
+                if (i % 3 == 0)
+                {
+                    tasksGroup = tasksGroupsShuffled.Dequeue();
+                }
+
+                if (i % 6 == 0)
+                {
+                    project = projectsShuffled.Dequeue();
+                }
+
+                var name = _faker.Hacker.Verb();
+                var capitalizedVerb = char.ToUpper(name[0]) + name[1..];
 
                 var task = new Core.Models.Task
                 {
-                    Name = $"{_faker.Hacker.Verb()}{capitalizedName} {_faker.Hacker.Noun()}",
+                    Name = $"{capitalizedVerb} {_faker.Hacker.Adjective()} {_faker.Hacker.Noun()}",
                     Description = $"Необходимо {_faker.Hacker.Verb()} {_faker.Hacker.Noun()} и {_faker.Hacker.Verb()} {_faker.Hacker.Noun()}",
 
                     Project = project,
                     TasksGroup = tasksGroup,
-                    Deadline = DateTime.Now + TimeSpan.FromDays(_faker.Random.Double(6, 366)),
+                    Deadline = DateTime.UtcNow + TimeSpan.FromDays(_faker.Random.Double(6, 366)),
                     Status = _faker.PickRandom(Core.Enums.Status.Backlog, Core.Enums.Status.Current),
                     Priority = _faker.PickRandom<Core.Enums.Priority>(),
                     Performers = performers,
@@ -83,11 +111,12 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.DataSeeding
 
         private static void Shuffle(List<Guid> employees)
         {
+
             var random = new Random();
 
             for (int i = employees.Count - 1; i > 0; i--)
             {
-                int j = random.Next(0, i - 1);
+                int j = random.Next(0, i);
 
                 (employees[i], employees[j]) = (employees[j], employees[i]);
             }
@@ -97,7 +126,7 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.DataSeeding
         {
             var employeesPart = new List<Guid>();
 
-            for (int i = 0; i < quantity; i++)
+            for (int i = 0; i < quantity && employees.Count > 0; i++)
             {
                 employeesPart.Add(employees.Dequeue());
             }

@@ -48,11 +48,11 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.Data
 
             modelBuilder.Entity<Core.Models.Task>()
                 .Property(p => p.Performers)
-                .HasColumnType("jsonb");
+                .HasColumnType("uuid[]");
 
             modelBuilder.Entity<Core.Models.Task>()
                 .Property(p => p.Observers)
-                .HasColumnType("jsonb");
+                .HasColumnType("uuid[]");
 
             base.OnModelCreating(modelBuilder);
         }

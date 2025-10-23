@@ -12,7 +12,7 @@ namespace EmployeesTasksTracker.TasksService.Core.Models
         public Guid Project { get; init; }
         public Guid TasksGroup { get; init; }
         public DateTime Deadline { get; set; }
-        public DateTime CreatedAt { get; set; } = DateTime.Now;
+        public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
         public Status Status { get; set; }
         public Priority Priority { get; set; }
         public List<Guid> Performers { get; set; }
