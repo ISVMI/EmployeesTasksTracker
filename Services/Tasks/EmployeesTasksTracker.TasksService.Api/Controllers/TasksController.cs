@@ -113,7 +113,7 @@ namespace EmployeesTasksTracker.TasksService.Api.Controllers
 
             try
             {
-                await _mediator.Send(new AddTaskPerformerCommand(observerId, taskId), token);
+                await _mediator.Send(new AddTaskObserverCommand(observerId, taskId), token);
 
                 return Ok($"Successfully added observer with id - {observerId}, to task with id {taskId}!");
             }
