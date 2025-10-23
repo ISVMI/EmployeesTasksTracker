@@ -128,7 +128,7 @@ namespace EmployeesTasksTracker.TasksService.Api.Controllers
         }
 
         [HttpPost("ChangeStatus/{taskId}")]
-        public async Task<IActionResult> AddTaskPerformer(Guid taskId, string newStatus, CancellationToken token)
+        public async Task<IActionResult> ChangeTaskStatus(Guid taskId, string newStatus, CancellationToken token)
         {
 
             try
