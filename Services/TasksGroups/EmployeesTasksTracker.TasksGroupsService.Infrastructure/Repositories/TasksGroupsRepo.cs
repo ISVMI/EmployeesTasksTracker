@@ -55,6 +55,12 @@ namespace EmployeesTasksTracker.TasksGroupsService.Infrastructure.Repositories
 
             return tasksGroups;
         }
+        public async Task<IEnumerable<Guid>> GetAllIdsAsync(CancellationToken cancellationToken = default)
+        {
+            return await _context.Database.
+                SqlQueryRaw<Guid>("SELECT \"Id\" FROM public.\"TasksGroups\"")
+                .ToListAsync();
+        }
 
         public async Task<TasksGroup> GetByIdAsync(Guid id, CancellationToken token = default)
         {
