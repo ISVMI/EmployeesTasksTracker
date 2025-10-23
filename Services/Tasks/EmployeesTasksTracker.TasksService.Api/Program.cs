@@ -1,11 +1,37 @@
+using EmployeesTasksTracker.TasksService.Infrastructure.Extensions;
+using EmployeesTasksTracker.TasksService.Application.Extensions;
+using EmployeesTasksTracker.TasksService.Application.Interfaces;
+using EmployeesTasksTracker.TasksService.Infrastructure.Clients;
+using EmployeesTasksTracker.TasksService.Infrastructure.DataSeeding;
+
 var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
 builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
+
+builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddApplication();
+
+builder.Services.AddHttpClient<IEmployeesClient, EmployeesClient>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["ServicesUrls:Employees"]);
+});
+
+builder.Services.AddHttpClient<ITasksGroupsClient, TasksGroupsClient>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["ServicesUrls:TasksGroups"]);
+});
+
+builder.Services.AddHttpClient<IProjectsClient, ProjectsClient>(client =>
+{
+    client.BaseAddress = new Uri(builder.Configuration["ServicesUrls:Projects"]);
+});
+
+builder.Services.AddScoped<TasksGenerator>();
+builder.Services.AddScoped<DbInitializer>();
 
 var app = builder.Build();
 
@@ -21,5 +47,7 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.MapControllers();
+
+await app.Services.AddDatabaseInitialization();
 
 app.Run();
