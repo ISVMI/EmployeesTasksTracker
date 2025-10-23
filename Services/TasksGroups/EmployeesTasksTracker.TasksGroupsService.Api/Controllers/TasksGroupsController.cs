@@ -102,7 +102,7 @@ namespace EmployeesTasksTracker.TasksGroupsService.Api.Controllers
             return Ok($"Successfully deleted tasks group with id {id}");
         }
 
-        [HttpGet("GetAllTaskGroupsIds")]
+        [HttpGet("GetAllTasksGroupsIds")]
         public async Task<IActionResult> GetAllIds(CancellationToken token)
         {
             var result = await _mediator.Send(new GetAllTasksGroupsIdsQuery(), token);
