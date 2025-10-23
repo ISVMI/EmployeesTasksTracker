@@ -17,8 +17,8 @@ namespace EmployeesTasksTracker.TasksService.Api.Controllers
             _mediator = mediator;
         }
 
-        [HttpGet("All/{employeeId};{tasksGroupId};{projectId}")]
-        public async Task<IActionResult> GetAllTasks(Guid employeeId, Guid tasksGroupId, Guid projectId,CancellationToken token)
+        [HttpGet("All")]
+        public async Task<IActionResult> GetAllTasks(Guid? employeeId, Guid? tasksGroupId, Guid? projectId, CancellationToken token)
         {
             var tasks = await _mediator.Send(new GetAllTasksQuery(employeeId, tasksGroupId, projectId), token);
 
