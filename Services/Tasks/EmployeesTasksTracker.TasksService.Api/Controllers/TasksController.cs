@@ -30,13 +30,21 @@ namespace EmployeesTasksTracker.TasksService.Api.Controllers
         {
             try
             {
-                var tasks = await _mediator.Send(new GetTaskByIdQuery(id), token);
+                var task = await _mediator.Send(new GetTaskByIdQuery(id), token);
 
-                return Ok(tasks);
+                return Ok(task);
             }
             catch (Exception ex)
             {
                 var message = $"Could not find task with the given id {id} : {ex.Message}";
+
+                var problem = new ProblemDetails
+                {
+                    Title = "Task not found",
+                    Status = StatusCodes.Status404NotFound,
+                    Detail = message,
+                    Instance = HttpContext.Request.Path
+                };
 
                 Console.WriteLine(message);
 
@@ -59,9 +67,17 @@ namespace EmployeesTasksTracker.TasksService.Api.Controllers
             {
                 var message = $"Could not create task: {ex.Message}";
 
+                var problem = new ProblemDetails
+                {
+                    Title = "Couldn't create task",
+                    Status = StatusCodes.Status400BadRequest,
+                    Detail = ex.Message,
+                    Instance = HttpContext.Request.Path
+                };
+
                 Console.WriteLine(message);
 
-                return BadRequest(new { message, command });
+                return BadRequest(new { problem, command });
             }
         }
 
@@ -81,9 +97,21 @@ namespace EmployeesTasksTracker.TasksService.Api.Controllers
             {
                 var message = $"Could not edit task : {ex.Message} / {ex.InnerException?.Message}";
 
+                var problem = new ProblemDetails
+                {
+                    Title = "Couldn't edit task",
+                    Status = StatusCodes.Status400BadRequest,
+                    Detail = $"{ex.Message} {ex.InnerException?.Message}",
+                    Instance = HttpContext.Request.Path,
+                    Extensions =
+                    {
+                        ["taskId"] = id
+                    }
+                };
+
                 Console.WriteLine(message);
 
-                return BadRequest(new { id, message });
+                return BadRequest(problem);
             }
         }
 
@@ -101,9 +129,22 @@ namespace EmployeesTasksTracker.TasksService.Api.Controllers
             {
                 var message = $"Could not add performer to task : {ex.Message}";
 
+                var problem = new ProblemDetails
+                {
+                    Title = "Couldn't add performer",
+                    Status = StatusCodes.Status400BadRequest,
+                    Detail = message,
+                    Instance = HttpContext.Request.Path,
+                    Extensions =
+                    {
+                        ["performerId"] = performerId,
+                        ["taskId"] = taskId
+                    }
+                };
+
                 Console.WriteLine(message);
 
-                return BadRequest(new { performerId, taskId, message });
+                return BadRequest(problem);
             }
         }
 
@@ -121,9 +162,22 @@ namespace EmployeesTasksTracker.TasksService.Api.Controllers
             {
                 var message = $"Could not add observer to task : {ex.Message}";
 
+                var problem = new ProblemDetails
+                {
+                    Title = "Couldn't add observer",
+                    Status = StatusCodes.Status400BadRequest,
+                    Detail = message,
+                    Instance = HttpContext.Request.Path,
+                    Extensions =
+                    {
+                        ["observerId"] = observerId,
+                        ["taskId"] = taskId
+                    }
+                };
+
                 Console.WriteLine(message);
 
-                return BadRequest(new { observerId, taskId, message });
+                return BadRequest(problem);
             }
         }
 
@@ -141,9 +195,22 @@ namespace EmployeesTasksTracker.TasksService.Api.Controllers
             {
                 var message = $"Could not change task's status : {ex.Message}";
 
+                var problem = new ProblemDetails
+                {
+                    Title = "Couldn't change status",
+                    Status = StatusCodes.Status400BadRequest,
+                    Detail = message,
+                    Instance = HttpContext.Request.Path,
+                    Extensions =
+                    {
+                        ["taskId"] = taskId,
+                        ["newStatus"] = newStatus
+                    }
+                };
+
                 Console.WriteLine(message);
 
-                return BadRequest(new { taskId, newStatus,  message });
+                return BadRequest(problem);
             }
         }
 
@@ -156,10 +223,22 @@ namespace EmployeesTasksTracker.TasksService.Api.Controllers
             {
                 var message = $"Could not delete task with id {id}";
 
-                return NotFound(new { message });
+                var problem = new ProblemDetails
+                {
+                    Title = "Couldn't delete task",
+                    Status = StatusCodes.Status404NotFound,
+                    Detail = message,
+                    Instance = HttpContext.Request.Path,
+                    Extensions =
+                    {
+                        ["taskId"] = id
+                    }
+                };
+
+                return NotFound(problem);
             }
 
-            return Ok($"Successfully deleted task with id {id}");
+            return Ok($"Successfully deleted task with id: {id}");
         }
     }
 }
