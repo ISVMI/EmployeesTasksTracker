@@ -22,14 +22,14 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.Clients
             return await responce.Content.ReadFromJsonAsync<IEnumerable<Guid>>();
         }
 
-        public async Task<IEnumerable<EmployeeForReportDTO>> GetEmployeesInfo(IEnumerable<Guid> ids, CancellationToken cancellationToken = default)
+        public async Task<EmployeeForReportDTO> GetEmployeeInfo(Guid id, CancellationToken cancellationToken = default)
         {
 
-            var responce = await _httpClient.PostAsJsonAsync($"api/Employees/GetEmployeesInfo", ids, cancellationToken);
+            var responce = await _httpClient.PostAsJsonAsync($"api/Employees/{id}?infoRequested=true", id, cancellationToken);
 
             responce.EnsureSuccessStatusCode();
 
-            return await responce.Content.ReadFromJsonAsync<IEnumerable<EmployeeForReportDTO>>();
+            return await responce.Content.ReadFromJsonAsync<EmployeeForReportDTO>();
 
         }
     }
