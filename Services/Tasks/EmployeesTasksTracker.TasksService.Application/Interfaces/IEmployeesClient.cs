@@ -5,6 +5,6 @@ namespace EmployeesTasksTracker.TasksService.Application.Interfaces
 {
     public interface IEmployeesClient : IIdsGetter
     {
-        public Task<IEnumerable<EmployeeForReportDTO>> GetEmployeesInfo(IEnumerable<Guid> ids, CancellationToken cancellationToken = default);
+        public Task<EmployeeForReportDTO> GetEmployeeInfo(Guid id, CancellationToken cancellationToken = default);
     }
 }
