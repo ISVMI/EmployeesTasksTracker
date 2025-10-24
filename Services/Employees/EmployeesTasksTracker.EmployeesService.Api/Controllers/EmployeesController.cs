@@ -3,6 +3,7 @@ using EmployeesTasksTracker.EmployeesService.Application.DTOs;
 using EmployeesTasksTracker.EmployeesService.Application.Queries;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Shared.DTOs;
 
 namespace EmployeesTasksTracker.EmployeesService.Api.Controllers
 {
@@ -26,11 +27,24 @@ namespace EmployeesTasksTracker.EmployeesService.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetEmployeeById(Guid id, CancellationToken token)
+        public async Task<IActionResult> GetEmployeeById(Guid id, bool infoRequested, CancellationToken token)
         {
             try
             {
                 var employee = await _mediator.Send(new GetEmployeeByIdQuery(id), token);
+
+                if (infoRequested)
+                {
+                    var employeeInfo = new EmployeeForReportDTO
+                    {
+                        Name = employee.Name,
+                        Surname = employee.Surname,
+                        Patronymic = employee.Patronymic,
+                        Role = employee.Role.ToString(),
+                    };
+
+                    return Ok(employeeInfo);
+                }
 
                 return Ok(employee);
             }
