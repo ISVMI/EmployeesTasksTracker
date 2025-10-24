@@ -26,11 +26,16 @@ namespace EmployeesTasksTracker.TasksGroupsService.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetTasksGroupById(Guid id, CancellationToken token)
+        public async Task<IActionResult> GetTasksGroupById(Guid id, bool nameRequested, CancellationToken token)
         {
             try
             {
                 var tasksGroup = await _mediator.Send(new GetTasksGroupByIdQuery(id), token);
+
+                if (nameRequested)
+                {
+                    return Ok(tasksGroup.Name);
+                }
 
                 return Ok(tasksGroup);
             }
