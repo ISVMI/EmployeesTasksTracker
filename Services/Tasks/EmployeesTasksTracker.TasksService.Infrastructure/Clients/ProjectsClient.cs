@@ -20,5 +20,14 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.Clients
 
             return await responce.Content.ReadFromJsonAsync<IEnumerable<Guid>>();
         }
+
+        public async Task<string> GetProjectName(Guid id, CancellationToken cancellationToken = default)
+        {
+            var responce = await _httpClient.GetAsync($"api/Projects/{id}?nameRequested=true", cancellationToken);
+
+            responce.EnsureSuccessStatusCode();
+
+            return await responce.Content.ReadFromJsonAsync<string>();
+        }
     }
 }
