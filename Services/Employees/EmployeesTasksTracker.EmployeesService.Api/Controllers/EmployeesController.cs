@@ -38,9 +38,21 @@ namespace EmployeesTasksTracker.EmployeesService.Api.Controllers
             {
                 var message = $"Could not find employee with the given id {id} : {ex.Message}";
 
+                var problem = new ProblemDetails
+                {
+                    Title = "Couldn't find employee",
+                    Status = StatusCodes.Status404NotFound,
+                    Detail = ex.Message,
+                    Instance = HttpContext.Request.Path,
+                    Extensions =
+                    {
+                        ["employeeId"] = id
+                    }
+                };
+
                 Console.WriteLine(message);
 
-                return NotFound(new { message });
+                return NotFound(problem);
             }
         }
 
@@ -59,9 +71,17 @@ namespace EmployeesTasksTracker.EmployeesService.Api.Controllers
             {
                 var message = $"Could not create an employee: {ex.Message}";
 
+                var problem = new ProblemDetails
+                {
+                    Title = "Couldn't create an employee",
+                    Status = StatusCodes.Status400BadRequest,
+                    Detail = ex.Message,
+                    Instance = HttpContext.Request.Path,
+                };
+
                 Console.WriteLine(message);
 
-                return BadRequest(new { message, command });
+                return BadRequest(new { problem, command });
             }
         }
 
@@ -81,6 +101,18 @@ namespace EmployeesTasksTracker.EmployeesService.Api.Controllers
             {
                 var message = $"Could not edit employee : {ex.Message} / {ex.InnerException?.Message}";
 
+                var problem = new ProblemDetails
+                {
+                    Title = "Couldn't edit employee",
+                    Status = StatusCodes.Status400BadRequest,
+                    Detail = $"{ex.Message} {ex.InnerException?.Message}",
+                    Instance = HttpContext.Request.Path,
+                    Extensions =
+                    {
+                        ["employeeId"] = id
+                    }
+                };
+
                 Console.WriteLine(message);
 
                 return BadRequest(new { id, message });
@@ -96,7 +128,19 @@ namespace EmployeesTasksTracker.EmployeesService.Api.Controllers
             {
                 var message = $"Could not delete employee with id {id}";
 
-                return NotFound(new { message });
+                var problem = new ProblemDetails
+                {
+                    Title = "Couldn't not delete employee",
+                    Status = StatusCodes.Status404NotFound,
+                    Detail = message,
+                    Instance = HttpContext.Request.Path,
+                    Extensions =
+                    {
+                        ["employeeId"] = id
+                    }
+                };
+
+                return NotFound(problem);
             }
 
             return Ok($"Successfully deleted employee with id {id}");
