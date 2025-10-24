@@ -1,4 +1,5 @@
 ﻿using EmployeesTasksTracker.TasksService.Application.Interfaces;
+using Shared.DTOs;
 using System.Net.Http.Json;
 
 namespace EmployeesTasksTracker.TasksService.Infrastructure.Clients
@@ -19,6 +20,17 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.Clients
             responce.EnsureSuccessStatusCode();
 
             return await responce.Content.ReadFromJsonAsync<IEnumerable<Guid>>();
+        }
+
+        public async Task<IEnumerable<EmployeeForReportDTO>> GetEmployeesInfo(IEnumerable<Guid> ids, CancellationToken cancellationToken = default)
+        {
+
+            var responce = await _httpClient.PostAsJsonAsync($"api/Employees/GetEmployeesInfo", ids, cancellationToken);
+
+            responce.EnsureSuccessStatusCode();
+
+            return await responce.Content.ReadFromJsonAsync<IEnumerable<EmployeeForReportDTO>>();
+
         }
     }
 }
