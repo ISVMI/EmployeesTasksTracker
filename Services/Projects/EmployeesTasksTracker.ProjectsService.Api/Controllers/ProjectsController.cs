@@ -38,6 +38,18 @@ namespace ProjectsTasksTracker.ProjectsService.Api.Controllers
             {
                 var message = $"Could not find project with the given id {id} : {ex.Message}";
 
+                var problem = new ProblemDetails
+                {
+                    Title = "Couldn't find project",
+                    Status = StatusCodes.Status404NotFound,
+                    Detail = ex.Message,
+                    Instance = HttpContext.Request.Path,
+                    Extensions =
+                    {
+                        ["id"] = id
+                    }
+                };
+
                 Console.WriteLine(message);
 
                 return NotFound(new { message });
@@ -59,9 +71,17 @@ namespace ProjectsTasksTracker.ProjectsService.Api.Controllers
             {
                 var message = $"Could not create project: {ex.Message}";
 
+                var problem = new ProblemDetails
+                {
+                    Title = "Couldn't create project",
+                    Status = StatusCodes.Status400BadRequest,
+                    Detail = message,
+                    Instance = HttpContext.Request.Path,
+                };
+
                 Console.WriteLine(message);
 
-                return BadRequest(new { message, command });
+                return BadRequest(new { problem, command });
             }
         }
 
@@ -81,9 +101,21 @@ namespace ProjectsTasksTracker.ProjectsService.Api.Controllers
             {
                 var message = $"Could not edit project : {ex.Message} / {ex.InnerException?.Message}";
 
+                var problem = new ProblemDetails
+                {
+                    Title = "Couldn't edit project",
+                    Status = StatusCodes.Status400BadRequest,
+                    Detail = $"{ex.Message} {ex.InnerException?.Message}",
+                    Instance = HttpContext.Request.Path,
+                    Extensions =
+                    {
+                        ["projectId"] = id
+                    }
+                };
+
                 Console.WriteLine(message);
 
-                return BadRequest(new { id, message });
+                return BadRequest(problem);
             }
         }
 
@@ -96,7 +128,19 @@ namespace ProjectsTasksTracker.ProjectsService.Api.Controllers
             {
                 var message = $"Could not delete project with id {id}";
 
-                return NotFound(new { message });
+                var problem = new ProblemDetails
+                {
+                    Title = "Couldn't delete project",
+                    Status = StatusCodes.Status404NotFound,
+                    Detail = message,
+                    Instance = HttpContext.Request.Path,
+                    Extensions =
+                    {
+                        ["projectId"] = id
+                    }
+                };
+
+                return NotFound(problem);
             }
 
             return Ok($"Successfully deleted project with id {id}");
