@@ -1,6 +1,5 @@
-﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.EntityFrameworkCore.Design;
-using Microsoft.Extensions.Configuration;
+﻿using Microsoft.EntityFrameworkCore.Design;
+using Shared.Extensions;
 
 namespace EmployeesTasksTracker.TasksService.Infrastructure.Data
 {
@@ -8,13 +7,7 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.Data
     {
         public TasksContext CreateDbContext(string[] args)
         {
-            var optionsBuilder = new DbContextOptionsBuilder<TasksContext>();
-
-            var configuration = new ConfigurationBuilder()
-                .AddEnvironmentVariables()
-                .Build();
-
-            optionsBuilder.UseNpgsql(configuration.GetConnectionString("DefaultConnection"));
+            var optionsBuilder = ContextFactoryExtensions.GetOptionsBuilder<TasksContext>();
 
             return new TasksContext(optionsBuilder.Options);
         }
