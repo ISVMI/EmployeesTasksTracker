@@ -26,11 +26,16 @@ namespace ProjectsTasksTracker.ProjectsService.Api.Controllers
         }
 
         [HttpGet("{id}")]
-        public async Task<IActionResult> GetProjectById(Guid id, CancellationToken token)
+        public async Task<IActionResult> GetProjectById(Guid id, bool nameRequested, CancellationToken token)
         {
             try
             {
                 var Project = await _mediator.Send(new GetProjectByIdQuery(id), token);
+
+                if (nameRequested)
+                {
+                    return Ok(Project.Name);
+                }
 
                 return Ok(Project);
             }
