@@ -38,9 +38,21 @@ namespace EmployeesTasksTracker.TasksGroupsService.Api.Controllers
             {
                 var message = $"Could not find tasks group with the given id {id} : {ex.Message}";
 
+                var problem = new ProblemDetails
+                {
+                    Title = "Couldn't find tasks group",
+                    Status = StatusCodes.Status404NotFound,
+                    Detail = ex.Message,
+                    Instance = HttpContext.Request.Path,
+                    Extensions =
+                    {
+                        ["taskGroupId"] = id
+                    }
+                };
+
                 Console.WriteLine(message);
 
-                return NotFound(new { message });
+                return NotFound(problem);
             }
         }
 
@@ -59,9 +71,17 @@ namespace EmployeesTasksTracker.TasksGroupsService.Api.Controllers
             {
                 var message = $"Could not create tasks group: {ex.Message}";
 
+                var problem = new ProblemDetails
+                {
+                    Title = "Couldn't create tasks group",
+                    Status = StatusCodes.Status400BadRequest,
+                    Detail = ex.Message,
+                    Instance = HttpContext.Request.Path,
+                };
+
                 Console.WriteLine(message);
 
-                return BadRequest(new { message, command });
+                return BadRequest(new { problem, command });
             }
         }
 
@@ -81,9 +101,21 @@ namespace EmployeesTasksTracker.TasksGroupsService.Api.Controllers
             {
                 var message = $"Could not edit tasks group : {ex.Message} / {ex.InnerException?.Message}";
 
+                var problem = new ProblemDetails
+                {
+                    Title = "Couldn't edit tasks group",
+                    Status = StatusCodes.Status400BadRequest,
+                    Detail = $"{ex.Message} {ex.InnerException?.Message}",
+                    Instance = HttpContext.Request.Path,
+                    Extensions =
+                    {
+                        ["tasksGroupId"] = id
+                    }
+                };
+
                 Console.WriteLine(message);
 
-                return BadRequest(new { id, message });
+                return BadRequest(problem);
             }
         }
 
@@ -96,7 +128,19 @@ namespace EmployeesTasksTracker.TasksGroupsService.Api.Controllers
             {
                 var message = $"Could not delete tasks group with id {id}";
 
-                return NotFound(new { message });
+                var problem = new ProblemDetails
+                {
+                    Title = "Couldn't delete tasks group",
+                    Status = StatusCodes.Status400BadRequest,
+                    Detail = message,
+                    Instance = HttpContext.Request.Path,
+                    Extensions =
+                    {
+                        ["tasksGroupId"] = id
+                    }
+                };
+
+                return NotFound(problem);
             }
 
             return Ok($"Successfully deleted tasks group with id {id}");
