@@ -27,7 +27,7 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.Clients
 
             responce.EnsureSuccessStatusCode();
 
-            return await responce.Content.ReadFromJsonAsync<string>();
+            return await responce.Content.ReadAsStringAsync();
         }
     }
 }

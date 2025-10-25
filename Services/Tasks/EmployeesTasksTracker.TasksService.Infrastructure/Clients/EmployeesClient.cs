@@ -25,7 +25,7 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.Clients
         public async Task<EmployeeForReportDTO> GetEmployeeInfo(Guid id, CancellationToken cancellationToken = default)
         {
 
-            var responce = await _httpClient.PostAsJsonAsync($"api/Employees/{id}?infoRequested=true", id, cancellationToken);
+            var responce = await _httpClient.GetAsync($"api/Employees/{id}?infoRequested=true", cancellationToken);
 
             responce.EnsureSuccessStatusCode();
 
