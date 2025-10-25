@@ -24,6 +24,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <ProjectReference Include="..\EmployeesTasksTracker.TasksGroupsService.Application\EmployeesTasksTracker.TasksGroupsService.Application.csproj" />
     <ProjectReference Include="..\EmployeesTasksTracker.TasksGroupsService.Core\EmployeesTasksTracker.TasksGroupsService.Core.csproj" />
   </ItemGroup>
 
