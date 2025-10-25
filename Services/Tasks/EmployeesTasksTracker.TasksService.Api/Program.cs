@@ -3,6 +3,9 @@ using EmployeesTasksTracker.TasksService.Application.Extensions;
 using EmployeesTasksTracker.TasksService.Application.Interfaces;
 using EmployeesTasksTracker.TasksService.Infrastructure.Clients;
 using EmployeesTasksTracker.TasksService.Infrastructure.DataSeeding;
+using EmployeesTasksTracker.TasksService.Application.Services;
+using EmployeesTasksTracker.TasksService.Infrastructure.Interfaces;
+using EmployeesTasksTracker.TasksService.Infrastructure.ReportGeneration;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -32,6 +35,8 @@ builder.Services.AddHttpClient<IProjectsClient, ProjectsClient>(client =>
 
 builder.Services.AddScoped<TasksGenerator>();
 builder.Services.AddScoped<DbInitializer>();
+builder.Services.AddScoped<ITaskReportService, TaskReportService>();
+builder.Services.AddScoped<IPdfReportGenerator, PdfReportGenerator>();
 
 var app = builder.Build();
 

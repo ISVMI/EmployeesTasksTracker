@@ -1,6 +1,7 @@
 using EmployeesTasksTracker.TasksService.Application.Commands;
 using EmployeesTasksTracker.TasksService.Application.DTOs;
 using EmployeesTasksTracker.TasksService.Application.Queries;
+using EmployeesTasksTracker.TasksService.Infrastructure.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
 
@@ -11,10 +12,12 @@ namespace EmployeesTasksTracker.TasksService.Api.Controllers
     public class TasksController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IPdfReportGenerator _reportGenerator;
 
-        public TasksController(IMediator mediator)
+        public TasksController(IMediator mediator, IPdfReportGenerator reportGenerator)
         {
             _mediator = mediator;
+            _reportGenerator = reportGenerator;
         }
 
         [HttpGet("All")]
@@ -239,6 +242,40 @@ namespace EmployeesTasksTracker.TasksService.Api.Controllers
             }
 
             return Ok($"Successfully deleted task with id: {id}");
+        }
+
+        [HttpGet("GenerateReport/")]
+        public async Task<IActionResult> GenerateReport(Guid Id, CancellationToken token)
+        {
+
+            try
+            {
+                var pdfBytes = await _reportGenerator.GenerateTaskReportAsync(Id, token);
+
+                var fileName = $"task_report_{Id}_{DateTime.Now:yyyyMMddHHmm}.pdf";
+
+                return File(pdfBytes, "application/pdf", fileName);
+            }
+            catch (Exception ex)
+            {
+                var message = $"Could not generate report : {ex.Message} / {ex.InnerException?.Message}";
+
+                var problem = new ProblemDetails
+                {
+                    Title = "Couldn't generate report",
+                    Status = StatusCodes.Status400BadRequest,
+                    Detail = $"{ex.Message} {ex.InnerException?.Message}",
+                    Instance = HttpContext.Request.Path,
+                    Extensions =
+                    {
+                        ["taskId"] = Id
+                    }
+                };
+
+                Console.WriteLine(message);
+
+                return BadRequest(problem);
+            }
         }
     }
 }
