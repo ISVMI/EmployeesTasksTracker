@@ -4,8 +4,8 @@ using EmployeesTasksTracker.TasksService.Application.Interfaces;
 using EmployeesTasksTracker.TasksService.Infrastructure.Clients;
 using EmployeesTasksTracker.TasksService.Infrastructure.DataSeeding;
 using EmployeesTasksTracker.TasksService.Application.Services;
-using EmployeesTasksTracker.TasksService.Infrastructure.Interfaces;
 using EmployeesTasksTracker.TasksService.Infrastructure.ReportGeneration;
+using Shared.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 

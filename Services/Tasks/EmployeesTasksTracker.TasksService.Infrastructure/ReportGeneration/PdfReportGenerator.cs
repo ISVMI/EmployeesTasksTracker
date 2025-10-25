@@ -1,6 +1,6 @@
 ﻿using EmployeesTasksTracker.TasksService.Application.Interfaces;
-using EmployeesTasksTracker.TasksService.Infrastructure.Interfaces;
 using QuestPDF.Fluent;
+using Shared.Interfaces;
 using Shared.Models;
 
 namespace EmployeesTasksTracker.TasksService.Infrastructure.ReportGeneration
@@ -14,7 +14,7 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.ReportGeneration
             _service = service;
         }
 
-        public async Task<byte[]> GenerateTaskReportAsync(Guid taskId, CancellationToken cancellationToken = default)
+        public async Task<byte[]> GenerateReportAsync(Guid taskId, CancellationToken cancellationToken = default)
         {
             try
             {

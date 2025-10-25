@@ -1,9 +1,9 @@
 using EmployeesTasksTracker.TasksService.Application.Commands;
 using EmployeesTasksTracker.TasksService.Application.DTOs;
 using EmployeesTasksTracker.TasksService.Application.Queries;
-using EmployeesTasksTracker.TasksService.Infrastructure.Interfaces;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
+using Shared.Interfaces;
 
 namespace EmployeesTasksTracker.TasksService.Api.Controllers
 {
@@ -250,7 +250,7 @@ namespace EmployeesTasksTracker.TasksService.Api.Controllers
 
             try
             {
-                var pdfBytes = await _reportGenerator.GenerateTaskReportAsync(Id, token);
+                var pdfBytes = await _reportGenerator.GenerateReportAsync(Id, token);
 
                 var fileName = $"task_report_{Id}_{DateTime.Now:yyyyMMddHHmm}.pdf";
 
