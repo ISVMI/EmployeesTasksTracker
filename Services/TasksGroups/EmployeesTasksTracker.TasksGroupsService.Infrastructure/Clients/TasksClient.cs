@@ -15,7 +15,7 @@ namespace EmployeesTasksTracker.TasksGroupsService.Infrastructure.Clients
 
         public async Task<Guid> GetProjectId(Guid tasksGroupId, CancellationToken cancellationToken = default)
         {
-            var responce = await _httpClient.GetAsync($"api/Tasks/GetProjectId/{tasksGroupId}", cancellationToken);
+            var responce = await _httpClient.GetAsync($"api/Tasks/GetProjectId?tasksGroupId={tasksGroupId}", cancellationToken);
 
             responce.EnsureSuccessStatusCode();
 
@@ -24,7 +24,7 @@ namespace EmployeesTasksTracker.TasksGroupsService.Infrastructure.Clients
 
         public async Task<IEnumerable<TaskForReportDTO>> GetTasks(Guid tasksGroupId, CancellationToken cancellationToken = default)
         {
-            var responce = await _httpClient.GetAsync($"api/Tasks/GetTasksByGroupId/{tasksGroupId}", cancellationToken);
+            var responce = await _httpClient.GetAsync($"api/Tasks/GetTasksByGroupId?tasksGroupId={tasksGroupId}", cancellationToken);
 
             responce.EnsureSuccessStatusCode();
 

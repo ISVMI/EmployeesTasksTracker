@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using EmployeesTasksTracker.TasksGroupsService.Application.Commands;
 using EmployeesTasksTracker.TasksGroupsService.Application.Queries;
 using EmployeesTasksTracker.TasksGroupsService.Application.DTOs;
+using Shared.Interfaces;
 
 namespace EmployeesTasksTracker.TasksGroupsService.Api.Controllers
 {
@@ -11,10 +12,12 @@ namespace EmployeesTasksTracker.TasksGroupsService.Api.Controllers
     public class TasksGroupsController : ControllerBase
     {
         private readonly IMediator _mediator;
+        private readonly IPdfReportGenerator _reportGenerator;
 
-        public TasksGroupsController(IMediator mediator)
+        public TasksGroupsController(IMediator mediator, IPdfReportGenerator reportGenerator)
         {
             _mediator = mediator;
+            _reportGenerator = reportGenerator;
         }
 
         [HttpGet("All")]
@@ -157,6 +160,40 @@ namespace EmployeesTasksTracker.TasksGroupsService.Api.Controllers
             var result = await _mediator.Send(new GetAllTasksGroupsIdsQuery(), token);
 
             return Ok(result);
+        }
+
+        [HttpGet("GenerateReport/")]
+        public async Task<IActionResult> GenerateReport(Guid Id, CancellationToken token)
+        {
+
+            try
+            {
+                var pdfBytes = await _reportGenerator.GenerateReportAsync(Id, token);
+
+                var fileName = $"task_report_{Id}_{DateTime.Now:yyyyMMddHHmm}.pdf";
+
+                return File(pdfBytes, "application/pdf", fileName);
+            }
+            catch (Exception ex)
+            {
+                var message = $"Could not generate report : {ex.Message} / {ex.InnerException?.Message}";
+
+                var problem = new ProblemDetails
+                {
+                    Title = "Couldn't generate report",
+                    Status = StatusCodes.Status400BadRequest,
+                    Detail = $"{ex.Message} {ex.InnerException?.Message}",
+                    Instance = HttpContext.Request.Path,
+                    Extensions =
+                    {
+                        ["tasksGroupId"] = Id
+                    }
+                };
+
+                Console.WriteLine(message);
+
+                return BadRequest(problem);
+            }
         }
     }
 }

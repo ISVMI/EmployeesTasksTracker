@@ -1,6 +1,5 @@
 ﻿using EmployeesTasksTracker.TasksGroupsService.Application.Interfaces;
 using EmployeesTasksTracker.TasksGroupsService.Core.Interfaces;
-using Shared.DTOs;
 using Shared.Models;
 
 namespace EmployeesTasksTracker.TasksGroupsService.Application.Services
