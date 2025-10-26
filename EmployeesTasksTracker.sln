@@ -49,6 +49,16 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Common", "Common", "{973C09
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Common\Shared\Shared.csproj", "{DDDDA788-AFC7-4AB9-A0FF-04BCFC023130}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "History", "History", "{46B42DAD-B6F5-4557-8CA9-D54B2F29ABFB}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.HistoryService.Infrastructure", "Services\History\EmployeesTasksTracker.HistoryService.Infrastructure\EmployeesTasksTracker.HistoryService.Infrastructure.csproj", "{1EE75E90-BE8B-4637-9780-274CB8FFEBB4}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.HistoryService.Core", "Services\History\EmployeesTasksTracker.HistoryService.Core\EmployeesTasksTracker.HistoryService.Core.csproj", "{FFAC1E78-F0A1-4D5A-B082-A788CE5D4090}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.HistoryService.Application", "Services\History\EmployeesTasksTracker.HistoryService.Application\EmployeesTasksTracker.HistoryService.Application.csproj", "{DB46EF40-B72D-43B0-874A-9AF2B43DAB93}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.HistoryService.Api", "Services\History\EmployeesTasksTracker.HistoryService.Api\EmployeesTasksTracker.HistoryService.Api.csproj", "{2F636783-4433-47DA-B04B-381509EE57E0}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -123,6 +133,22 @@ Global
 		{DDDDA788-AFC7-4AB9-A0FF-04BCFC023130}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{DDDDA788-AFC7-4AB9-A0FF-04BCFC023130}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{DDDDA788-AFC7-4AB9-A0FF-04BCFC023130}.Release|Any CPU.Build.0 = Release|Any CPU
+		{1EE75E90-BE8B-4637-9780-274CB8FFEBB4}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{1EE75E90-BE8B-4637-9780-274CB8FFEBB4}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{1EE75E90-BE8B-4637-9780-274CB8FFEBB4}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{1EE75E90-BE8B-4637-9780-274CB8FFEBB4}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FFAC1E78-F0A1-4D5A-B082-A788CE5D4090}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FFAC1E78-F0A1-4D5A-B082-A788CE5D4090}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FFAC1E78-F0A1-4D5A-B082-A788CE5D4090}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FFAC1E78-F0A1-4D5A-B082-A788CE5D4090}.Release|Any CPU.Build.0 = Release|Any CPU
+		{DB46EF40-B72D-43B0-874A-9AF2B43DAB93}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{DB46EF40-B72D-43B0-874A-9AF2B43DAB93}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{DB46EF40-B72D-43B0-874A-9AF2B43DAB93}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{DB46EF40-B72D-43B0-874A-9AF2B43DAB93}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2F636783-4433-47DA-B04B-381509EE57E0}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2F636783-4433-47DA-B04B-381509EE57E0}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2F636783-4433-47DA-B04B-381509EE57E0}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2F636783-4433-47DA-B04B-381509EE57E0}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -149,6 +175,11 @@ Global
 		{BD3E9172-62C1-4178-A67F-202B3CE647F7} = {D8C236A8-A393-41CB-B7FC-C928A68B8F26}
 		{9918B982-B777-4954-9A3B-F2B3D6FA8AED} = {D8C236A8-A393-41CB-B7FC-C928A68B8F26}
 		{DDDDA788-AFC7-4AB9-A0FF-04BCFC023130} = {973C095C-6BED-4DFB-A20A-AA08425AF967}
+		{46B42DAD-B6F5-4557-8CA9-D54B2F29ABFB} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
+		{1EE75E90-BE8B-4637-9780-274CB8FFEBB4} = {46B42DAD-B6F5-4557-8CA9-D54B2F29ABFB}
+		{FFAC1E78-F0A1-4D5A-B082-A788CE5D4090} = {46B42DAD-B6F5-4557-8CA9-D54B2F29ABFB}
+		{DB46EF40-B72D-43B0-874A-9AF2B43DAB93} = {46B42DAD-B6F5-4557-8CA9-D54B2F29ABFB}
+		{2F636783-4433-47DA-B04B-381509EE57E0} = {46B42DAD-B6F5-4557-8CA9-D54B2F29ABFB}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {341B74ED-0792-4146-AAFD-C8BEF49DBB82}
