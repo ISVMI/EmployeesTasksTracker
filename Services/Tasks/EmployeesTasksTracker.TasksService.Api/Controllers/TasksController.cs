@@ -51,7 +51,7 @@ namespace EmployeesTasksTracker.TasksService.Api.Controllers
 
                 Console.WriteLine(message);
 
-                return NotFound(new { message });
+                return NotFound(problem);
             }
         }
 
@@ -242,6 +242,66 @@ namespace EmployeesTasksTracker.TasksService.Api.Controllers
             }
 
             return Ok($"Successfully deleted task with id: {id}");
+        }
+
+        [HttpGet("GetTasksByGroupId")]
+        public async Task<IActionResult> GetTasksByGroupId(Guid tasksGroupId, CancellationToken token)
+        {
+            try
+            {
+                var tasks = await _mediator.Send(new GetTasksByGroupIdQuery(tasksGroupId), token);
+
+                return Ok(tasks);
+            }
+            catch (Exception ex)
+            {
+
+                var problem = new ProblemDetails
+                {
+                    Title = "Could not get tasks",
+                    Status = StatusCodes.Status404NotFound,
+                    Detail = ex.Message,
+                    Instance = HttpContext.Request.Path,
+                    Extensions =
+                    {
+                        ["tasksGroupId"] = tasksGroupId
+                    }
+                };
+
+                Console.WriteLine(ex.Message);
+
+                return NotFound(problem);
+            }
+        }
+
+        [HttpGet("GetProjectId")]
+        public async Task<IActionResult> GetProjectId(Guid tasksGroupId, CancellationToken token)
+        {
+            try
+            {
+                var projectId = await _mediator.Send(new GetProjectIdQuery(tasksGroupId), token);
+
+                return Ok(projectId);
+            }
+            catch (Exception ex)
+            {
+
+                var problem = new ProblemDetails
+                {
+                    Title = "Could not get project id",
+                    Status = StatusCodes.Status404NotFound,
+                    Detail = ex.Message,
+                    Instance = HttpContext.Request.Path,
+                    Extensions =
+                    {
+                        ["tasksGroupId"] = tasksGroupId
+                    }
+                };
+
+                Console.WriteLine(ex.Message);
+
+                return NotFound(problem);
+            }
         }
 
         [HttpGet("GenerateReport/")]

@@ -238,6 +238,20 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.Repositories
             return taskToFind;
         }
 
+        public async Task<Guid> GetProjectId(Guid tasksGroupId, CancellationToken cancellationToken = default)
+        {
+            var project = await _context.Tasks.Where(t => t.TasksGroup == tasksGroupId).Select(t => t.Project).FirstAsync(cancellationToken);
+
+            return project;
+        }
+
+        public async Task<IEnumerable<Core.Models.Task>> GetTasksByGroupId(Guid tasksGroupId, CancellationToken cancellationToken = default)
+        {
+            var tasks = await _context.Tasks.Where(t => t.TasksGroup == tasksGroupId).ToListAsync(cancellationToken);
+
+            return tasks;
+        }
+
         public async Task<Core.Models.Task> UpdateAsync(Core.Models.Task task, CancellationToken token = default)
         {
             try
