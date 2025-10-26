@@ -6,6 +6,7 @@ using EmployeesTasksTracker.TasksService.Infrastructure.DataSeeding;
 using EmployeesTasksTracker.TasksService.Application.Services;
 using EmployeesTasksTracker.TasksService.Infrastructure.ReportGeneration;
 using Shared.Interfaces;
+using MassTransit;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -17,6 +18,18 @@ builder.Services.AddSwaggerGen();
 
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
+
+builder.Services.AddMassTransit(config =>
+{
+    config.UsingRabbitMq((context, cfg) =>
+    {
+        cfg.Host("rabbitmq://localhost", h =>
+        {
+            h.Username("guest");
+            h.Password("guest");
+        });
+    });
+});
 
 builder.Services.AddHttpClient<IEmployeesClient, EmployeesClient>(client =>
 {
