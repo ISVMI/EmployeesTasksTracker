@@ -1,4 +1,4 @@
 ﻿namespace Shared.Messages
 {
-    public sealed record TaskDataChanged(Guid taskId, IEnumerable<string> Changes, DateTime ChangedAt);
+    public sealed record TaskDataChanged(Guid TaskId, IEnumerable<string> Changes, DateTime ChangedAt);
 }
