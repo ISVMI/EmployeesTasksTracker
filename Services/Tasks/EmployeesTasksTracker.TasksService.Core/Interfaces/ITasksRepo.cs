@@ -12,5 +12,7 @@ namespace EmployeesTasksTracker.TasksService.Core.Interfaces
         Task AddObserverAsync(Guid observerId, Guid taskId, CancellationToken cancellationToken = default);
         Task ChangeStatusAsync(Guid taskId, string newStatus, CancellationToken cancellationToken = default);
         Task<IEnumerable<Models.Task>> GetAllAsync(Guid? employeeId = null, Guid? tasksGroupId = null, Guid? projectId = null, CancellationToken token = default);
+        Task<IEnumerable<Models.Task>> GetTasksByGroupId(Guid tasksGroupId, CancellationToken cancellationToken = default);
+        Task<Guid> GetProjectId(Guid tasksGroupId, CancellationToken cancellationToken = default);
     }
 }
