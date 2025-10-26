@@ -1,6 +1,7 @@
 ﻿using EmployeesTasksTracker.TasksService.Application.Interfaces;
 using EmployeesTasksTracker.TasksService.Core.Interfaces;
 using Shared.DTOs;
+using Shared.Methods;
 using Shared.Models;
 
 namespace EmployeesTasksTracker.TasksService.Application.Services
@@ -56,8 +57,8 @@ namespace EmployeesTasksTracker.TasksService.Application.Services
                         Description = task.Description,
                         CreatedAt = task.CreatedAt.ToString("dd.MM.yyyy HH:mm"),
                         Deadline = task.Deadline.ToString("dd.MM.yyyy HH:mm"),
-                        Status = Translate(task.Status.ToString()),
-                        Priority = Translate(task.Priority.ToString())
+                        Status = EnumsHumanizer.Translate(task.Status.ToString()),
+                        Priority = EnumsHumanizer.Translate(task.Priority.ToString())
                     },
                     ProjectName = project,
                     TasksGroupName = tasksGroup,
@@ -68,61 +69,6 @@ namespace EmployeesTasksTracker.TasksService.Application.Services
             catch (Exception ex)
             {
                 throw new Exception($"Could not get task report data {ex.Message}");
-            }
-        }
-
-        private static string Translate(string word)
-        {
-            switch (word)
-            {
-                case "Low":
-                    {
-                        return "Низкий";
-                    }
-                case "Medium":
-                    {
-                        return "Средний";
-                    }
-                case "High":
-                    {
-                        return "Высокий";
-                    }
-                case "Critical":
-                    {
-                        return "Критический";
-                    }
-                case "Blocker":
-                    {
-                        return "Блокер";
-                    }
-                case "Backlog":
-                    {
-                        return "Бэклог";
-                    }
-                case "Current":
-                    {
-                        return "Текущая";
-                    }
-                case "Active":
-                    {
-                        return "Активная";
-                    }
-                case "Testing":
-                    {
-                        return "Тестируется";
-                    }
-                case "Completed":
-                    {
-                        return "Завершена";
-                    }
-                case "Canceled":
-                    {
-                        return "Отменена";
-                    }
-                default:
-                    {
-                        return "Неизвестно";
-                    }
             }
         }
     }
