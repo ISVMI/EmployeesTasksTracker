@@ -1,0 +1,6 @@
+@EmployeesTasksTracker.NotificationService_HostAddress = http://localhost:5240
+
+GET {{EmployeesTasksTracker.NotificationService_HostAddress}}/weatherforecast/
+Accept: application/json
+
+###
