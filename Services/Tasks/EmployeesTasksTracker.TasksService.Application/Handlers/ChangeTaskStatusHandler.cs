@@ -21,9 +21,9 @@ namespace EmployeesTasksTracker.TasksService.Application.Handlers
         {
             try
             {
-                await _repo.ChangeStatusAsync(request.TaskId, request.NewStatus, cancellationToken);
-
                 var existingTask = await _repo.GetByIdAsync(request.TaskId);
+
+                await _repo.ChangeStatusAsync(request.TaskId, request.NewStatus, cancellationToken);
 
                 var changes = new List<string>
                 {
