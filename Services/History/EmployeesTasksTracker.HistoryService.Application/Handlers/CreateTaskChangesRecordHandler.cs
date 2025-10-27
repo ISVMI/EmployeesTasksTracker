@@ -6,12 +6,12 @@ using MediatR;
 
 namespace EmployeesTasksTracker.HistoryService.Application.Handlers
 {
-    public class CreateTaskRecordHandler : IRequestHandler<CreateTaskChangesRecordCommand, Guid>
+    public class CreateTaskChangesRecordHandler : IRequestHandler<CreateTaskChangesRecordCommand, Guid>
     {
         private readonly ITaskChangesRepo _repo;
         private readonly IMapper _mapper;
 
-        public CreateTaskRecordHandler(ITaskChangesRepo repo, IMapper mapper)
+        public CreateTaskChangesRecordHandler(ITaskChangesRepo repo, IMapper mapper)
         {
             _repo = repo;
             _mapper = mapper;
