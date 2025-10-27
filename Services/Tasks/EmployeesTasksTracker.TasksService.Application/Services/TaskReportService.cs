@@ -21,7 +21,7 @@ namespace EmployeesTasksTracker.TasksService.Application.Services
             _employeesClient = employeesClient;
         }
 
-        public async Task<TaskReportData> GetTaskReportDataAsync(Guid id, CancellationToken cancellationToken = default)
+        public async Task<TaskReportModel> GetTaskReportDataAsync(Guid id, CancellationToken cancellationToken = default)
         {
             try
             {
@@ -33,7 +33,7 @@ namespace EmployeesTasksTracker.TasksService.Application.Services
 
                 var performers = new List<EmployeeForReportDTO>();
 
-                for (int i = 0; i < task.Performers.Count; i++) 
+                for (int i = 0; i < task.Performers.Count; i++)
                 {
                     var performer = await _employeesClient.GetEmployeeInfo(task.Performers[i], cancellationToken);
 
@@ -49,19 +49,17 @@ namespace EmployeesTasksTracker.TasksService.Application.Services
                     observers.Add(observer);
                 }
 
-                return new TaskReportData
+                return new TaskReportModel
                 {
-                    Task = new TaskForReportDTO
-                    {
-                        Name = task.Name,
-                        Description = task.Description,
-                        CreatedAt = task.CreatedAt.ToString("dd.MM.yyyy HH:mm"),
-                        Deadline = task.Deadline.ToString("dd.MM.yyyy HH:mm"),
-                        Status = EnumsHumanizer.Translate(task.Status.ToString()),
-                        Priority = EnumsHumanizer.Translate(task.Priority.ToString())
-                    },
+                    ReportTitle = "Отчёт о задаче",
+                    TaskName = task.Name,
+                    Description = task.Description,
+                    Deadline = task.Deadline.ToString("dd.MM.yyyy HH:mm"),
+                    CreatedAt = task.CreatedAt.ToString("dd.MM.yyyy HH:mm"),
+                    Status = EnumsHumanizer.Translate(task.Status.ToString()),
+                    Priority = EnumsHumanizer.Translate(task.Priority.ToString()),
                     ProjectName = project,
-                    TasksGroupName = tasksGroup,
+                    TaskGroupName = tasksGroup,
                     Performers = performers,
                     Observers = observers
                 };
