@@ -21,9 +21,7 @@ namespace EmployeesTasksTracker.TasksService.Application.Handlers
         {
             try
             {
-                var existingTask = await _repo.GetByIdAsync(request.TaskId);
-
-                await _repo.ChangeStatusAsync(request.TaskId, request.NewStatus, cancellationToken);
+                var existingTask = await _repo.GetByIdAsync(request.TaskId, cancellationToken);
 
                 var changes = new List<string>
                 {
@@ -33,6 +31,8 @@ namespace EmployeesTasksTracker.TasksService.Application.Handlers
                 var message = new TaskDataChanged(request.TaskId, changes, DateTime.UtcNow);
 
                 await _bus.Publish(message, cancellationToken);
+
+                await _repo.ChangeStatusAsync(request.TaskId, request.NewStatus, cancellationToken);
             }
             catch (Exception ex) 
             {
