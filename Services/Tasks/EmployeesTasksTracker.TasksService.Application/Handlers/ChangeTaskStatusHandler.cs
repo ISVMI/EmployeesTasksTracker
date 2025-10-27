@@ -38,11 +38,12 @@ namespace EmployeesTasksTracker.TasksService.Application.Handlers
                     NewStatus = request.NewStatus
                 };
 
+                await _repo.ChangeStatusAsync(request.TaskId, request.NewStatus, cancellationToken);
+
                 await _bus.Publish(message, cancellationToken);
 
                 await _bus.Publish(secondMessage, cancellationToken);
 
-                await _repo.ChangeStatusAsync(request.TaskId, request.NewStatus, cancellationToken);
             }
             catch (Exception ex) 
             {
