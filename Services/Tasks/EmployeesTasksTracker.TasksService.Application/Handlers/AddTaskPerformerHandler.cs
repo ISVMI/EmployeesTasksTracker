@@ -42,7 +42,6 @@ namespace EmployeesTasksTracker.TasksService.Application.Handlers
                 await _bus.Publish(message, cancellationToken);
 
                 await _bus.Publish(secondMessage, cancellationToken);
-
             }
             catch (Exception ex)
             {
