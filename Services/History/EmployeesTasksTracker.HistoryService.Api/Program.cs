@@ -1,6 +1,7 @@
 using EmployeesTasksTracker.HistoryService.Infrastructure.Extensions;
 using EmployeesTasksTracker.HistoryService.Application.Extensions;
 using MassTransit;
+using EmployeesTasksTracker.HistoryService.Infrastructure.Consumers;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -16,12 +17,19 @@ builder.Services.AddApplication();
 
 builder.Services.AddMassTransit(config =>
 {
+    config.AddConsumer<TaskDataChangedConsumer>();
+
     config.UsingRabbitMq((context, cfg) =>
     {
         cfg.Host("rabbitmq://localhost", h =>
         {
             h.Username("guest");
             h.Password("guest");
+        });
+
+        cfg.ReceiveEndpoint("task-data-changed", e =>
+        {
+            e.ConfigureConsumer<TaskDataChangedConsumer>(context);
         });
     });
 });
