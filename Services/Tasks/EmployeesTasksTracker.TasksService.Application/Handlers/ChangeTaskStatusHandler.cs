@@ -30,7 +30,17 @@ namespace EmployeesTasksTracker.TasksService.Application.Handlers
 
                 var message = new TaskDataChanged(request.TaskId, changes, DateTime.UtcNow);
 
+                var secondMessage = new TaskStatusChanged
+                {
+                    TaskId = request.TaskId,
+                    TaskName = existingTask.Name,
+                    OldStatus = existingTask.Status.ToString(),
+                    NewStatus = request.NewStatus
+                };
+
                 await _bus.Publish(message, cancellationToken);
+
+                await _bus.Publish(secondMessage, cancellationToken);
 
                 await _repo.ChangeStatusAsync(request.TaskId, request.NewStatus, cancellationToken);
             }

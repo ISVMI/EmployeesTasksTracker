@@ -21,6 +21,8 @@ namespace EmployeesTasksTracker.TasksService.Application.Handlers
         {
             try
             {
+                var task = await _repo.GetByIdAsync(request.TaskId, cancellationToken);
+
                 await _repo.AddObserverAsync(request.ObserverId, request.TaskId, cancellationToken);
 
                 var changes = new List<string>
@@ -30,7 +32,16 @@ namespace EmployeesTasksTracker.TasksService.Application.Handlers
 
                 var message = new TaskDataChanged(request.TaskId, changes, DateTime.UtcNow);
 
+                var secondMessage = new EmployeeAssigned
+                {
+                    TaskId = request.TaskId,
+                    EmployeeId = request.ObserverId,
+                    TaskName = task.Name
+                };
+
                 await _bus.Publish(message, cancellationToken);
+
+                await _bus.Publish(secondMessage, cancellationToken);
             }
             catch (Exception ex)
             {
