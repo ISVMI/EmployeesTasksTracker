@@ -1,7 +1,6 @@
 ﻿using EmployeesTasksTracker.TasksService.Application.Interfaces;
 using QuestPDF.Fluent;
 using Shared.Interfaces;
-using Shared.Models;
 
 namespace EmployeesTasksTracker.TasksService.Infrastructure.ReportGeneration
 {
@@ -18,23 +17,7 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.ReportGeneration
         {
             try
             {
-                var reportData = await _service.GetTaskReportDataAsync(taskId);
-
-                var reportModel = new TaskReportModel
-                {
-                    ReportTitle = "Отчёт по задаче",
-                    TaskName = reportData.Task.Name,
-                    Description = reportData.Task.Description,
-                    Deadline = reportData.Task.Deadline,
-                    CreatedAt = reportData.Task.CreatedAt,
-                    Status = reportData.Task.Status,
-                    Priority = reportData.Task.Priority,
-                    ProjectName = reportData.ProjectName,
-                    TaskGroupName = reportData.TasksGroupName,
-                    Performers = reportData.Performers,
-                    Observers = reportData.Observers
-
-                };
+                var reportModel = await _service.GetTaskReportDataAsync(taskId);
 
                 var document = new TaskReportDocument(reportModel);
 
