@@ -6,6 +6,9 @@ MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Services", "Services", "{36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Projects", "Projects", "{914EE489-ED55-437F-98F4-016160C0EFC0}"
+	ProjectSection(SolutionItems) = preProject
+		Services\Projects\Dockerfile = Services\Projects\Dockerfile
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.ProjectsService.Api", "Services\Projects\EmployeesTasksTracker.ProjectsService.Api\EmployeesTasksTracker.ProjectsService.Api.csproj", "{0B519EF2-99E3-4494-8B0F-1338675A51FE}"
 EndProject
@@ -16,6 +19,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.ProjectsService.Core", "Services\Projects\EmployeesTasksTracker.ProjectsService.Core\EmployeesTasksTracker.ProjectsService.Core.csproj", "{D8FF4141-9F3D-439F-A1CB-F6B95C5DD045}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Employees", "Employees", "{E17C9100-E161-4AA3-81BC-50C0A2DFB0D4}"
+	ProjectSection(SolutionItems) = preProject
+		Services\Employees\Dockerfile = Services\Employees\Dockerfile
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.EmployeesService.Api", "Services\Employees\EmployeesTasksTracker.EmployeesService.Api\EmployeesTasksTracker.EmployeesService.Api.csproj", "{F032CCBF-C0E2-4E94-8D93-202DE6AFD460}"
 EndProject
@@ -26,6 +32,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.EmployeesService.Core", "Services\Employees\EmployeesTasksTracker.EmployeesService.Core\EmployeesTasksTracker.EmployeesService.Core.csproj", "{FD5F9A90-8262-4816-A3C6-18D3F6BCABB3}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Tasks", "Tasks", "{5C4277CA-3344-41A3-9497-E0D0F805358F}"
+	ProjectSection(SolutionItems) = preProject
+		Services\Tasks\Dockerfile = Services\Tasks\Dockerfile
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.TasksService.Api", "Services\Tasks\EmployeesTasksTracker.TasksService.Api\EmployeesTasksTracker.TasksService.Api.csproj", "{11A2E64B-253F-432B-AA34-9A8A04D8CF7D}"
 EndProject
@@ -36,6 +45,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.TasksService.Core", "Services\Tasks\EmployeesTasksTracker.TasksService.Core\EmployeesTasksTracker.TasksService.Core.csproj", "{16E706ED-4708-4D4A-A3BC-5409B27B4279}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TasksGroups", "TasksGroups", "{D8C236A8-A393-41CB-B7FC-C928A68B8F26}"
+	ProjectSection(SolutionItems) = preProject
+		Services\TasksGroups\Dockerfile = Services\TasksGroups\Dockerfile
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.TasksGroupsService.Api", "Services\TasksGroups\EmployeesTasksTracker.TasksGroupsService.Api\EmployeesTasksTracker.TasksGroupsService.Api.csproj", "{314AF828-E36A-48A8-93C1-0713368609F0}"
 EndProject
@@ -50,6 +62,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Shared", "Common\Shared\Shared.csproj", "{DDDDA788-AFC7-4AB9-A0FF-04BCFC023130}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "History", "History", "{46B42DAD-B6F5-4557-8CA9-D54B2F29ABFB}"
+	ProjectSection(SolutionItems) = preProject
+		Services\History\Dockerfile = Services\History\Dockerfile
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.HistoryService.Infrastructure", "Services\History\EmployeesTasksTracker.HistoryService.Infrastructure\EmployeesTasksTracker.HistoryService.Infrastructure.csproj", "{1EE75E90-BE8B-4637-9780-274CB8FFEBB4}"
 EndProject
@@ -60,10 +75,16 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.HistoryService.Api", "Services\History\EmployeesTasksTracker.HistoryService.Api\EmployeesTasksTracker.HistoryService.Api.csproj", "{2F636783-4433-47DA-B04B-381509EE57E0}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Notification", "Notification", "{8979B9A1-9E5A-4485-BB82-E2D834F5B016}"
+	ProjectSection(SolutionItems) = preProject
+		Services\Notification\Dockerfile = Services\Notification\Dockerfile
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.NotificationService", "Services\Notification\EmployeesTasksTracker.NotificationService\EmployeesTasksTracker.NotificationService.csproj", "{E393C1A3-F355-F46E-33AB-AE21E374A2B2}"
 EndProject
-Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.NotificationService.Client", "Services\Notification\EmployeesTasksTracker.NotificationService.Client\EmployeesTasksTracker.NotificationService.Client.csproj", "{2EE9C9C5-6D01-5AAD-1E71-A90D95C77DD3}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Элементы решения", "Элементы решения", "{754FC069-D67B-A9D7-50A1-8D1CA196D8F1}"
+	ProjectSection(SolutionItems) = preProject
+		docker-compose.yml = docker-compose.yml
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -159,10 +180,6 @@ Global
 		{E393C1A3-F355-F46E-33AB-AE21E374A2B2}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E393C1A3-F355-F46E-33AB-AE21E374A2B2}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E393C1A3-F355-F46E-33AB-AE21E374A2B2}.Release|Any CPU.Build.0 = Release|Any CPU
-		{2EE9C9C5-6D01-5AAD-1E71-A90D95C77DD3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
-		{2EE9C9C5-6D01-5AAD-1E71-A90D95C77DD3}.Debug|Any CPU.Build.0 = Debug|Any CPU
-		{2EE9C9C5-6D01-5AAD-1E71-A90D95C77DD3}.Release|Any CPU.ActiveCfg = Release|Any CPU
-		{2EE9C9C5-6D01-5AAD-1E71-A90D95C77DD3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -196,7 +213,6 @@ Global
 		{2F636783-4433-47DA-B04B-381509EE57E0} = {46B42DAD-B6F5-4557-8CA9-D54B2F29ABFB}
 		{8979B9A1-9E5A-4485-BB82-E2D834F5B016} = {36D591C7-65C7-A0D1-1CBC-10CDE441BDC8}
 		{E393C1A3-F355-F46E-33AB-AE21E374A2B2} = {8979B9A1-9E5A-4485-BB82-E2D834F5B016}
-		{2EE9C9C5-6D01-5AAD-1E71-A90D95C77DD3} = {8979B9A1-9E5A-4485-BB82-E2D834F5B016}
 	EndGlobalSection
 	GlobalSection(ExtensibilityGlobals) = postSolution
 		SolutionGuid = {341B74ED-0792-4146-AAFD-C8BEF49DBB82}

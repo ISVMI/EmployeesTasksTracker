@@ -1,7 +1,6 @@
 using EmployeesTasksTracker.NotificationService.Consumers;
 using EmployeesTasksTracker.NotificationService.Hubs;
 using MassTransit;
-using Microsoft.AspNetCore.SignalR;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -20,7 +19,7 @@ builder.Services.AddMassTransit(config => {
 
     config.UsingRabbitMq((context, cfg) =>
     {
-        cfg.Host("rabbitmq://localhost", h =>
+        cfg.Host(builder.Configuration["RabbitMQHost"], h =>
         {
             h.Username("guest");
             h.Password("guest");

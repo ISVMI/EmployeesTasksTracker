@@ -1,0 +1,142 @@
+services:    
+  postgres:
+    image: postgres:18
+    hostname: postgres
+    ports:
+      - "5432:5432"
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: pa55w0rd!
+    healthcheck:
+      test: ["CMD-SHELL", "pg_isready -U postgres"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  rabbitmq:
+    image: rabbitmq:management
+    hostname: rabbitmq
+    ports:
+      - "15672:15672"
+      - "5672:5672"
+    environment:
+      RABBITMQ_DEFAULT_USER: guest
+      RABBITMQ_DEFAULT_PASS: guest
+    healthcheck:
+      test: ["CMD", "rabbitmq-diagnostics", "ping"]
+      interval: 5s
+      timeout: 3s
+      retries: 5
+
+  employees-service:
+    build:
+      context: .
+      dockerfile: Services/Employees/Dockerfile
+    hostname: employees-service
+    depends_on:
+      postgres:
+        condition: service_healthy
+    ports:
+      - "5006:80"
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=Employees;Username=postgres;Password=pa55w0rd!"
+      RabbitMq__Host: "rabbitmq"
+      RabbitMq__Username: "guest"
+      RabbitMq__Password: "guest"
+
+  history-service:
+    build:
+      context: .
+      dockerfile: Services/History/Dockerfile
+    hostname: history-service
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      tasks-service:
+        condition: service_started
+    ports:
+      - "5004:80"
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=History;Username=postgres;Password=pa55w0rd!"
+      RabbitMq__Host: "rabbitmq"
+      RabbitMq__Username: "guest"
+      RabbitMq__Password: "guest"
+
+  notification-service:
+    build:
+      context: .
+      dockerfile: Services/Notification/Dockerfile
+    hostname: notification-service
+    depends_on:
+      tasks-service:
+        condition: service_started
+      rabbitmq:
+        condition: service_healthy
+    ports:
+      - "5005:80"
+    environment:
+      RabbitMq__Host: "rabbitmq"
+      RabbitMq__Username: "guest"
+      RabbitMq__Password: "guest"
+
+  projects-service:
+    build:
+      context: .
+      dockerfile: Services/Projects/Dockerfile
+    hostname: projects-service
+    depends_on:
+      postgres:
+        condition: service_healthy
+      employees-service:
+        condition: service_started
+    ports:
+      - "5003:80"
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=Projects;Username=postgres;Password=pa55w0rd!"
+      RabbitMq__Host: "rabbitmq"
+      RabbitMq__Username: "guest"
+      RabbitMq__Password: "guest"
+
+  tasks-service:
+    build:
+      context: .
+      dockerfile: Services/Tasks/Dockerfile
+    hostname: tasks-service
+    depends_on:
+      postgres:
+        condition: service_healthy
+      rabbitmq:
+        condition: service_healthy
+      employees-service:
+        condition: service_started
+      projects-service:
+        condition: service_started
+      tasksgroups-service :
+        condition: service_started
+    ports:
+      - "5001:80"
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=Tasks;Username=postgres;Password=pa55w0rd!"
+      RabbitMq__Host: "rabbitmq"
+      RabbitMq__Username: "guest"
+      RabbitMq__Password: "guest"
+
+  tasksgroups-service:
+    build:
+      context: .
+      dockerfile: Services/TasksGroups/Dockerfile
+    hostname: tasksgroups-service
+    depends_on:
+      postgres:
+        condition: service_healthy
+      projects-service:
+        condition: service_started
+    ports:
+      - "5002:80"
+    environment:
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=TasksGroups;Username=postgres;Password=pa55w0rd!"
+      RabbitMq__Host: "rabbitmq"
+      RabbitMq__Username: "guest"
+      RabbitMq__Password: "guest"

@@ -23,6 +23,8 @@ namespace Shared.Extensions
             {
                 var context = services.GetRequiredService<TContext>();
 
+                await context.Database.MigrateAsync();
+
                 if (initializer != null)
                 {
                     await initializer(context);
