@@ -2,6 +2,7 @@
 using EmployeesTasksTracker.ProjectsService.Infrastructure.Data;
 using EmployeesTasksTracker.ProjectsService.Infrastructure.DataSeeding;
 using EmployeesTasksTracker.ProjectsService.Infrastructure.Repositories;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Shared.Extensions;
@@ -24,6 +25,9 @@ namespace EmployeesTasksTracker.ProjectsService.Infrastructure.Extensions
             try
             {
                 var context = serviceProvider.GetRequiredService<ProjectsContext>();
+
+                await context.Database.MigrateAsync();
+
                 var initializer = serviceProvider.GetRequiredService<DbInitializer>();
 
                 await initializer.InitializeAsync(context);
