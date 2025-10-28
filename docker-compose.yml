@@ -43,6 +43,7 @@ services:
       RabbitMq__Host: "rabbitmq"
       RabbitMq__Username: "guest"
       RabbitMq__Password: "guest"
+      ASPNETCORE_URLS: "http://+:80"
 
   history-service:
     build:
@@ -63,6 +64,7 @@ services:
       RabbitMq__Host: "rabbitmq"
       RabbitMq__Username: "guest"
       RabbitMq__Password: "guest"
+      ASPNETCORE_URLS: "http://+:80"
 
   notification-service:
     build:
@@ -80,6 +82,7 @@ services:
       RabbitMq__Host: "rabbitmq"
       RabbitMq__Username: "guest"
       RabbitMq__Password: "guest"
+      ASPNETCORE_URLS: "http://+:80"
 
   projects-service:
     build:
@@ -98,6 +101,7 @@ services:
       RabbitMq__Host: "rabbitmq"
       RabbitMq__Username: "guest"
       RabbitMq__Password: "guest"
+      ASPNETCORE_URLS: "http://+:80"
 
   tasks-service:
     build:
@@ -122,6 +126,7 @@ services:
       RabbitMq__Host: "rabbitmq"
       RabbitMq__Username: "guest"
       RabbitMq__Password: "guest"
+      ASPNETCORE_URLS: "http://+:80"
 
   tasksgroups-service:
     build:
@@ -140,3 +145,4 @@ services:
       RabbitMq__Host: "rabbitmq"
       RabbitMq__Username: "guest"
       RabbitMq__Password: "guest"
+      ASPNETCORE_URLS: "http://+:80"
