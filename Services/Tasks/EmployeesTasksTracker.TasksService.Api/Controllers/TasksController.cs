@@ -304,6 +304,14 @@ namespace EmployeesTasksTracker.TasksService.Api.Controllers
             }
         }
 
+        [HttpGet("GetAllTasksIds")]
+        public async Task<IActionResult> GetAllTasksIds(CancellationToken token)
+        {
+            var tasks = await _mediator.Send(new GetAllTasksIdsQuery(), token);
+
+            return Ok(tasks);
+        }
+
         [HttpGet("GenerateReport/")]
         public async Task<IActionResult> GenerateReport(Guid Id, CancellationToken token)
         {
