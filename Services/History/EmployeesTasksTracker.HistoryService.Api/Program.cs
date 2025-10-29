@@ -49,4 +49,6 @@ app.UseAuthorization();
 
 app.MapControllers();
 
+await app.Services.AddDatabaseInitialization();
+
 app.Run();
