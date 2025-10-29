@@ -27,9 +27,7 @@ namespace EmployeesTasksTracker.ProjectsService.Application.Handlers
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Could not create new project: {ex.Message}");
-
-                return Guid.Empty;
+                throw new Exception(ex.Message);
             }
         }
     }

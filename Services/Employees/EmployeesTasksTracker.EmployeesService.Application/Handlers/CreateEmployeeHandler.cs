@@ -29,8 +29,7 @@ namespace EmployeesTasksTracker.EmployeesService.Application.Handlers
             }
             catch (Exception ex) 
             {
-                Console.WriteLine($"Could not create an employee : {ex.Message}");
-                return Guid.Empty;
+                throw new Exception(ex.Message);
             }
         }
     }

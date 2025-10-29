@@ -26,7 +26,7 @@ namespace EmployeesTasksTracker.TasksService.Application.Handlers
             }
             catch (Exception ex) 
             {
-                throw new Exception($"Could not create new task: {ex.Message}");
+                throw new Exception(ex.Message);
             }
         }
     }

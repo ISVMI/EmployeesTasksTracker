@@ -27,9 +27,7 @@ namespace EmployeesTasksTracker.TasksGroupsService.Application.Handlers
             }
             catch (Exception ex)
             {
-                Console.WriteLine($"Could not create new tasks group: {ex.Message}");
-
-                return Guid.Empty;
+                throw new Exception(ex.Message);
             }
         }
     }
