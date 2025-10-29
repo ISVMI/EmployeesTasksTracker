@@ -70,7 +70,7 @@ namespace ProjectsTasksTracker.ProjectsService.Api.Controllers
 
                 var project = new { id, command };
 
-                return CreatedAtAction(nameof(GetProjectById), new { id }, command);
+                return CreatedAtAction(nameof(GetProjectById), new { id }, project);
             }
             catch (Exception ex)
             {
