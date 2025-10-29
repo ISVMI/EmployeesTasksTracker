@@ -224,6 +224,13 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.Repositories
             return tasks;
         }
 
+        public async Task<IEnumerable<Guid>> GetAllIds(CancellationToken token = default)
+        {
+            return await _context.Database.
+                SqlQueryRaw<Guid>("SELECT \"Id\" FROM public.\"Tasks\"")
+                .ToListAsync();
+        }
+
         public async Task<Core.Models.Task> GetByIdAsync(Guid id, CancellationToken token = default)
         {
             var taskToFind = await _context.Tasks
