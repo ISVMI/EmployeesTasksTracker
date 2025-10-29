@@ -1,0 +1,1635 @@
+{
+	"info": {
+		"_postman_id": "9fcff457-0441-4bd0-be7f-e7d2648e1321",
+		"name": "EmployeesTaskTracker",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "45113056",
+		"_collection_link": "https://valentineskorlyakov.postman.co/workspace/098ecd9b-53c1-40f5-8a42-e46401c989fa/collection/45113056-9fcff457-0441-4bd0-be7f-e7d2648e1321?action=share&source=collection_link&creator=45113056"
+	},
+	"item": [
+		{
+			"name": "Local",
+			"item": [
+				{
+					"name": "Employees",
+					"item": [
+						{
+							"name": "GetAllEmployees",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:7203/api/Employees/All",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7203",
+									"path": [
+										"api",
+										"Employees",
+										"All"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetEmployeeById",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:7203/api/Employees/",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7203",
+									"path": [
+										"api",
+										"Employees",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CreateEmployee",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"employee\": {\r\n    \"name\": \"Александр\",\r\n    \"surname\": \"Алексеев\",\r\n    \"patronymic\": \"Валерьевич\",\r\n    \"userName\": \"fasd1284sad3sd\",\r\n    \"role\": \"Manager\"\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:7203/api/Employees/Create",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7203",
+									"path": [
+										"api",
+										"Employees",
+										"Create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "EditEmployee",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"Name\":\"Александр\",\r\n\"Surname\":\"Алексеев\",\r\n\"Patronymic\":\"Валерьевич\",\r\n\"UserName\":\"fasd1284sad3sa\",\r\n\"Role\":\"Manager\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:7203/api/Employees/Edit/",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7203",
+									"path": [
+										"api",
+										"Employees",
+										"Edit",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteEmployee",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:7203/api/Employees/Delete/",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7203",
+									"path": [
+										"api",
+										"Employees",
+										"Delete",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetAllEmployeesIds",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:7203/api/Employees/GetAllEmployeesIds",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7203",
+									"path": [
+										"api",
+										"Employees",
+										"GetAllEmployeesIds"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Projects",
+					"item": [
+						{
+							"name": "GetAllProjects",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:7067/api/Projects/All",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7067",
+									"path": [
+										"api",
+										"Projects",
+										"All"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetProjectById",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:7067/api/Projects/",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7067",
+									"path": [
+										"api",
+										"Projects",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CreateProject",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"project\": {\r\n    \"name\": \"Визуальный сенсор 3.0\",\r\n    \"description\": \"Проект позволяет перезагрузить протокол и синтезировать передатчик\",\r\n    \"supervisor\": \"00000000-0000-0000-0000-000000000000\",\r\n    \"manager\": \"00000000-0000-0000-0000-000000000000\"\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:7067/api/Projects/Create",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7067",
+									"path": [
+										"api",
+										"Projects",
+										"Create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "EditProject",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": \"00000000-0000-0000-0000-000000000000\",\r\n    \"name\": \"Визуальный сенсор\",\r\n    \"description\": \"Проект позволяет перезагрузить протокол и синтезировать передатчик\",\r\n    \"supervisor\": \"00000000-0000-0000-0000-000000000000\",\r\n    \"manager\": \"00000000-0000-0000-0000-000000000000\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:7067/api/Projects/Edit/",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7067",
+									"path": [
+										"api",
+										"Projects",
+										"Edit",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteProject",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:7067/api/Projects/Delete/",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7067",
+									"path": [
+										"api",
+										"Projects",
+										"Delete",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetAllProjectsIds",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:7067/api/Projects/GetAllProjectsIds",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7067",
+									"path": [
+										"api",
+										"Projects",
+										"GetAllProjectsIds"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "TasksGroups",
+					"item": [
+						{
+							"name": "GetAllTasksGroups",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:7132/api/TasksGroups/All",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7132",
+									"path": [
+										"api",
+										"TasksGroups",
+										"All"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetTasksGroupById",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:7132/api/TasksGroups/",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7132",
+									"path": [
+										"api",
+										"TasksGroups",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CreateTasksGroup",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"tasksGroup\": {\r\n    \"name\": \"Разработать визуальный сенсор\"\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:7132/api/TasksGroups/create",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7132",
+									"path": [
+										"api",
+										"TasksGroups",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "EditTasksGroup",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\":\"00000000-0000-0000-0000-000000000000\",\r\n    \"name\": \"Имя\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:7132/api/TasksGroups/Edit/",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7132",
+									"path": [
+										"api",
+										"TasksGroups",
+										"Edit",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteTasksGroup",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:7132/api/TasksGroups/Delete/",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7132",
+									"path": [
+										"api",
+										"TasksGroups",
+										"Delete",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GenerateReport",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:7132/api/TasksGroups/GenerateReport/?id",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7132",
+									"path": [
+										"api",
+										"TasksGroups",
+										"GenerateReport",
+										""
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetAllTasksGroupsIds",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:7132/api/TasksGroups/GetAllTasksGroupsIds",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7132",
+									"path": [
+										"api",
+										"TasksGroups",
+										"GetAllTasksGroupsIds"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Tasks",
+					"item": [
+						{
+							"name": "GetAllTasks",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:7044/api/Tasks/All",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7044",
+									"path": [
+										"api",
+										"Tasks",
+										"All"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetTaskById",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:7044/api/Tasks/",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7044",
+									"path": [
+										"api",
+										"Tasks",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CreateTask",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"task\": {\r\n\"Name\": \"Переопределить 1080-пиксельный массив\",\r\n\"Description\": \"Необходимо вычислить объект и перезагрузить протокол\",\r\n\"Project\": \"00000000-0000-0000-0000-000000000000\",\r\n\"TasksGroup\": \"00000000-0000-0000-0000-000000000000\",\r\n\"Deadline\": \"2025-12-23T11:42:38.205Z\",\r\n\"CreatedAt\": \"2025-10-23T11:42:38.205Z\",\r\n\"Status\": \"Backlog\",\r\n\"Priority\": \"Critical\",\r\n\"performers\": [\r\n      \"00000000-0000-0000-0000-000000000000\"\r\n    ],\r\n\"observers\": [\r\n      \"00000000-0000-0000-0000-000000000000\"\r\n    ]\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:7044/api/Tasks/Create",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7044",
+									"path": [
+										"api",
+										"Tasks",
+										"Create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "EditTask",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"Id\": \"00000000-0000-0000-0000-000000000000\",\r\n\"Name\": \"Переопределить 1080-пиксельный массив\",\r\n\"Description\": \"Необходимо вычислить объект и перезагрузить протокол\",\r\n\"Project\": \"00000000-0000-0000-0000-000000000000\",\r\n\"TasksGroup\": \"00000000-0000-0000-0000-000000000000\",\r\n\"Deadline\": \"2025-12-23T11:42:38.205Z\",\r\n\"CreatedAt\": \"2025-10-23T11:42:38.205Z\",\r\n\"Priority\": \"Critical\",\r\n\"performers\": [\r\n      \"00000000-0000-0000-0000-000000000000\"\r\n    ],\r\n\"observers\": [\r\n      \"00000000-0000-0000-0000-000000000000\"\r\n    ]\r\n  }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "https://localhost:7044/api/Tasks/Edit/",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7044",
+									"path": [
+										"api",
+										"Tasks",
+										"Edit",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteTask",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:7044/api/Tasks/Delete/",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7044",
+									"path": [
+										"api",
+										"Tasks",
+										"Delete",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ChageStatus",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:7044/api/Tasks/ChangeStatus/?taskId=&newStatus=",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7044",
+									"path": [
+										"api",
+										"Tasks",
+										"ChangeStatus",
+										""
+									],
+									"query": [
+										{
+											"key": "taskId",
+											"value": ""
+										},
+										{
+											"key": "newStatus",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "AddPerformer",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:7044/api/Tasks/AddPerformer?performerId=&taskId=",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7044",
+									"path": [
+										"api",
+										"Tasks",
+										"AddPerformer"
+									],
+									"query": [
+										{
+											"key": "performerId",
+											"value": ""
+										},
+										{
+											"key": "taskId",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "AddObserver",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:7044/api/Tasks/AddObserver?observerId=&taskId=",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7044",
+									"path": [
+										"api",
+										"Tasks",
+										"AddObserver"
+									],
+									"query": [
+										{
+											"key": "observerId",
+											"value": ""
+										},
+										{
+											"key": "taskId",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GenerateReport",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:7044/api/Tasks/GenerateReport/?id",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7044",
+									"path": [
+										"api",
+										"Tasks",
+										"GenerateReport",
+										""
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetAllTasksIds",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:7044/api/Tasks/GetAllTasksIds",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7044",
+									"path": [
+										"api",
+										"Tasks",
+										"GetAllTasksIds"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "History",
+					"item": [
+						{
+							"name": "GetAllHistory",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:7071/api/History/All",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7071",
+									"path": [
+										"api",
+										"History",
+										"All"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetHistoryByTaskId",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "https://localhost:7071/api/History/",
+									"protocol": "https",
+									"host": [
+										"localhost"
+									],
+									"port": "7071",
+									"path": [
+										"api",
+										"History",
+										""
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		},
+		{
+			"name": "Production",
+			"item": [
+				{
+					"name": "Employees",
+					"item": [
+						{
+							"name": "GetAllEmployees",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5006/api/Employees/All",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5006",
+									"path": [
+										"api",
+										"Employees",
+										"All"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetEmployeeById",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5006/api/Employees/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5006",
+									"path": [
+										"api",
+										"Employees",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CreateEmployee",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"employee\": {\r\n    \"name\": \"Александр\",\r\n    \"surname\": \"Алексеев\",\r\n    \"patronymic\": \"Валерьевич\",\r\n    \"userName\": \"fasd1284sad3sd\",\r\n    \"role\": \"Manager\"\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5006/api/Employees/Create",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5006",
+									"path": [
+										"api",
+										"Employees",
+										"Create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "EditEmployee",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"Name\":\"Александр\",\r\n\"Surname\":\"Алексеев\",\r\n\"Patronymic\":\"Валерьевич\",\r\n\"UserName\":\"fasd1284sad3sa\",\r\n\"Role\":\"Manager\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5006/api/Employees/Edit/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5006",
+									"path": [
+										"api",
+										"Employees",
+										"Edit",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteEmployee",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5006/api/Employees/Delete/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5006",
+									"path": [
+										"api",
+										"Employees",
+										"Delete",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetAllEmployeesIds",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5006/api/Employees/GetAllEmployeesIds",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5006",
+									"path": [
+										"api",
+										"Employees",
+										"GetAllEmployeesIds"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Projects",
+					"item": [
+						{
+							"name": "GetAllProjects",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5003/api/Projects/All",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5003",
+									"path": [
+										"api",
+										"Projects",
+										"All"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetProjectById",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5003/api/Projects/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5003",
+									"path": [
+										"api",
+										"Projects",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CreateProject",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"project\": {\r\n    \"name\": \"Визуальный сенсор 3.0\",\r\n    \"description\": \"Проект позволяет перезагрузить протокол и синтезировать передатчик\",\r\n    \"supervisor\": \"00000000-0000-0000-0000-000000000000\",\r\n    \"manager\": \"00000000-0000-0000-0000-000000000000\"\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5003/api/Projects/Create",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5003",
+									"path": [
+										"api",
+										"Projects",
+										"Create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "EditProject",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\": \"00000000-0000-0000-0000-000000000000\",\r\n    \"name\": \"Визуальный сенсор\",\r\n    \"description\": \"Проект позволяет перезагрузить протокол и синтезировать передатчик\",\r\n    \"supervisor\": \"00000000-0000-0000-0000-000000000000\",\r\n    \"manager\": \"00000000-0000-0000-0000-000000000000\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5003/api/Projects/Edit/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5003",
+									"path": [
+										"api",
+										"Projects",
+										"Edit",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteProject",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5003/api/Projects/Delete/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5003",
+									"path": [
+										"api",
+										"Projects",
+										"Delete",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetAllProjectsIds",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5003/api/Projects/GetAllProjectsIds",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5003",
+									"path": [
+										"api",
+										"Projects",
+										"GetAllProjectsIds"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "TasksGroups",
+					"item": [
+						{
+							"name": "GetAllTasksGroups",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5002/api/TasksGroups/All",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5002",
+									"path": [
+										"api",
+										"TasksGroups",
+										"All"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetTasksGroupById",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5002/api/TasksGroups/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5002",
+									"path": [
+										"api",
+										"TasksGroups",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CreateTasksGroup",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"tasksGroup\": {\r\n    \"name\": \"Разработать визуальный сенсор\"\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5002/api/TasksGroups/create",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5002",
+									"path": [
+										"api",
+										"TasksGroups",
+										"create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "EditTasksGroup",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n    \"id\":\"00000000-0000-0000-0000-000000000000\",\r\n    \"name\": \"Имя\"\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5002/api/TasksGroups/Edit/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5002",
+									"path": [
+										"api",
+										"TasksGroups",
+										"Edit",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteTasksGroup",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5002/api/TasksGroups/Delete/?id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5002",
+									"path": [
+										"api",
+										"TasksGroups",
+										"Delete",
+										""
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GenerateReport",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5002/api/TasksGroups/GenerateReport/?id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5002",
+									"path": [
+										"api",
+										"TasksGroups",
+										"GenerateReport",
+										""
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetAllTasksGroupsIds",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5002/api/TasksGroups/GetAllTasksGroupsIds",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5002",
+									"path": [
+										"api",
+										"TasksGroups",
+										"GetAllTasksGroupsIds"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "Tasks",
+					"item": [
+						{
+							"name": "GetAllTasks",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5001/api/Tasks/All",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"Tasks",
+										"All"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetTaskById",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5001/api/Tasks/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"Tasks",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "CreateTask",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n  \"task\": {\r\n\"Name\": \"Переопределить 1080-пиксельный массив\",\r\n\"Description\": \"Необходимо вычислить объект и перезагрузить протокол\",\r\n\"Project\": \"00000000-0000-0000-0000-000000000000\",\r\n\"TasksGroup\": \"00000000-0000-0000-0000-000000000000\",\r\n\"Deadline\": \"2025-12-23T11:42:38.205Z\",\r\n\"CreatedAt\": \"2025-10-23T11:42:38.205Z\",\r\n\"Status\": \"Backlog\",\r\n\"Priority\": \"Critical\",\r\n\"performers\": [\r\n      \"00000000-0000-0000-0000-000000000000\"\r\n    ],\r\n\"observers\": [\r\n      \"00000000-0000-0000-0000-000000000000\"\r\n    ]\r\n  }\r\n}",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5001/api/Tasks/Create",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"Tasks",
+										"Create"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "EditTask",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"body": {
+									"mode": "raw",
+									"raw": "{\r\n\"Id\": \"00000000-0000-0000-0000-000000000000\",\r\n\"Name\": \"Переопределить 1080-пиксельный массив\",\r\n\"Description\": \"Необходимо вычислить объект и перезагрузить протокол\",\r\n\"Project\": \"00000000-0000-0000-0000-000000000000\",\r\n\"TasksGroup\": \"00000000-0000-0000-0000-000000000000\",\r\n\"Deadline\": \"2025-12-23T11:42:38.205Z\",\r\n\"CreatedAt\": \"2025-10-23T11:42:38.205Z\",\r\n\"Priority\": \"Critical\",\r\n\"performers\": [\r\n      \"00000000-0000-0000-0000-000000000000\"\r\n    ],\r\n\"observers\": [\r\n      \"00000000-0000-0000-0000-000000000000\"\r\n    ]\r\n  }",
+									"options": {
+										"raw": {
+											"language": "json"
+										}
+									}
+								},
+								"url": {
+									"raw": "http://localhost:5001/api/Tasks/Edit/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"Tasks",
+										"Edit",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "DeleteTask",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5001/api/Tasks/Delete/",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"Tasks",
+										"Delete",
+										""
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "ChageStatus",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5001/api/Tasks/ChangeStatus/?taskId=&newStatus=",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"Tasks",
+										"ChangeStatus",
+										""
+									],
+									"query": [
+										{
+											"key": "taskId",
+											"value": ""
+										},
+										{
+											"key": "newStatus",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "AddPerformer",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5001/api/Tasks/AddPerformer?performerId=&taskId=",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"Tasks",
+										"AddPerformer"
+									],
+									"query": [
+										{
+											"key": "performerId",
+											"value": ""
+										},
+										{
+											"key": "taskId",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "AddObserver",
+							"request": {
+								"method": "POST",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5001/api/Tasks/AddObserver?observerId=&taskId=",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"Tasks",
+										"AddObserver"
+									],
+									"query": [
+										{
+											"key": "observerId",
+											"value": ""
+										},
+										{
+											"key": "taskId",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GenerateReport",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5001/api/Tasks/GenerateReport/?id=",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"Tasks",
+										"GenerateReport",
+										""
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": ""
+										}
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetAllTasksIds",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5001/api/Tasks/GetAllTasksIds",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5001",
+									"path": [
+										"api",
+										"Tasks",
+										"GetAllTasksIds"
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				},
+				{
+					"name": "History",
+					"item": [
+						{
+							"name": "GetAllHistory",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5004/api/History/All",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5004",
+									"path": [
+										"api",
+										"History",
+										"All"
+									]
+								}
+							},
+							"response": []
+						},
+						{
+							"name": "GetHistoryByTaskId",
+							"request": {
+								"method": "GET",
+								"header": [],
+								"url": {
+									"raw": "http://localhost:5004/api/History/?id",
+									"protocol": "http",
+									"host": [
+										"localhost"
+									],
+									"port": "5004",
+									"path": [
+										"api",
+										"History",
+										""
+									],
+									"query": [
+										{
+											"key": "id",
+											"value": null
+										}
+									]
+								}
+							},
+							"response": []
+						}
+					]
+				}
+			]
+		}
+	]
+}
