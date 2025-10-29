@@ -118,7 +118,7 @@ namespace EmployeesTasksTracker.TasksService.Api.Controllers
             }
         }
 
-        [HttpPost("AddPerformer")]
+        [HttpPost("AddPerformer/")]
         public async Task<IActionResult> AddTaskPerformer(Guid performerId, Guid taskId, CancellationToken token)
         {
 
@@ -151,7 +151,7 @@ namespace EmployeesTasksTracker.TasksService.Api.Controllers
             }
         }
 
-        [HttpPost("AddObserver")]
+        [HttpPost("AddObserver/")]
         public async Task<IActionResult> AddTaskObserver(Guid observerId, Guid taskId, CancellationToken token)
         {
 
@@ -184,7 +184,7 @@ namespace EmployeesTasksTracker.TasksService.Api.Controllers
             }
         }
 
-        [HttpPost("ChangeStatus/{taskId}")]
+        [HttpPost("ChangeStatus/")]
         public async Task<IActionResult> ChangeTaskStatus(Guid taskId, string newStatus, CancellationToken token)
         {
 
