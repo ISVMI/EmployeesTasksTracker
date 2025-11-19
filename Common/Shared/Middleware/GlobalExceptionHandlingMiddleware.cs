@@ -1,0 +1,74 @@
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
+using Shared.Exceptions;
+using System.Text.Json;
+
+namespace Shared.Middleware
+{
+    public class GlobalExceptionHandlingMiddleware
+    {
+        private readonly RequestDelegate _next;
+
+        public GlobalExceptionHandlingMiddleware(RequestDelegate next)
+        {
+            _next = next;
+        }
+
+        public async Task InvokeAsync(HttpContext context) 
+        {
+            try
+            {
+                await _next(context);
+            }
+            catch (Exception ex) 
+            {
+                await HandleExceptionAsync(context, ex);
+            }
+        }
+
+        private static async Task HandleExceptionAsync(HttpContext context, Exception exception) 
+        {
+            context.Response.ContentType = "application/json";
+
+            var statusCode = (int)StatusCodes.Status500InternalServerError;
+
+            var title = "Internal Server Error";
+
+            switch (exception)
+            {
+                case DomainException:
+                    {
+                        statusCode = (int)StatusCodes.Status400BadRequest;
+                        title = "Bad Requst";
+                        break;
+                    }
+                case NotFoundException:
+                    {
+                        statusCode = (int)StatusCodes.Status404NotFound;
+                        title = "Not Found";
+                        break;
+                    }
+                case AlreadyExistsException:
+                    {
+                        statusCode = (int)StatusCodes.Status400BadRequest;
+                        title = "Already Exists";
+                        break;
+                    }
+            }
+
+            context.Response.StatusCode = statusCode;
+
+            var problem = new ProblemDetails
+            {
+                Status = statusCode,
+                Title = title,
+                Detail = exception.Message,
+                Instance = context.Request.Path
+            };
+
+            var json = JsonSerializer.Serialize(problem);
+
+            await context.Response.WriteAsync(json);
+        }
+    }
+}
