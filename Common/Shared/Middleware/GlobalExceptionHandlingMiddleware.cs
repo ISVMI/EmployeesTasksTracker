@@ -25,7 +25,7 @@ namespace Shared.Middleware
             }
             catch (Exception ex) 
             {
-                _logger.LogError(ex, "Global exception heandler has caught an excaption!");
+                _logger.LogError(ex, "Global exception handler has caught an exception!");
                 await HandleExceptionAsync(context, ex);
             }
         }
