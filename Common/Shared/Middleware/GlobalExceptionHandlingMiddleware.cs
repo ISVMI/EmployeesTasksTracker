@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.Extensions.Logging;
 using Shared.Exceptions;
 using System.Text.Json;
 
@@ -8,10 +9,12 @@ namespace Shared.Middleware
     public class GlobalExceptionHandlingMiddleware
     {
         private readonly RequestDelegate _next;
+        private readonly ILogger<GlobalExceptionHandlingMiddleware> _logger;
 
-        public GlobalExceptionHandlingMiddleware(RequestDelegate next)
+        public GlobalExceptionHandlingMiddleware(RequestDelegate next, ILogger<GlobalExceptionHandlingMiddleware> logger)
         {
             _next = next;
+            _logger = logger;
         }
 
         public async Task InvokeAsync(HttpContext context) 
@@ -22,6 +25,7 @@ namespace Shared.Middleware
             }
             catch (Exception ex) 
             {
+                _logger.LogError(ex, "Global exception heandler has caught an excaption!");
                 await HandleExceptionAsync(context, ex);
             }
         }
