@@ -3,6 +3,7 @@ using EmployeesTasksTracker.TasksService.Core.Enums;
 using EmployeesTasksTracker.TasksService.Core.Interfaces;
 using MassTransit;
 using MediatR;
+using Shared.Exceptions;
 using Shared.Messages;
 
 namespace EmployeesTasksTracker.TasksService.Application.Handlers
@@ -23,7 +24,7 @@ namespace EmployeesTasksTracker.TasksService.Application.Handlers
 
             if (!Enum.TryParse<Status>(request.NewStatus, true, out Status newStatusEnum))
             {
-                throw new ArgumentException($"Unknown status {request.NewStatus}");
+                throw new DomainException($"Unknown status {request.NewStatus}");
             }
 
             var existingTask = await _repo.GetByIdAsync(request.TaskId, cancellationToken);
