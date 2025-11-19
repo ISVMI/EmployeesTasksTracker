@@ -19,8 +19,6 @@ namespace EmployeesTasksTracker.TasksService.Application.Handlers
 
         public async Task Handle(AddTaskPerformerCommand request, CancellationToken cancellationToken)
         {
-            try
-            {
                 var task = await _repo.GetByIdAsync(request.TaskId, cancellationToken);
 
                 await _repo.AddPerformerAsync(request.PerformerId, request.TaskId, cancellationToken);
@@ -42,11 +40,6 @@ namespace EmployeesTasksTracker.TasksService.Application.Handlers
                 await _bus.Publish(message, cancellationToken);
 
                 await _bus.Publish(secondMessage, cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Could not add performer: {ex.Message}");
-            }
         }
     }
 }

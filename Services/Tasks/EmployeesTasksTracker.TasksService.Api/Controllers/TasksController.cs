@@ -31,190 +31,51 @@ namespace EmployeesTasksTracker.TasksService.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTaskById(Guid id, CancellationToken token)
         {
-            try
-            {
-                var task = await _mediator.Send(new GetTaskByIdQuery(id), token);
+            var task = await _mediator.Send(new GetTaskByIdQuery(id), token);
 
-                return Ok(task);
-            }
-            catch (Exception ex)
-            {
-                var message = $"Could not find task with the given id {id} : {ex.Message}";
-
-                var problem = new ProblemDetails
-                {
-                    Title = "Task not found",
-                    Status = StatusCodes.Status404NotFound,
-                    Detail = message,
-                    Instance = HttpContext.Request.Path
-                };
-
-                Console.WriteLine(message);
-
-                return NotFound(problem);
-            }
+            return Ok(task);
         }
 
         [HttpPost("Create")]
         public async Task<IActionResult> CreateTask([FromBody] CreateTaskCommand command, CancellationToken token)
         {
-            try
-            {
-                var id = await _mediator.Send(command, token);
+            var id = await _mediator.Send(command, token);
 
-                var tasks = new { id, command };
+            var tasks = new { id, command };
 
-                return CreatedAtAction(nameof(GetTaskById), new { id }, tasks);
-            }
-            catch (Exception ex)
-            {
-                var message = $"Could not create task: {ex.Message}";
-
-                var problem = new ProblemDetails
-                {
-                    Title = "Couldn't create task",
-                    Status = StatusCodes.Status400BadRequest,
-                    Detail = ex.Message,
-                    Instance = HttpContext.Request.Path
-                };
-
-                Console.WriteLine(message);
-
-                return BadRequest(new { problem, command });
-            }
+            return CreatedAtAction(nameof(GetTaskById), new { id }, tasks);
         }
 
         [HttpPost("Edit/{id}")]
         public async Task<IActionResult> EditTask(Guid id, EditTaskDTO editTaskDTO, CancellationToken token)
         {
+            await _mediator.Send(new EditTaskCommand(editTaskDTO), token);
 
-            editTaskDTO.Id = id;
-
-            try
-            {
-                await _mediator.Send(new EditTaskCommand(editTaskDTO), token);
-
-                return Ok(editTaskDTO);
-            }
-            catch (Exception ex)
-            {
-                var message = $"Could not edit task : {ex.Message} / {ex.InnerException?.Message}";
-
-                var problem = new ProblemDetails
-                {
-                    Title = "Couldn't edit task",
-                    Status = StatusCodes.Status400BadRequest,
-                    Detail = $"{ex.Message} {ex.InnerException?.Message}",
-                    Instance = HttpContext.Request.Path,
-                    Extensions =
-                    {
-                        ["taskId"] = id
-                    }
-                };
-
-                Console.WriteLine(message);
-
-                return BadRequest(problem);
-            }
+            return Ok(editTaskDTO);
         }
 
         [HttpPost("AddPerformer/")]
         public async Task<IActionResult> AddTaskPerformer(Guid performerId, Guid taskId, CancellationToken token)
         {
+            await _mediator.Send(new AddTaskPerformerCommand(performerId, taskId), token);
 
-            try
-            {
-                await _mediator.Send(new AddTaskPerformerCommand(performerId, taskId), token);
-
-                return Ok($"Successfully added performer with id - {performerId}, to task with id {taskId}!");
-            }
-            catch (Exception ex)
-            {
-                var message = $"Could not add performer to task : {ex.Message}";
-
-                var problem = new ProblemDetails
-                {
-                    Title = "Couldn't add performer",
-                    Status = StatusCodes.Status400BadRequest,
-                    Detail = message,
-                    Instance = HttpContext.Request.Path,
-                    Extensions =
-                    {
-                        ["performerId"] = performerId,
-                        ["taskId"] = taskId
-                    }
-                };
-
-                Console.WriteLine(message);
-
-                return BadRequest(problem);
-            }
+            return Ok($"Successfully added performer with id - {performerId}, to task with id {taskId}!");
         }
 
         [HttpPost("AddObserver/")]
         public async Task<IActionResult> AddTaskObserver(Guid observerId, Guid taskId, CancellationToken token)
         {
+            await _mediator.Send(new AddTaskObserverCommand(observerId, taskId), token);
 
-            try
-            {
-                await _mediator.Send(new AddTaskObserverCommand(observerId, taskId), token);
-
-                return Ok($"Successfully added observer with id - {observerId}, to task with id {taskId}!");
-            }
-            catch (Exception ex)
-            {
-                var message = $"Could not add observer to task : {ex.Message}";
-
-                var problem = new ProblemDetails
-                {
-                    Title = "Couldn't add observer",
-                    Status = StatusCodes.Status400BadRequest,
-                    Detail = message,
-                    Instance = HttpContext.Request.Path,
-                    Extensions =
-                    {
-                        ["observerId"] = observerId,
-                        ["taskId"] = taskId
-                    }
-                };
-
-                Console.WriteLine(message);
-
-                return BadRequest(problem);
-            }
+            return Ok($"Successfully added observer with id - {observerId}, to task with id {taskId}!");
         }
 
         [HttpPost("ChangeStatus/")]
         public async Task<IActionResult> ChangeTaskStatus(Guid taskId, string newStatus, CancellationToken token)
         {
+            await _mediator.Send(new ChangeTaskStatusCommand(taskId, newStatus), token);
 
-            try
-            {
-                await _mediator.Send(new ChangeTaskStatusCommand(taskId, newStatus), token);
-
-                return Ok($"Successfully changed status to - {newStatus}, for task with id {taskId}!");
-            }
-            catch (Exception ex)
-            {
-                var message = $"Could not change task's status : {ex.Message}";
-
-                var problem = new ProblemDetails
-                {
-                    Title = "Couldn't change status",
-                    Status = StatusCodes.Status400BadRequest,
-                    Detail = message,
-                    Instance = HttpContext.Request.Path,
-                    Extensions =
-                    {
-                        ["taskId"] = taskId,
-                        ["newStatus"] = newStatus
-                    }
-                };
-
-                Console.WriteLine(message);
-
-                return BadRequest(problem);
-            }
+            return Ok($"Successfully changed status to - {newStatus}, for task with id {taskId}!");
         }
 
         [HttpPost("Delete/{id}")]
@@ -247,61 +108,17 @@ namespace EmployeesTasksTracker.TasksService.Api.Controllers
         [HttpGet("GetTasksByGroupId")]
         public async Task<IActionResult> GetTasksByGroupId(Guid tasksGroupId, CancellationToken token)
         {
-            try
-            {
-                var tasks = await _mediator.Send(new GetTasksByGroupIdQuery(tasksGroupId), token);
+            var tasks = await _mediator.Send(new GetTasksByGroupIdQuery(tasksGroupId), token);
 
-                return Ok(tasks);
-            }
-            catch (Exception ex)
-            {
-
-                var problem = new ProblemDetails
-                {
-                    Title = "Could not get tasks",
-                    Status = StatusCodes.Status404NotFound,
-                    Detail = ex.Message,
-                    Instance = HttpContext.Request.Path,
-                    Extensions =
-                    {
-                        ["tasksGroupId"] = tasksGroupId
-                    }
-                };
-
-                Console.WriteLine(ex.Message);
-
-                return NotFound(problem);
-            }
+            return Ok(tasks);
         }
 
         [HttpGet("GetProjectId")]
         public async Task<IActionResult> GetProjectId(Guid tasksGroupId, CancellationToken token)
         {
-            try
-            {
-                var projectId = await _mediator.Send(new GetProjectIdQuery(tasksGroupId), token);
+            var projectId = await _mediator.Send(new GetProjectIdQuery(tasksGroupId), token);
 
-                return Ok(projectId);
-            }
-            catch (Exception ex)
-            {
-
-                var problem = new ProblemDetails
-                {
-                    Title = "Could not get project id",
-                    Status = StatusCodes.Status404NotFound,
-                    Detail = ex.Message,
-                    Instance = HttpContext.Request.Path,
-                    Extensions =
-                    {
-                        ["tasksGroupId"] = tasksGroupId
-                    }
-                };
-
-                Console.WriteLine(ex.Message);
-
-                return NotFound(problem);
-            }
+            return Ok(projectId);
         }
 
         [HttpGet("GetAllTasksIds")]
@@ -315,35 +132,11 @@ namespace EmployeesTasksTracker.TasksService.Api.Controllers
         [HttpGet("GenerateReport/")]
         public async Task<IActionResult> GenerateReport(Guid Id, CancellationToken token)
         {
+            var pdfBytes = await _reportGenerator.GenerateReportAsync(Id, token);
 
-            try
-            {
-                var pdfBytes = await _reportGenerator.GenerateReportAsync(Id, token);
+            var fileName = $"task_report_{Id}_{DateTime.Now:yyyyMMddHHmm}.pdf";
 
-                var fileName = $"task_report_{Id}_{DateTime.Now:yyyyMMddHHmm}.pdf";
-
-                return File(pdfBytes, "application/pdf", fileName);
-            }
-            catch (Exception ex)
-            {
-                var message = $"Could not generate report : {ex.Message} / {ex.InnerException?.Message}";
-
-                var problem = new ProblemDetails
-                {
-                    Title = "Couldn't generate report",
-                    Status = StatusCodes.Status400BadRequest,
-                    Detail = $"{ex.Message} {ex.InnerException?.Message}",
-                    Instance = HttpContext.Request.Path,
-                    Extensions =
-                    {
-                        ["taskId"] = Id
-                    }
-                };
-
-                Console.WriteLine(message);
-
-                return BadRequest(problem);
-            }
+            return File(pdfBytes, "application/pdf", fileName);
         }
     }
 }

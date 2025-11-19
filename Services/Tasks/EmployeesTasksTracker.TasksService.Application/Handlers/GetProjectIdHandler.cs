@@ -15,16 +15,9 @@ namespace EmployeesTasksTracker.TasksService.Application.Handlers
 
         public async Task<Guid> Handle(GetProjectIdQuery request, CancellationToken cancellationToken)
         {
-            try
-            {
                 var projectId = await _repo.GetProjectId(request.TasksGroupId, cancellationToken);
 
                 return projectId;
-            }
-            catch (Exception ex) 
-            {
-                throw new Exception($"Could not get projectId {ex.Message}");
-            }
         }
     }
 }

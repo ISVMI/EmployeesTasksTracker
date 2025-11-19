@@ -1,6 +1,7 @@
 ﻿using EmployeesTasksTracker.TasksService.Application.Interfaces;
 using EmployeesTasksTracker.TasksService.Core.Interfaces;
 using Shared.DTOs;
+using Shared.Exceptions;
 using Shared.Methods;
 using Shared.Models;
 
@@ -66,7 +67,7 @@ namespace EmployeesTasksTracker.TasksService.Application.Services
             }
             catch (Exception ex)
             {
-                throw new Exception($"Could not get task report data {ex.Message}");
+                throw new DomainException($"Could not get task report data {ex.Message}");
             }
         }
     }

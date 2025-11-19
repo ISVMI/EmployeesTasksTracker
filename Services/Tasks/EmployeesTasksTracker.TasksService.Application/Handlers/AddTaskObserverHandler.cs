@@ -19,8 +19,6 @@ namespace EmployeesTasksTracker.TasksService.Application.Handlers
 
         public async Task Handle(AddTaskObserverCommand request, CancellationToken cancellationToken)
         {
-            try
-            {
                 var task = await _repo.GetByIdAsync(request.TaskId, cancellationToken);
 
                 await _repo.AddObserverAsync(request.ObserverId, request.TaskId, cancellationToken);
@@ -42,11 +40,6 @@ namespace EmployeesTasksTracker.TasksService.Application.Handlers
                 await _bus.Publish(message, cancellationToken);
 
                 await _bus.Publish(secondMessage, cancellationToken);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Could not add observer: {ex.Message}");
-            }
         }
     }
 }

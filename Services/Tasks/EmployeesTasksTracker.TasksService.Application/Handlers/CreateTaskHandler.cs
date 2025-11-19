@@ -18,16 +18,9 @@ namespace EmployeesTasksTracker.TasksService.Application.Handlers
 
         public async Task<Guid> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
         {
-            try
-            {
                 var newTask = _mapper.Map<Core.Models.Task>(request.Task);
                 await _repo.CreateAsync(newTask, cancellationToken);
                 return newTask.Id;
-            }
-            catch (Exception ex) 
-            {
-                throw new Exception(ex.Message);
-            }
         }
     }
 }

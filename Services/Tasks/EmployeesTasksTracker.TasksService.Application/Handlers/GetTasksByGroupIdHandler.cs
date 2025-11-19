@@ -16,8 +16,6 @@ namespace EmployeesTasksTracker.TasksService.Application.Handlers
 
         public async Task<IEnumerable<TaskForReportDTO>> Handle(GetTasksByGroupIdQuery request, CancellationToken cancellationToken)
         {
-            try
-            {
                 var tasks = await _repo.GetTasksByGroupId(request.TasksGroupId, cancellationToken);
 
                 var tasksList = new List<TaskForReportDTO>();
@@ -38,11 +36,6 @@ namespace EmployeesTasksTracker.TasksService.Application.Handlers
                 }
 
                 return tasksList;
-            }
-            catch (Exception ex) 
-            {
-                throw new Exception($"Could not get tasks by group id: {ex.Message}");
-            }
         }
     }
 }

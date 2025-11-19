@@ -18,17 +18,9 @@ namespace EmployeesTasksTracker.TasksService.Application.Handlers
         }
         public async Task<TaskDTO> Handle(GetTaskByIdQuery request, CancellationToken cancellationToken)
         {
-            try
-            {
-                var task = await _repo.GetByIdAsync(request.Id, cancellationToken);
+            var task = await _repo.GetByIdAsync(request.Id, cancellationToken);
 
-                return _mapper.Map<TaskDTO>(task);
-            }
-            catch (Exception ex) 
-            {
-                throw new Exception($"Could not get task : {ex.Message}");
-            }
-            
+            return _mapper.Map<TaskDTO>(task);
         }
     }
 }
