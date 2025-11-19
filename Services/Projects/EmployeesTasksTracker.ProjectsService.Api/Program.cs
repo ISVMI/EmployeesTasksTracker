@@ -3,6 +3,7 @@ using EmployeesTasksTracker.ProjectsService.Application.Interfaces;
 using EmployeesTasksTracker.ProjectsService.Infrastructure.Clients;
 using EmployeesTasksTracker.ProjectsService.Infrastructure.DataSeeding;
 using EmployeesTasksTracker.ProjectsService.Infrastructure.Extensions;
+using Shared.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -37,6 +38,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseGlobalExceptionHandler();
 
 app.MapControllers();
 

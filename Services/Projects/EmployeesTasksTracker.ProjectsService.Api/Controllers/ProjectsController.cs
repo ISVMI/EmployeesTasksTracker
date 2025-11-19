@@ -28,66 +28,24 @@ namespace ProjectsTasksTracker.ProjectsService.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetProjectById(Guid id, bool nameRequested, CancellationToken token)
         {
-            try
+            var Project = await _mediator.Send(new GetProjectByIdQuery(id), token);
+
+            if (nameRequested)
             {
-                var Project = await _mediator.Send(new GetProjectByIdQuery(id), token);
-
-                if (nameRequested)
-                {
-                    return Ok(Project.Name);
-                }
-
-                return Ok(Project);
+                return Ok(Project.Name);
             }
-            catch (Exception ex)
-            {
-                var message = $"Could not find project with the given id {id} : {ex.Message}";
 
-                var problem = new ProblemDetails
-                {
-                    Title = "Couldn't find project",
-                    Status = StatusCodes.Status404NotFound,
-                    Detail = ex.Message,
-                    Instance = HttpContext.Request.Path,
-                    Extensions =
-                    {
-                        ["id"] = id
-                    }
-                };
-
-                Console.WriteLine(message);
-
-                return NotFound(new { message });
-            }
+            return Ok(Project);
         }
 
         [HttpPost("Create")]
         public async Task<IActionResult> CreateProject([FromBody] CreateProjectCommand command, CancellationToken token)
         {
-            try
-            {
-                var id = await _mediator.Send(command, token);
+            var id = await _mediator.Send(command, token);
 
-                var project = new { id, command };
+            var project = new { id, command };
 
-                return CreatedAtAction(nameof(GetProjectById), new { id }, project);
-            }
-            catch (Exception ex)
-            {
-                var message = $"Could not create project: {ex.Message}";
-
-                var problem = new ProblemDetails
-                {
-                    Title = "Couldn't create project",
-                    Status = StatusCodes.Status400BadRequest,
-                    Detail = message,
-                    Instance = HttpContext.Request.Path,
-                };
-
-                Console.WriteLine(message);
-
-                return BadRequest(new { problem, command });
-            }
+            return CreatedAtAction(nameof(GetProjectById), new { id }, project);
         }
 
         [HttpPost("Edit/{id}")]
@@ -96,32 +54,10 @@ namespace ProjectsTasksTracker.ProjectsService.Api.Controllers
 
             editProjectDto.Id = id;
 
-            try
-            {
-                await _mediator.Send(new EditProjectCommand(editProjectDto), token);
 
-                return Ok(editProjectDto);
-            }
-            catch (Exception ex)
-            {
-                var message = $"Could not edit project : {ex.Message} / {ex.InnerException?.Message}";
+            await _mediator.Send(new EditProjectCommand(editProjectDto), token);
 
-                var problem = new ProblemDetails
-                {
-                    Title = "Couldn't edit project",
-                    Status = StatusCodes.Status400BadRequest,
-                    Detail = $"{ex.Message} {ex.InnerException?.Message}",
-                    Instance = HttpContext.Request.Path,
-                    Extensions =
-                    {
-                        ["projectId"] = id
-                    }
-                };
-
-                Console.WriteLine(message);
-
-                return BadRequest(problem);
-            }
+            return Ok(editProjectDto);
         }
 
         [HttpPost("Delete/{id}")]
