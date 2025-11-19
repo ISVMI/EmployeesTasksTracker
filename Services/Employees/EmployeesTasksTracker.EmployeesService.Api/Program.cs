@@ -1,5 +1,6 @@
 using EmployeesTasksTracker.EmployeesService.Infrastructure.Extensions;
 using EmployeesTasksTracker.EmployeesService.Application.Extensions;
+using Shared.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -24,6 +25,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseGlobalExceptionHandler();
 
 app.MapControllers();
 
