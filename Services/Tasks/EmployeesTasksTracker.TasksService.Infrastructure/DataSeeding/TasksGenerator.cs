@@ -1,5 +1,6 @@
 ﻿using Bogus;
 using EmployeesTasksTracker.TasksService.Application.Interfaces;
+using EmployeesTasksTracker.TasksService.Core.Enums;
 
 namespace EmployeesTasksTracker.TasksService.Infrastructure.DataSeeding
 {
@@ -96,12 +97,12 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.DataSeeding
                     Project = project,
                     TasksGroup = tasksGroup,
                     Deadline = DateTime.UtcNow + TimeSpan.FromDays(_faker.Random.Double(6, 366)),
-                    Status = _faker.PickRandom(Core.Enums.Status.Backlog, Core.Enums.Status.Current),
-                    Priority = _faker.PickRandom<Core.Enums.Priority>(),
+                    Priority = _faker.PickRandom<Priority>(),
                     Performers = performers,
                     Observers = observers
 
                 };
+                task.ChangeStatus(_faker.PickRandom(Status.Backlog, Status.Current));
 
                 tasks.Add(task);
             }

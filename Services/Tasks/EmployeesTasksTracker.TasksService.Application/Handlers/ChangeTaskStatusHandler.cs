@@ -1,4 +1,5 @@
 ﻿using EmployeesTasksTracker.TasksService.Application.Commands;
+using EmployeesTasksTracker.TasksService.Core.Enums;
 using EmployeesTasksTracker.TasksService.Core.Interfaces;
 using MassTransit;
 using MediatR;
@@ -19,36 +20,37 @@ namespace EmployeesTasksTracker.TasksService.Application.Handlers
 
         public async Task Handle(ChangeTaskStatusCommand request, CancellationToken cancellationToken)
         {
-            try
-            {
-                var existingTask = await _repo.GetByIdAsync(request.TaskId, cancellationToken);
 
-                var changes = new List<string>
+            if (!Enum.TryParse<Status>(request.NewStatus, true, out Status newStatusEnum))
+            {
+                throw new ArgumentException($"Unknown status {request.NewStatus}");
+            }
+
+            var existingTask = await _repo.GetByIdAsync(request.TaskId, cancellationToken);
+
+            var changes = new List<string>
                 {
-                    $"Статус изменился с {existingTask.Status} на {request.NewStatus}" 
+                    $"Статус изменился с {existingTask.Status} на {request.NewStatus}"
                 };
 
-                var message = new TaskDataChanged(request.TaskId, changes, DateTime.UtcNow);
+            var message = new TaskDataChanged(request.TaskId, changes, DateTime.UtcNow);
 
-                var secondMessage = new TaskStatusChanged
-                {
-                    TaskId = request.TaskId,
-                    TaskName = existingTask.Name,
-                    OldStatus = existingTask.Status.ToString(),
-                    NewStatus = request.NewStatus
-                };
-
-                await _repo.ChangeStatusAsync(request.TaskId, request.NewStatus, cancellationToken);
-
-                await _bus.Publish(message, cancellationToken);
-
-                await _bus.Publish(secondMessage, cancellationToken);
-
-            }
-            catch (Exception ex) 
+            var secondMessage = new TaskStatusChanged
             {
-                throw new Exception($"Could not change task's status: {ex.Message}");
-            }
+                TaskId = request.TaskId,
+                TaskName = existingTask.Name,
+                OldStatus = existingTask.Status.ToString(),
+                NewStatus = request.NewStatus
+            };
+
+            existingTask.ChangeStatus(newStatusEnum);
+
+            await _repo.UpdateAsync(existingTask, cancellationToken);
+
+            await _bus.Publish(message, cancellationToken);
+
+            await _bus.Publish(secondMessage, cancellationToken);
+
         }
     }
 }
