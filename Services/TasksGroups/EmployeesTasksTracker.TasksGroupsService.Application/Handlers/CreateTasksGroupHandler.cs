@@ -19,16 +19,9 @@ namespace EmployeesTasksTracker.TasksGroupsService.Application.Handlers
 
         public async Task<Guid> Handle(CreateTasksGroupCommand request, CancellationToken cancellationToken)
         {
-            try
-            {
                 var newTasksGroup = _mapper.Map<TasksGroup>(request.TasksGroup);
                 await _repo.CreateAsync(newTasksGroup, cancellationToken);
                 return newTasksGroup.Id;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception(ex.Message);
-            }
         }
     }
 }

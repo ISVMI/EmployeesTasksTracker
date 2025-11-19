@@ -19,16 +19,9 @@ namespace EmployeesTasksTracker.TasksGroupsService.Application.Handlers
 
         public async Task<TasksGroupDTO> Handle(GetTasksGroupByIdQuery request, CancellationToken cancellationToken)
         {
-            try
-            {
                 var tasksGroup = await _repo.GetByIdAsync(request.Id, cancellationToken);
 
                 return _mapper.Map<TasksGroupDTO>(tasksGroup);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Could not get tasks group: {ex.Message}");
-            }
         }
     }
 }

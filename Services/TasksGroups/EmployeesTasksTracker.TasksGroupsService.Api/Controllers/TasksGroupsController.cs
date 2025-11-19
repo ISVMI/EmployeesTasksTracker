@@ -31,66 +31,24 @@ namespace EmployeesTasksTracker.TasksGroupsService.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetTasksGroupById(Guid id, bool nameRequested, CancellationToken token)
         {
-            try
+            var tasksGroup = await _mediator.Send(new GetTasksGroupByIdQuery(id), token);
+
+            if (nameRequested)
             {
-                var tasksGroup = await _mediator.Send(new GetTasksGroupByIdQuery(id), token);
-
-                if (nameRequested)
-                {
-                    return Ok(tasksGroup.Name);
-                }
-
-                return Ok(tasksGroup);
+                return Ok(tasksGroup.Name);
             }
-            catch (Exception ex)
-            {
-                var message = $"Could not find tasks group with the given id {id} : {ex.Message}";
 
-                var problem = new ProblemDetails
-                {
-                    Title = "Couldn't find tasks group",
-                    Status = StatusCodes.Status404NotFound,
-                    Detail = ex.Message,
-                    Instance = HttpContext.Request.Path,
-                    Extensions =
-                    {
-                        ["taskGroupId"] = id
-                    }
-                };
-
-                Console.WriteLine(message);
-
-                return NotFound(problem);
-            }
+            return Ok(tasksGroup);
         }
 
         [HttpPost("Create")]
         public async Task<IActionResult> CreateTasksGroup([FromBody] CreateTasksGroupCommand command, CancellationToken token)
         {
-            try
-            {
-                var id = await _mediator.Send(command, token);
+            var id = await _mediator.Send(command, token);
 
-                var tasksGroup = new { id, command };
+            var tasksGroup = new { id, command };
 
-                return CreatedAtAction(nameof(GetTasksGroupById), new { id }, tasksGroup);
-            }
-            catch (Exception ex)
-            {
-                var message = $"Could not create tasks group: {ex.Message}";
-
-                var problem = new ProblemDetails
-                {
-                    Title = "Couldn't create tasks group",
-                    Status = StatusCodes.Status400BadRequest,
-                    Detail = ex.Message,
-                    Instance = HttpContext.Request.Path,
-                };
-
-                Console.WriteLine(message);
-
-                return BadRequest(new { problem, command });
-            }
+            return CreatedAtAction(nameof(GetTasksGroupById), new { id }, tasksGroup);
         }
 
         [HttpPost("Edit/{id}")]
@@ -99,32 +57,10 @@ namespace EmployeesTasksTracker.TasksGroupsService.Api.Controllers
 
             editTasksGroupDTO.Id = id;
 
-            try
-            {
-                await _mediator.Send(new EditTasksGroupCommand(editTasksGroupDTO), token);
+            await _mediator.Send(new EditTasksGroupCommand(editTasksGroupDTO), token);
 
-                return Ok(editTasksGroupDTO);
-            }
-            catch (Exception ex)
-            {
-                var message = $"Could not edit tasks group : {ex.Message} / {ex.InnerException?.Message}";
+            return Ok(editTasksGroupDTO);
 
-                var problem = new ProblemDetails
-                {
-                    Title = "Couldn't edit tasks group",
-                    Status = StatusCodes.Status400BadRequest,
-                    Detail = $"{ex.Message} {ex.InnerException?.Message}",
-                    Instance = HttpContext.Request.Path,
-                    Extensions =
-                    {
-                        ["tasksGroupId"] = id
-                    }
-                };
-
-                Console.WriteLine(message);
-
-                return BadRequest(problem);
-            }
         }
 
         [HttpPost("Delete/{id}")]
@@ -165,35 +101,11 @@ namespace EmployeesTasksTracker.TasksGroupsService.Api.Controllers
         [HttpGet("GenerateReport/")]
         public async Task<IActionResult> GenerateReport(Guid Id, CancellationToken token)
         {
-
-            try
-            {
                 var pdfBytes = await _reportGenerator.GenerateReportAsync(Id, token);
 
                 var fileName = $"task_report_{Id}_{DateTime.Now:yyyyMMddHHmm}.pdf";
 
                 return File(pdfBytes, "application/pdf", fileName);
-            }
-            catch (Exception ex)
-            {
-                var message = $"Could not generate report : {ex.Message} / {ex.InnerException?.Message}";
-
-                var problem = new ProblemDetails
-                {
-                    Title = "Couldn't generate report",
-                    Status = StatusCodes.Status400BadRequest,
-                    Detail = $"{ex.Message} {ex.InnerException?.Message}",
-                    Instance = HttpContext.Request.Path,
-                    Extensions =
-                    {
-                        ["tasksGroupId"] = Id
-                    }
-                };
-
-                Console.WriteLine(message);
-
-                return BadRequest(problem);
-            }
         }
     }
 }

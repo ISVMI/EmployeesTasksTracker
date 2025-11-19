@@ -4,6 +4,7 @@ using EmployeesTasksTracker.TasksGroupsService.Application.Services;
 using EmployeesTasksTracker.TasksGroupsService.Infrastructure.Clients;
 using EmployeesTasksTracker.TasksGroupsService.Infrastructure.Extensions;
 using EmployeesTasksTracker.TasksGroupsService.Infrastructure.ReportGeneration;
+using Shared.Extensions;
 using Shared.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
@@ -42,6 +43,8 @@ if (app.Environment.IsDevelopment())
 app.UseHttpsRedirection();
 
 app.UseAuthorization();
+
+app.UseGlobalExceptionHandler();
 
 app.MapControllers();
 
