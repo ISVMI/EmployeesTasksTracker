@@ -48,12 +48,6 @@ namespace Shared.Middleware
                         title = "Not Found";
                         break;
                     }
-                case AlreadyExistsException:
-                    {
-                        statusCode = (int)StatusCodes.Status400BadRequest;
-                        title = "Already Exists";
-                        break;
-                    }
             }
 
             context.Response.StatusCode = statusCode;
