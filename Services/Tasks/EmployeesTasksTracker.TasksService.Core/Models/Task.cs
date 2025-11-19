@@ -1,4 +1,5 @@
 ﻿using EmployeesTasksTracker.TasksService.Core.Enums;
+using Shared.Exceptions;
 using System.ComponentModel.DataAnnotations;
 
 namespace EmployeesTasksTracker.TasksService.Core.Models
@@ -27,12 +28,12 @@ namespace EmployeesTasksTracker.TasksService.Core.Models
 
             if (Status == Status.Completed)
             {
-                throw new Exception("Could not change status - task already completed!");
+                throw new DomainException("Could not change status - task already completed!");
             }
 
             if (Status == newStatus)
             {
-                throw new Exception("Task status has not changed, because it were the same as before");
+                throw new DomainException("Task status has not changed, because it were the same as before");
             }
 
             if (newStatus != Status.Canceled)
@@ -46,10 +47,8 @@ namespace EmployeesTasksTracker.TasksService.Core.Models
                         {
                             if (Status != Status.Backlog)
                             {
-                                throw new ArgumentException(exMessage);
+                                throw new DomainException(exMessage);
                             }
-
-                            Console.WriteLine("Task status has not changed, because it were and are \"Backlog\"");
 
                             return;
                         }
@@ -58,7 +57,7 @@ namespace EmployeesTasksTracker.TasksService.Core.Models
                         {
                             if (Status != Status.Backlog)
                             {
-                                throw new ArgumentException(exMessage);
+                                throw new DomainException(exMessage);
                             }
                             break;
                         }
@@ -67,7 +66,7 @@ namespace EmployeesTasksTracker.TasksService.Core.Models
                         {
                             if (Status != Status.Current && Status != Status.Testing)
                             {
-                                throw new ArgumentException(exMessage);
+                                throw new DomainException(exMessage);
                             }
 
                             break;
@@ -77,7 +76,7 @@ namespace EmployeesTasksTracker.TasksService.Core.Models
                         {
                             if (Status != Status.Active)
                             {
-                                throw new ArgumentException(exMessage);
+                                throw new DomainException(exMessage);
                             }
 
                             break;
@@ -87,13 +86,13 @@ namespace EmployeesTasksTracker.TasksService.Core.Models
                         {
                             if (Status != Status.Testing)
                             {
-                                throw new ArgumentException(exMessage);
+                                throw new DomainException(exMessage);
                             }
                             break;
                         }
                     default:
                         {
-                            throw new ArgumentException($"Unknown status : {newStatus}!");
+                            throw new DomainException($"Unknown status : {newStatus}!");
                         }
                 }
             }
