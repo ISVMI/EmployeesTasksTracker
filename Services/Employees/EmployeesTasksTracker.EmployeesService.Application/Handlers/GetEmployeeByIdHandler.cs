@@ -20,18 +20,9 @@ namespace EmployeesTasksTracker.EmployeesService.Application.Handlers
 
         public async Task<EmployeeDTO> Handle(GetEmployeeByIdQuery request, CancellationToken cancellationToken)
         {
-            try
-            {
                 var employee = await _repo.GetByIdAsync(request.Id, cancellationToken);
 
                 return _mapper.Map<EmployeeDTO>(employee);
-            }
-            catch (Exception ex) 
-            {
-                Console.WriteLine($"Could not get employee by id {request.Id} : {ex.Message}");
-
-                return new EmployeeDTO();
-            }
         }
     }
 }

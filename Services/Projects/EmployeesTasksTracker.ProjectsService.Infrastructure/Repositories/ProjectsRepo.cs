@@ -2,6 +2,7 @@
 using EmployeesTasksTracker.ProjectsService.Core.Models;
 using EmployeesTasksTracker.ProjectsService.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Shared.Exceptions;
 
 namespace EmployeesTasksTracker.ProjectsService.Infrastructure.Repositories
 {
@@ -23,7 +24,7 @@ namespace EmployeesTasksTracker.ProjectsService.Infrastructure.Repositories
 
             if (await _context.Projects.AnyAsync(p => p.Name == project.Name, token))
             {
-                throw new Exception("Such project already exists");
+                throw new DomainException("Such project already exists");
             }
 
             await _context.Projects.AddAsync(project, token);
@@ -33,19 +34,11 @@ namespace EmployeesTasksTracker.ProjectsService.Infrastructure.Repositories
 
         public async Task<bool> DeleteAsync(Guid id, CancellationToken token = default)
         {
-            try
-            {
-                var projectToDelete = await GetByIdAsync(id, token);
+            var projectToDelete = await GetByIdAsync(id, token);
 
-                _context.Projects.Remove(projectToDelete);
-                await _context.SaveChangesAsync(token);
-                return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Could not delete project with the given id {id} : {ex.Message}");
-                return false;
-            }
+            _context.Projects.Remove(projectToDelete);
+            await _context.SaveChangesAsync(token);
+            return true;
         }
 
         public async Task<IEnumerable<Project>> GetAllAsync(CancellationToken token = default)
@@ -71,7 +64,7 @@ namespace EmployeesTasksTracker.ProjectsService.Infrastructure.Repositories
 
             if (projectToFind == null)
             {
-                throw new Exception($"Project with id: {id} not found!");
+                throw new DomainException($"Project with id: {id} not found!");
             }
 
             return projectToFind;
@@ -79,18 +72,11 @@ namespace EmployeesTasksTracker.ProjectsService.Infrastructure.Repositories
 
         public async Task<Project> UpdateAsync(Project project, CancellationToken token = default)
         {
-            try
-            {
-                var existingProject = await GetByIdAsync(project.Id, token);
+            var existingProject = await GetByIdAsync(project.Id, token);
 
-                _context.Entry(existingProject).CurrentValues.SetValues(project);
-                await _context.SaveChangesAsync(token);
-                return project;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Could not update project named: {project.Name}", ex);
-            }
+            _context.Entry(existingProject).CurrentValues.SetValues(project);
+            await _context.SaveChangesAsync(token);
+            return project;
         }
     }
 }

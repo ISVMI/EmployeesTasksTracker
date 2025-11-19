@@ -29,108 +29,43 @@ namespace EmployeesTasksTracker.EmployeesService.Api.Controllers
         [HttpGet("{id}")]
         public async Task<IActionResult> GetEmployeeById(Guid id, bool infoRequested, CancellationToken token)
         {
-            try
+            var employee = await _mediator.Send(new GetEmployeeByIdQuery(id), token);
+
+            if (infoRequested)
             {
-                var employee = await _mediator.Send(new GetEmployeeByIdQuery(id), token);
-
-                if (infoRequested)
+                var employeeInfo = new EmployeeForReportDTO
                 {
-                    var employeeInfo = new EmployeeForReportDTO
-                    {
-                        Name = employee.Name,
-                        Surname = employee.Surname,
-                        Patronymic = employee.Patronymic,
-                        Role = employee.Role.ToString(),
-                    };
-
-                    return Ok(employeeInfo);
-                }
-
-                return Ok(employee);
-            }
-            catch (Exception ex)
-            {
-                var message = $"Could not find employee with the given id {id} : {ex.Message}";
-
-                var problem = new ProblemDetails
-                {
-                    Title = "Couldn't find employee",
-                    Status = StatusCodes.Status404NotFound,
-                    Detail = ex.Message,
-                    Instance = HttpContext.Request.Path,
-                    Extensions =
-                    {
-                        ["employeeId"] = id
-                    }
+                    Name = employee.Name,
+                    Surname = employee.Surname,
+                    Patronymic = employee.Patronymic,
+                    Role = employee.Role.ToString(),
                 };
 
-                Console.WriteLine(message);
-
-                return NotFound(problem);
+                return Ok(employeeInfo);
             }
+
+            return Ok(employee);
+
         }
 
         [HttpPost("Create")]
         public async Task<IActionResult> CreateEmployee([FromBody] CreateEmployeeCommand command, CancellationToken token)
         {
-            try
-            {
-                var id = await _mediator.Send(command, token);
+            var id = await _mediator.Send(command, token);
 
-                var employee = new { id, command };
+            var employee = new { id, command };
 
-                return CreatedAtAction(nameof(GetEmployeeById), new { id }, employee);
-            }
-            catch (Exception ex)
-            {
-                var message = $"Could not create an employee: {ex.Message}";
-
-                var problem = new ProblemDetails
-                {
-                    Title = "Couldn't create an employee",
-                    Status = StatusCodes.Status400BadRequest,
-                    Detail = ex.Message,
-                    Instance = HttpContext.Request.Path,
-                };
-
-                Console.WriteLine(message);
-
-                return BadRequest(new { problem, command });
-            }
+            return CreatedAtAction(nameof(GetEmployeeById), new { id }, employee);
         }
 
         [HttpPost("Edit/{id}")]
         public async Task<IActionResult> EditEmployee(Guid id, EditEmployeeDTO editEmployeeDto, CancellationToken token)
         {
-
             editEmployeeDto.Id = id;
 
-            try
-            {
-                await _mediator.Send(new EditEmployeeCommand(editEmployeeDto), token);
+            await _mediator.Send(new EditEmployeeCommand(editEmployeeDto), token);
 
-                return Ok(editEmployeeDto);
-            }
-            catch (Exception ex)
-            {
-                var message = $"Could not edit employee : {ex.Message} / {ex.InnerException?.Message}";
-
-                var problem = new ProblemDetails
-                {
-                    Title = "Couldn't edit employee",
-                    Status = StatusCodes.Status400BadRequest,
-                    Detail = $"{ex.Message} {ex.InnerException?.Message}",
-                    Instance = HttpContext.Request.Path,
-                    Extensions =
-                    {
-                        ["employeeId"] = id
-                    }
-                };
-
-                Console.WriteLine(message);
-
-                return BadRequest(new { id, message });
-            }
+            return Ok(editEmployeeDto);
         }
 
         [HttpPost("Delete/{id}")]

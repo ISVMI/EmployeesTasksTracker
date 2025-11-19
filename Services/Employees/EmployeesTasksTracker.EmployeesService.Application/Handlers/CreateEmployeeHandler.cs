@@ -19,18 +19,11 @@ namespace EmployeesTasksTracker.EmployeesService.Application.Handlers
 
         public async Task<Guid> Handle(CreateEmployeeCommand request, CancellationToken cancellationToken)
         {
-            try
-            {
                 var employee = _mapper.Map<Employee>(request.Employee);
 
                 var result = await _repo.CreateAsync(employee, cancellationToken);
 
                 return result;
-            }
-            catch (Exception ex) 
-            {
-                throw new Exception(ex.Message);
-            }
         }
     }
 }

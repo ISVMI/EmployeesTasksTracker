@@ -2,6 +2,7 @@
 using EmployeesTasksTracker.EmployeesService.Core.Models;
 using EmployeesTasksTracker.EmployeesService.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
+using Shared.Exceptions;
 
 namespace EmployeesTasksTracker.EmployeesService.Infrastructure.Repositories
 {
@@ -23,7 +24,7 @@ namespace EmployeesTasksTracker.EmployeesService.Infrastructure.Repositories
 
             if (await _context.Employees.AnyAsync(e => e.UserName  == employee.UserName, token))
             {
-                throw new Exception("Such employee already exists");
+                throw new DomainException("Such employee already exists");
             }
 
             await _context.Employees.AddAsync(employee, token);
@@ -33,19 +34,11 @@ namespace EmployeesTasksTracker.EmployeesService.Infrastructure.Repositories
 
         public async Task<bool> DeleteAsync(Guid id, CancellationToken token = default)
         {
-            try
-            {
                 var employeeToDelete = await GetByIdAsync(id, token);
 
                 _context.Employees.Remove(employeeToDelete);
                 await _context.SaveChangesAsync(token);
                 return true;
-            }
-            catch (Exception ex)
-            {
-                Console.WriteLine($"Could not delete employee with the given id {id} : {ex.Message}");
-                return false;
-            }
         }
 
         public async Task<IEnumerable<Employee>> GetAllAsync(CancellationToken token = default)
@@ -69,7 +62,7 @@ namespace EmployeesTasksTracker.EmployeesService.Infrastructure.Repositories
 
             if (employeeToFind == null)
             {
-                throw new Exception($"Employee with id: {id} not found!");
+                throw new DomainException($"Employee with id: {id} not found!");
             }
 
             return employeeToFind;
@@ -77,18 +70,11 @@ namespace EmployeesTasksTracker.EmployeesService.Infrastructure.Repositories
 
         public async Task<Employee> UpdateAsync(Employee employee, CancellationToken token = default)
         {
-            try
-            {
                 var existingEmployee = await GetByIdAsync(employee.Id, token);
 
                 _context.Entry(existingEmployee).CurrentValues.SetValues(employee);
                 await _context.SaveChangesAsync(token);
                 return employee;
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Could not update employee with username: {employee.UserName}", ex);
-            }
         }
     }
 }

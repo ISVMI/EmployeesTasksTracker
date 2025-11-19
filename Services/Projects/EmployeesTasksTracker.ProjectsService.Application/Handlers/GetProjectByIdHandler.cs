@@ -19,16 +19,9 @@ namespace EmployeesTasksTracker.ProjectsService.Application.Handlers
 
         public async Task<ProjectDTO> Handle(GetProjectByIdQuery request, CancellationToken cancellationToken)
         {
-            try
-            {
                 var project = await _repo.GetByIdAsync(request.Id, cancellationToken);
 
                 return _mapper.Map<ProjectDTO>(project);
-            }
-            catch (Exception ex)
-            {
-                throw new Exception($"Could not get project: {ex.Message}");
-            }
         }
     }
 }
