@@ -28,6 +28,11 @@ namespace EmployeesTasksTracker.TasksService.Application.Handlers
 
             var existingTask = await _repo.GetByIdAsync(taskToEdit.Id, cancellationToken);
 
+            if (existingTask.Status != taskToEdit.Status)
+            {
+                taskToEdit.ChangeStatus(existingTask.Status);
+            }
+
             taskToEdit.ChangeStatus(existingTask.Status);
 
             var changes = ChangesTracker.GetChanges(existingTask, taskToEdit);
