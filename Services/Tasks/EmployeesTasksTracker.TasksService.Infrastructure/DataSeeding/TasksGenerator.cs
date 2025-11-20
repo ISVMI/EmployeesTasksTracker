@@ -102,7 +102,6 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.DataSeeding
                     Observers = observers
 
                 };
-                task.ChangeStatus(_faker.PickRandom(Status.Backlog, Status.Current));
 
                 tasks.Add(task);
             }
