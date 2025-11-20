@@ -4,7 +4,7 @@
 		"name": "EmployeesTaskTracker",
 		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
 		"_exporter_id": "45113056",
-		"_collection_link": "https://valentineskorlyakov.postman.co/workspace/098ecd9b-53c1-40f5-8a42-e46401c989fa/collection/45113056-9fcff457-0441-4bd0-be7f-e7d2648e1321?action=share&source=collection_link&creator=45113056"
+		"_collection_link": "https://valentineskorlyakov.postman.co/workspace/Valentine-Skorlyakov's-Workspac~098ecd9b-53c1-40f5-8a42-e46401c989fa/collection/45113056-9fcff457-0441-4bd0-be7f-e7d2648e1321?action=share&source=collection_link&creator=45113056"
 	},
 	"item": [
 		{
@@ -500,7 +500,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "https://localhost:7044/api/Tasks/All",
+									"raw": "https://localhost:7044/api/Tasks/All?employeeId=&tasksGroupId=&projectId=",
 									"protocol": "https",
 									"host": [
 										"localhost"
@@ -510,6 +510,20 @@
 										"api",
 										"Tasks",
 										"All"
+									],
+									"query": [
+										{
+											"key": "employeeId",
+											"value": ""
+										},
+										{
+											"key": "tasksGroupId",
+											"value": ""
+										},
+										{
+											"key": "projectId",
+											"value": ""
+										}
 									]
 								}
 							},
@@ -1230,7 +1244,7 @@
 								"method": "POST",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:5002/api/TasksGroups/Delete/?id",
+									"raw": "http://localhost:5002/api/TasksGroups/Delete/",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -1241,12 +1255,6 @@
 										"TasksGroups",
 										"Delete",
 										""
-									],
-									"query": [
-										{
-											"key": "id",
-											"value": null
-										}
 									]
 								}
 							},
@@ -1312,7 +1320,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:5001/api/Tasks/All",
+									"raw": "http://localhost:5001/api/Tasks/All?employeeId&tasksGroupId&projectId",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -1322,6 +1330,20 @@
 										"api",
 										"Tasks",
 										"All"
+									],
+									"query": [
+										{
+											"key": "employeeId",
+											"value": null
+										},
+										{
+											"key": "tasksGroupId",
+											"value": null
+										},
+										{
+											"key": "projectId",
+											"value": null
+										}
 									]
 								}
 							},
@@ -1606,7 +1628,7 @@
 								"method": "GET",
 								"header": [],
 								"url": {
-									"raw": "http://localhost:5004/api/History/?id",
+									"raw": "http://localhost:5004/api/History/",
 									"protocol": "http",
 									"host": [
 										"localhost"
@@ -1616,12 +1638,6 @@
 										"api",
 										"History",
 										""
-									],
-									"query": [
-										{
-											"key": "id",
-											"value": null
-										}
 									]
 								}
 							},
