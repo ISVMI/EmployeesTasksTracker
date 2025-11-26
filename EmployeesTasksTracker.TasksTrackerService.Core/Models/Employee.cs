@@ -1,0 +1,16 @@
+﻿using EmployeesTasksTracker.TasksTrackerService.Core.Enums;
+using System.ComponentModel.DataAnnotations;
+
+namespace EmployeesTasksTracker.TasksTrackerService.Core.Models
+{
+    public class Employee
+    {
+        [Key]
+        public Guid Id { get; set; } = Guid.NewGuid();
+        public string Name { get; set; }
+        public string Surname { get; set; }
+        public string Patronymic { get; set; }
+        public string UserName { get; set; }
+        public EmployeeRole Role { get; set; }
+    }
+}
