@@ -1,23 +1,32 @@
 ﻿using EmployeesTasksTracker.TasksTrackerService.Core.Enums;
 using Shared.Exceptions;
 using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Core.Models
 {
     public class Task
     {
         [Key]
+        [Column("Id")]
         public Guid Id { get; set; } = Guid.NewGuid();
+        [Column("Name")]
         public string Name { get; set; }
+        [Column("Description")]
         public string Description { get; set; }
         public Guid ProjectId { get; set; }
         public virtual Project Project { get; set; }
         public Guid TasksGroupId { get; set; }
         public virtual TasksGroup TasksGroup { get; set; }
+        [Column("Deadline")]
         public DateTime Deadline { get; set; }
+        [Column("CreatedAt")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        [Column("Status")]
         public Status Status { get; private set; }
+        [Column("Priority")]
         public Priority Priority { get; set; }
+        public ICollection<TaskEmployee> TaskEmployees { get; set; } = new HashSet<TaskEmployee>();
 
         public void ChangeStatus(Status newStatus)
         {
