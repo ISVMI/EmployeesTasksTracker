@@ -1,73 +1,47 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EmployeesTasksTracker.TasksTrackerService.Core.Enums;
+using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
+using EmployeesTasksTracker.TasksTrackerService.Core.Models;
+using EmployeesTasksTracker.TasksTrackerService.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using Shared.Exceptions;
 
-namespace EmployeesTasksTracker.TasksService.Infrastructure.Repositories
+namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
 {
     public class TasksRepo : ITasksRepo
     {
-        private readonly TasksContext _context;
+        private readonly TasksTrackerContext _context;
 
-        public TasksRepo(TasksContext context)
+        public TasksRepo(TasksTrackerContext context)
         {
             _context = context;
         }
 
-        public async Task AddObserverAsync(Guid observerId, Guid taskId, CancellationToken cancellationToken = default)
+        public async System.Threading.Tasks.Task AddObserverAsync(Guid observerId, Guid taskId, CancellationToken token = default)
         {
-            if (observerId == Guid.Empty)
+            var observerToAdd = new TaskEmployee
             {
-                throw new ArgumentException($"Given observer's id was empty - {observerId}", nameof(observerId));
-            }
+                EmployeeId = observerId,
+                TaskId = taskId,
+                EmployeeRoleInTask = RoleInTask.Observer
+            };
 
-            var taskToEdit = await GetByIdAsync(taskId, cancellationToken);
+            await _context.TaskEmployees.AddAsync(observerToAdd, token);
 
-            if (taskToEdit == null)
-            {
-                throw new ArgumentNullException(nameof(taskToEdit), $"Could not find task with the given id - {taskId}");
-            }
-
-            if (taskToEdit.Observers.Contains(observerId))
-            {
-                throw new DomainException($"Observer with id {observerId} already exists!");
-            }
-
-            if (taskToEdit.Performers.Contains(observerId))
-            {
-                throw new DomainException($"Employee with id {observerId} already assigned as performer!");
-            }
-
-            taskToEdit.Observers.Add(observerId);
-
-            await _context.SaveChangesAsync(cancellationToken);
+            await _context.SaveChangesAsync(token);
         }
 
-        public async Task AddPerformerAsync(Guid performerId, Guid taskId, CancellationToken cancellationToken = default)
+        public async System.Threading.Tasks.Task AddPerformerAsync(Guid performerId, Guid taskId, CancellationToken token = default)
         {
-            if (performerId == Guid.Empty)
+            var performerToAdd = new TaskEmployee
             {
-                throw new ArgumentException($"Given performer's id was empty - {performerId}", nameof(performerId));
-            }
+                EmployeeId = performerId,
+                TaskId = taskId,
+                EmployeeRoleInTask = RoleInTask.Performer
+            };
 
-            var taskToEdit = await GetByIdAsync(taskId, cancellationToken);
+            await _context.TaskEmployees.AddAsync(performerToAdd, token);
 
-            if (taskToEdit == null)
-            {
-                throw new ArgumentNullException(nameof(taskToEdit), $"Could not find task with the given id - {taskId}");
-            }
-
-            if (taskToEdit.Performers.Contains(performerId))
-            {
-                throw new DomainException($"Performer with id {performerId} already exists!");
-            }
-
-            if (taskToEdit.Observers.Contains(performerId))
-            {
-                throw new DomainException($"Employee with id {performerId} already assigned as observer!");
-            }
-
-            taskToEdit.Performers.Add(performerId);
-
-            await _context.SaveChangesAsync(cancellationToken);
+            await _context.SaveChangesAsync(token);
         }
 
         public async Task<Guid> CreateAsync(Core.Models.Task task, CancellationToken token = default)
@@ -77,7 +51,7 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.Repositories
                 throw new ArgumentNullException(nameof(task), "Given task was null!");
             }
 
-            if (task.Status != Core.Enums.Status.Backlog && task.Status != Core.Enums.Status.Current)
+            if (task.Status != Status.Backlog && task.Status != Status.Current)
             {
                 throw new DomainException($"Could not create task with the given status - {task.Status}");
             }
@@ -91,8 +65,8 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.Repositories
         {
             var taskToDelete = await GetByIdAsync(id, token);
 
-            if (taskToDelete.Status == Core.Enums.Status.Active ||
-                taskToDelete.Status == Core.Enums.Status.Testing)
+            if (taskToDelete.Status == Status.Active ||
+                taskToDelete.Status == Status.Testing)
             {
                 throw new DomainException($"Could not delete task with status - {taskToDelete.Status}");
             }
@@ -108,21 +82,26 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.Repositories
             Guid? projectId = null,
             CancellationToken token = default)
         {
-            var query = _context.Tasks.AsNoTracking().AsQueryable();
+            var query = _context.Tasks
+                .Include(t => t.TasksGroup)
+                .Include(t => t.Project)
+                .Include(t => t.TaskEmployees)
+                .AsNoTracking()
+                .AsQueryable();
 
             if (employeeId.HasValue && employeeId != Guid.Empty)
             {
-                query = query.Where(t => t.Performers.Contains(employeeId.Value) || t.Observers.Contains(employeeId.Value));
+                query = query.Where(t => t.TaskEmployees.Any(te => te.EmployeeId == employeeId.Value));
             }
 
             if (tasksGroupId.HasValue && tasksGroupId != Guid.Empty)
             {
-                query = query.Where(t => t.TasksGroup == tasksGroupId.Value);
+                query = query.Where(t => t.TasksGroupId == tasksGroupId.Value);
             }
 
             if (projectId.HasValue && projectId != Guid.Empty)
             {
-                query = query.Where(t => t.Project == projectId.Value);
+                query = query.Where(t => t.ProjectId == projectId.Value);
             }
 
             var tasks = await query.ToListAsync(token);
@@ -132,9 +111,7 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.Repositories
 
         public async Task<IEnumerable<Guid>> GetAllIds(CancellationToken token = default)
         {
-            return await _context.Database.
-                SqlQueryRaw<Guid>("SELECT \"Id\" FROM public.\"Tasks\"")
-                .ToListAsync();
+            return await _context.Tasks.Select(t => t.Id).ToListAsync(token);
         }
 
         public async Task<Core.Models.Task> GetByIdAsync(Guid id, CancellationToken token = default)
@@ -153,14 +130,14 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.Repositories
 
         public async Task<Guid> GetProjectId(Guid tasksGroupId, CancellationToken cancellationToken = default)
         {
-            var project = await _context.Tasks.Where(t => t.TasksGroup == tasksGroupId).Select(t => t.Project).FirstAsync(cancellationToken);
+            var project = await _context.Tasks.Where(t => t.TasksGroupId == tasksGroupId).Select(t => t.ProjectId).FirstAsync(cancellationToken);
 
             return project;
         }
 
         public async Task<IEnumerable<Core.Models.Task>> GetTasksByGroupId(Guid tasksGroupId, CancellationToken cancellationToken = default)
         {
-            var tasks = await _context.Tasks.Where(t => t.TasksGroup == tasksGroupId).ToListAsync(cancellationToken);
+            var tasks = await _context.Tasks.Where(t => t.TasksGroupId == tasksGroupId).ToListAsync(cancellationToken);
 
             return tasks;
         }

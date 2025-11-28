@@ -1,13 +1,16 @@
-﻿using Microsoft.EntityFrameworkCore;
+﻿using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
+using EmployeesTasksTracker.TasksTrackerService.Core.Models;
+using EmployeesTasksTracker.TasksTrackerService.Infrastructure.Data;
+using Microsoft.EntityFrameworkCore;
 using Shared.Exceptions;
 
-namespace EmployeesTasksTracker.EmployeesService.Infrastructure.Repositories
+namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
 {
     internal class EmployeesRepo : IEmployeesRepo
     {
-        private readonly EmployeesContext _context;
+        private readonly TasksTrackerContext _context;
 
-        public EmployeesRepo(EmployeesContext context)
+        public EmployeesRepo(TasksTrackerContext context)
         {
             _context = context;
         }
@@ -46,11 +49,9 @@ namespace EmployeesTasksTracker.EmployeesService.Infrastructure.Repositories
             return employees;
         }
 
-        public async Task<IEnumerable<Guid>> GetAllIdsAsync()
+        public async Task<IEnumerable<Guid>> GetAllIds(CancellationToken token = default)
         {
-            return await _context.Database.
-                SqlQueryRaw<Guid>("SELECT \"Id\" FROM public.\"Employees\"")
-                .ToListAsync();
+            return await _context.Employees.Select(e => e.Id).ToListAsync(token);
         }
 
         public async Task<Employee> GetByIdAsync(Guid id, CancellationToken token = default)
