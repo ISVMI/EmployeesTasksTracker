@@ -1,4 +1,5 @@
 ﻿
+using EmployeesTasksTracker.TasksTrackerService.Core.Enums;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Core.Models
@@ -10,6 +11,6 @@ namespace EmployeesTasksTracker.TasksTrackerService.Core.Models
         public Guid EmployeeId { get; set; }
         public Employee Employee { get; set; }
         [Column("EmployeeRoleInProject")]
-        public string EmployeeRoleInProject { get; set; }
+        public RoleInProject EmployeeRoleInProject { get; set; }
     }
 }
