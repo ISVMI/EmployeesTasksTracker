@@ -1,18 +1,23 @@
 ﻿using EmployeesTasksTracker.TasksTrackerService.Application.Commands.Tasks;
 using EmployeesTasksTracker.TasksTrackerService.Core.Enums;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
+using MassTransit;
 using MediatR;
+using Shared.DTOs;
 using Shared.Exceptions;
+using Shared.Messages;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
 {
     public class CreateTaskHandler : IRequestHandler<CreateTaskCommand, Guid>
     {
         private readonly ITasksRepo _repo;
+        private readonly IBus _bus;
 
-        public CreateTaskHandler(ITasksRepo repo)
+        public CreateTaskHandler(ITasksRepo repo, IBus bus)
         {
             _repo = repo;
+            _bus = bus;
         }
 
         public async Task<Guid> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
@@ -42,7 +47,18 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
                 newTask.ChangeStatus(status);
             }
 
-            await _repo.CreateAsync(newTask, cancellationToken);
+            var taskId = await _repo.CreateAsync(newTask, cancellationToken);
+
+            var message = new TaskCreated
+            {
+                TaskId = taskId,
+                Name = request.Task.Name,
+                CreatedAt = request.Task.CreatedAt.ToString($"dd.MM.yyyy HH:mm:ss"),
+                Deadline = request.Task.Deadline.ToString($"dd.MM.yyyy HH:mm:ss"),
+                Description = request.Task.Description,
+                Priority = request.Task.Priority,
+                Status = request.Task.Status
+            };
 
             return newTask.Id;
         }
