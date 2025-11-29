@@ -10,36 +10,47 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
     {
         private readonly ITasksRepo _repo;
         private readonly IBus _bus;
+        private readonly ITaskEmployeeRepo _taskEmployeeRepo;
 
-        public AddTaskObserverHandler(ITasksRepo repo, IBus bus)
+        public AddTaskObserverHandler(ITasksRepo repo, ITaskEmployeeRepo taskEmployeeRepo, IBus bus)
         {
             _repo = repo;
             _bus = bus;
+            _taskEmployeeRepo = taskEmployeeRepo;
         }
 
         public async Task Handle(AddTaskObserverCommand request, CancellationToken cancellationToken)
         {
-                var task = await _repo.GetByIdAsync(request.TaskId, cancellationToken);
+            var task = await _repo.GetByIdAsync(request.TaskId, cancellationToken);
 
-                await _repo.AddObserverAsync(request.ObserverId, request.TaskId, cancellationToken);
+            var employeeProject = await _taskEmployeeRepo.GetAllById(request.TaskId, request.ObserverId, cancellationToken);
 
-                var changes = new List<string>
+            if (employeeProject.Any())
+            {
+                var employeeRole = employeeProject.First().EmployeeRoleInTask;
+
+                return Result.Failure($"Employee with id: {request.ObserverId} already assigned as {employeeRole}!");
+            }
+
+            await _repo.AddObserverAsync(request.ObserverId, request.TaskId, cancellationToken);
+
+            var changes = new List<string>
                 {
                     $"Добавился наблюдатель {request.ObserverId}"
                 };
 
-                var message = new TaskDataChanged(request.TaskId, changes, DateTime.UtcNow);
+            var message = new TaskDataChanged(request.TaskId, changes, DateTime.UtcNow);
 
-                var secondMessage = new EmployeeAssigned
-                {
-                    TaskId = request.TaskId,
-                    EmployeeId = request.ObserverId,
-                    TaskName = task.Name
-                };
+            var secondMessage = new EmployeeAssigned
+            {
+                TaskId = request.TaskId,
+                EmployeeId = request.ObserverId,
+                TaskName = task.Name
+            };
 
-                await _bus.Publish(message, cancellationToken);
+            await _bus.Publish(message, cancellationToken);
 
-                await _bus.Publish(secondMessage, cancellationToken);
+            await _bus.Publish(secondMessage, cancellationToken);
         }
     }
 }
