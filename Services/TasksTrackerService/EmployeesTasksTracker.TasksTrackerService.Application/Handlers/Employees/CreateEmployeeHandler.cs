@@ -3,6 +3,7 @@ using EmployeesTasksTracker.TasksTrackerService.Core.Enums;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using EmployeesTasksTracker.TasksTrackerService.Core.Models;
 using MediatR;
+using Shared.Exceptions;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Employees
 {
@@ -17,12 +18,18 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Employe
 
         public async Task<Guid> Handle(CreateEmployeeCommand request, CancellationToken cancellationToken)
         {
-                var employee = new Employee
+
+            if (!Enum.TryParse<EmployeeRole>(request.Employee.Role, true, out EmployeeRole employeeRole))
+            {
+                throw new DomainException($"Unknown status {request.Employee.Role}");
+            }
+
+            var employee = new Employee
                 {
                     Name = request.Employee.Name,
                     Surname = request.Employee.Surname,
                     Patronymic = request.Employee.Patronymic,
-                    Role = EmployeeRole.QA, //request.EmployeeToEdit.Role,
+                    Role = employeeRole,
                     UserName = request.Employee.UserName
                 };
 
