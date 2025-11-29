@@ -3,10 +3,11 @@ using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using MassTransit;
 using MediatR;
 using Shared.Messages;
+using Shared.Models;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
 {
-    public class AddTaskObserverHandler : IRequestHandler<AddTaskObserverCommand>
+    public class AddTaskObserverHandler : IRequestHandler<AddTaskObserverCommand, Result>
     {
         private readonly ITasksRepo _repo;
         private readonly IBus _bus;
@@ -19,7 +20,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
             _taskEmployeeRepo = taskEmployeeRepo;
         }
 
-        public async Task Handle(AddTaskObserverCommand request, CancellationToken cancellationToken)
+        public async Task<Result> Handle(AddTaskObserverCommand request, CancellationToken cancellationToken)
         {
             var task = await _repo.GetByIdAsync(request.TaskId, cancellationToken);
 
@@ -51,6 +52,8 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
             await _bus.Publish(message, cancellationToken);
 
             await _bus.Publish(secondMessage, cancellationToken);
+
+            return Result.Success();
         }
     }
 }
