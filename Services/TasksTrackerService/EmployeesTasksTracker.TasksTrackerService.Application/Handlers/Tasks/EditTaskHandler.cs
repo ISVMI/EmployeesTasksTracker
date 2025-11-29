@@ -4,6 +4,7 @@ using EmployeesTasksTracker.TasksTrackerService.Core.Enums;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using MassTransit;
 using MediatR;
+using Shared.Exceptions;
 using Shared.Messages;
 using Shared.Methods;
 
@@ -22,6 +23,12 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
 
         public async Task<TaskDTO> Handle(EditTaskCommand request, CancellationToken cancellationToken)
         {
+
+            if (!Enum.TryParse<Priority>(request.TaskToEdit.Priority, true, out Priority priority))
+            {
+                throw new DomainException($"Unknown priority {request.TaskToEdit.Priority}");
+            }
+
             var taskToEdit = new Core.Models.Task
             {
                 Id = request.TaskToEdit.Id,
@@ -29,7 +36,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
                 CreatedAt = request.TaskToEdit.CreatedAt,
                 Deadline = request.TaskToEdit.Deadline,
                 Description = request.TaskToEdit.Description,
-                Priority = Priority.Low, //request.TaskToEdit.Priority
+                Priority = priority
             };
 
             var existingTask = await _repo.GetByIdAsync(taskToEdit.Id, cancellationToken);
