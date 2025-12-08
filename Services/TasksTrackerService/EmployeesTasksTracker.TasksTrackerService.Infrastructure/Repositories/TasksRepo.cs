@@ -16,34 +16,6 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
             _context = context;
         }
 
-        public async System.Threading.Tasks.Task AddObserverAsync(Guid observerId, Guid taskId, CancellationToken token = default)
-        {
-            var observerToAdd = new TaskEmployee
-            {
-                EmployeeId = observerId,
-                TaskId = taskId,
-                EmployeeRoleInTask = RoleInTask.Observer
-            };
-
-            await _context.TaskEmployees.AddAsync(observerToAdd, token);
-
-            await _context.SaveChangesAsync(token);
-        }
-
-        public async System.Threading.Tasks.Task AddPerformerAsync(Guid performerId, Guid taskId, CancellationToken token = default)
-        {
-            var performerToAdd = new TaskEmployee
-            {
-                EmployeeId = performerId,
-                TaskId = taskId,
-                EmployeeRoleInTask = RoleInTask.Performer
-            };
-
-            await _context.TaskEmployees.AddAsync(performerToAdd, token);
-
-            await _context.SaveChangesAsync(token);
-        }
-
         public async Task<Guid> CreateAsync(Core.Models.Task task, CancellationToken token = default)
         {
             if (task == null)

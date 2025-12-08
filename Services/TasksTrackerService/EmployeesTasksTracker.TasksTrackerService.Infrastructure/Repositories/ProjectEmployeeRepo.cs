@@ -1,4 +1,5 @@
-﻿using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
+﻿using EmployeesTasksTracker.TasksTrackerService.Core.Enums;
+using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using EmployeesTasksTracker.TasksTrackerService.Core.Models;
 using EmployeesTasksTracker.TasksTrackerService.Infrastructure.Data;
 using Shared.Exceptions;
@@ -12,6 +13,20 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
         public ProjectEmployeeRepo(TasksTrackerContext context)
         {
             _context = context;
+        }
+
+        public async System.Threading.Tasks.Task AddEmployeeAsync(Guid employeeId, Guid taskId, RoleInProject roleInProject, CancellationToken token = default)
+        {
+            var employeeToAdd = new ProjectEmployee
+            {
+                EmployeeId = employeeId,
+                ProjectId = taskId,
+                EmployeeRoleInProject = roleInProject
+            };
+
+            await _context.ProjectEmployees.AddAsync(employeeToAdd, token);
+
+            await _context.SaveChangesAsync(token);
         }
 
         public async Task<IEnumerable<ProjectEmployee>> GetAllById(Guid? projectId = null, Guid? employeeId = null, CancellationToken token = default)
