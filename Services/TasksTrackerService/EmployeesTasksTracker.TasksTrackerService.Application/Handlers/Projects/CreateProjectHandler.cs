@@ -3,7 +3,7 @@ using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using EmployeesTasksTracker.TasksTrackerService.Core.Models;
 using MediatR;
 
-namespace EmployeesTasksTracker.ProjectsService.Application.Handlers
+namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Projects
 {
     public class CreateProjectHandler : IRequestHandler<CreateProjectCommand, Guid>
     {

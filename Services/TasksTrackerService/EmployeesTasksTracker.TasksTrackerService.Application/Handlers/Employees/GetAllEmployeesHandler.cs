@@ -3,7 +3,7 @@ using EmployeesTasksTracker.TasksTrackerService.Application.Queries.Employees;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using MediatR;
 
-namespace EmployeesTasksTracker.EmployeesService.Application.Handlers
+namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Employees
 {
     public class GetAllEmployeesHandler : IRequestHandler<GetAllEmployeesQuery, IEnumerable<EmployeeDTO>>
     {
