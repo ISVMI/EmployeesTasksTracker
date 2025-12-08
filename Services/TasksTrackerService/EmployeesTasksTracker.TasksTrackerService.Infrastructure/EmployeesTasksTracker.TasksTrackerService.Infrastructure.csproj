@@ -7,6 +7,19 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <EmbeddedResource Include="DataSeeding\FemalePatronymics.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+    <EmbeddedResource Include="DataSeeding\MalePatronymics.json">
+      <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+    </EmbeddedResource>
+  </ItemGroup>
+
+  <ItemGroup>
+    <PackageReference Include="Bogus" Version="35.6.4" />
+  </ItemGroup>
+
+  <ItemGroup>
     <ProjectReference Include="..\..\..\Common\Shared\Shared.csproj" />
     <ProjectReference Include="..\..\..\EmployeesTasksTracker.TasksTrackerService.Core\EmployeesTasksTracker.TasksTrackerService.Core.csproj" />
   </ItemGroup>
