@@ -1,4 +1,5 @@
 ﻿using EmployeesTasksTracker.TasksTrackerService.Application.Commands.Tasks;
+using EmployeesTasksTracker.TasksTrackerService.Core.Enums;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using MassTransit;
 using MediatR;
@@ -33,7 +34,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
                 return Result.Failure($"Employee with id: {request.ObserverId} already assigned as {employeeRole}!");
             }
 
-            await _repo.AddObserverAsync(request.ObserverId, request.TaskId, cancellationToken);
+            await _taskEmployeeRepo.AddEmployeeAsync(request.ObserverId, request.TaskId, RoleInTask.Observer, cancellationToken);
 
             var changes = new List<string>
                 {
