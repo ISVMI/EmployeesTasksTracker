@@ -13,9 +13,13 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Extensions
     {
         public static void AddInfrastructure(this IServiceCollection services, IConfiguration configuration)
         {
+            //Adding Database
             services.AddDatabaseService<TasksTrackerContext>(configuration);
+            //Addind Repos
             services.AddScoped<IEmployeesRepo, EmployeesRepo>();
+            services.AddScoped<IProjectEmployeeRepo, ProjectEmployeeRepo>();
             services.AddScoped<IProjectsRepo, ProjectsRepo>();
+            services.AddScoped<ITaskEmployeeRepo, TaskEmployeeRepo>();
             services.AddScoped<ITasksGroupsRepo, TasksGroupsRepo>();
             services.AddScoped<ITasksRepo, TasksRepo>();
         }
