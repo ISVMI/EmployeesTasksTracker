@@ -32,11 +32,13 @@ builder.Services.AddMassTransit(config =>
     });
 });
 
+builder.Services.AddScoped<ProjectsGenerator>();
+builder.Services.AddScoped<TasksGenerator>();
 builder.Services.AddScoped<DbInitializer>();
 
-builder.Services.AddScoped<ITaskReportService, TaskReportService>();
-builder.Services.AddScoped<IPdfReportGenerator, PdfReportGenerator>();
 builder.Services.AddScoped<ITasksGroupReportService, TasksGroupReportService>();
+builder.Services.AddScoped<IPdfReportGenerator, PdfReportGenerator>();
+builder.Services.AddScoped<ITaskReportService, TaskReportService>();
 builder.Services.AddScoped<IPdfReportGenerator, PdfReportGenerator>();
 
 var app = builder.Build();

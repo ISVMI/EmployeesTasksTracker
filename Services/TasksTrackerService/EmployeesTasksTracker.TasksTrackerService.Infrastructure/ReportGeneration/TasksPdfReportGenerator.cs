@@ -1,8 +1,8 @@
-﻿using EmployeesTasksTracker.TasksService.Application.Interfaces;
+﻿using EmployeesTasksTracker.TasksTrackerService.Application.Interfaces;
 using QuestPDF.Fluent;
 using Shared.Interfaces;
 
-namespace EmployeesTasksTracker.TasksService.Infrastructure.ReportGeneration
+namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.ReportGeneration
 {
     public class PdfReportGenerator : IPdfReportGenerator
     {
@@ -19,7 +19,7 @@ namespace EmployeesTasksTracker.TasksService.Infrastructure.ReportGeneration
             {
                 var reportModel = await _service.GetTaskReportDataAsync(taskId);
 
-                var document = new TaskReportDocument(reportModel);
+                var document = new TasksReportDocument(reportModel);
 
                 return document.GeneratePdf();
             }

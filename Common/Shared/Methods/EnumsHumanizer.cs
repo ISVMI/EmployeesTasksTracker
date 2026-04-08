@@ -50,6 +50,30 @@
                     {
                         return "Отменена";
                     }
+                case "Performer":
+                    {
+                        return "Исполнитель";
+                    }
+                case "Observer":
+                    {
+                        return "Наблюдатель";
+                    }
+                case "Manager":
+                    {
+                        return "Менеджер";
+                    }
+                case "Analyst":
+                    {
+                        return "Аналитик";
+                    }
+                case "Developer":
+                    {
+                        return "Разработчик";
+                    }
+                case "QA":
+                    {
+                        return "Тестировщик";
+                    }
                 default:
                     {
                         return "Неизвестно";

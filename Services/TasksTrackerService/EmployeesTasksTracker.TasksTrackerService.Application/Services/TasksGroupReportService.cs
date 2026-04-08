@@ -1,20 +1,23 @@
-﻿using EmployeesTasksTracker.TasksGroupsService.Application.Interfaces;
-using EmployeesTasksTracker.TasksGroupsService.Core.Interfaces;
+﻿using EmployeesTasksTracker.TasksTrackerService.Application.Interfaces;
+using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
+using Shared.DTOs;
+using Shared.Exceptions;
+using Shared.Methods;
 using Shared.Models;
 
-namespace EmployeesTasksTracker.TasksGroupsService.Application.Services
+namespace EmployeesTasksTracker.TasksTrackerService.Application.Services
 {
     public class TasksGroupReportService : ITasksGroupReportService
     {
         private readonly ITasksGroupsRepo _repo;
-        private readonly ITasksClient _tasksClient;
-        private readonly IProjectsClient _projectsClient;
+        private readonly ITasksRepo _tasksRepo;
+        private readonly IProjectsRepo _projectsRepo;
 
-        public TasksGroupReportService(ITasksGroupsRepo repo, ITasksClient tasksClient, IProjectsClient projectsClient)
+        public TasksGroupReportService(ITasksGroupsRepo repo, ITasksRepo tasksRepo, IProjectsRepo projectsRepo)
         {
             _repo = repo;
-            _tasksClient = tasksClient;
-            _projectsClient = projectsClient;
+            _tasksRepo = tasksRepo;
+            _projectsRepo = projectsRepo;
         }
 
         public async Task<TasksGroupReportModel> GetTasksGroupReportDataAsync(Guid id, CancellationToken cancellationToken = default)
@@ -23,18 +26,35 @@ namespace EmployeesTasksTracker.TasksGroupsService.Application.Services
             {
                 var tasksGroup = await _repo.GetByIdAsync(id, cancellationToken);
 
-                var projectId = await _tasksClient.GetProjectId(id, cancellationToken);
+                var projectId = await _tasksRepo.GetProjectId(id, cancellationToken);
 
-                var tasks = await _tasksClient.GetTasks(id, cancellationToken);
+                var tasks = await _tasksRepo.GetAllAsync(null, id, null, cancellationToken);
 
-                var projectName = await _projectsClient.GetProjectName(projectId, cancellationToken);
+                var task = tasksGroup.Tasks.FirstOrDefault() ?? throw new DomainException($"Tasks group {tasksGroup.Name} doesn't contain any tasks!");
+
+                var project = await _projectsRepo.GetByIdAsync(task.ProjectId, cancellationToken);
+
+                var tasksForReport = new List<TaskForReportDTO>();
+
+                Parallel.ForEach(tasks, (task) =>
+                {
+                    tasksForReport.Add(new TaskForReportDTO
+                    {
+                        Name = task.Name,
+                        CreatedAt = task.CreatedAt.ToString("dd.MM.yyyy HH:mm"),
+                        Deadline = task.Deadline.ToString("dd.MM.yyyy HH:mm"),
+                        Description = task.Description,
+                        Status = EnumsHumanizer.Translate(task.Status.ToString()),
+                        Priority = EnumsHumanizer.Translate(task.Priority.ToString())
+                    });
+                });
 
                 return new TasksGroupReportModel
                 {
                     ReportTitle = "Отчёт о группе задач",
                     Name = tasksGroup.Name,
-                    ProjectName = projectName,
-                    Tasks = tasks.ToList()
+                    ProjectName = project.Name,
+                    Tasks = tasksForReport
                 };
             }
             catch (Exception ex)

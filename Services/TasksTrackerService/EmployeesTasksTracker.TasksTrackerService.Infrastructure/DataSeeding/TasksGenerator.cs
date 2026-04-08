@@ -14,9 +14,9 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.DataSeeding
         private readonly ITasksRepo _tasksRepo;
 
         public TasksGenerator(
-            ITasksRepo tasksRepo, 
+            ITasksRepo tasksRepo,
             ITaskEmployeeRepo taskEmployeeRepo,
-            IEmployeesRepo employeesRepo, 
+            IEmployeesRepo employeesRepo,
             ITasksGroupsRepo tasksGroupsRepo,
             IProjectsRepo projectsRepo)
         {
@@ -113,7 +113,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.DataSeeding
 
                 await _tasksRepo.CreateAsync(task);
 
-                for(int j = 0; j < performers.Count; j++)
+                for (int j = 0; j < performers.Count; j++)
                 {
                     await _taskEmployeeRepo.AddEmployeeAsync(performers[j], task.Id, RoleInTask.Performer);
                 }

@@ -4,13 +4,13 @@ using QuestPDF.Infrastructure;
 using Shared.DTOs;
 using Shared.Models;
 
-namespace EmployeesTasksTracker.TasksService.Infrastructure.ReportGeneration
+namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.ReportGeneration
 {
-    public class TaskReportDocument : IDocument
+    public class TasksReportDocument : IDocument
     {
         private readonly TaskReportModel _model;
 
-        public TaskReportDocument(TaskReportModel model)
+        public TasksReportDocument(TaskReportModel model)
         {
             QuestPDF.Settings.License = LicenseType.Community;
             _model = model;
