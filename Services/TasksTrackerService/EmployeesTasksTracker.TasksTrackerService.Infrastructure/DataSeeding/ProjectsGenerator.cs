@@ -9,16 +9,17 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.DataSeeding
         private static readonly Faker _faker = new("ru");
         private readonly IEmployeesRepo _employeesRepo;
         private readonly IProjectEmployeeRepo _projectEmployeesRepo;
+        private readonly IProjectsRepo _projectsRepo;
 
-        public ProjectsGenerator(IEmployeesRepo employeesRepo, IProjectEmployeeRepo projectEmployeeRepo)
+        public ProjectsGenerator(IProjectsRepo projectsRepo, IEmployeesRepo employeesRepo, IProjectEmployeeRepo projectEmployeeRepo)
         {
             _employeesRepo = employeesRepo;
             _projectEmployeesRepo = projectEmployeeRepo;
+            _projectsRepo = projectsRepo;
         }
 
-        public async Task<List<Project>> GenerateProjectsAsync(int count)
+        public async System.Threading.Tasks.Task GenerateProjectsAsync(int count)
         {
-            var projects = new List<Project>();
             var employees = await _employeesRepo.GetAllIds();
 
             if (employees == null)
@@ -45,13 +46,12 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.DataSeeding
                     Description = $"Проект позволяет {_faker.Hacker.Verb()} {_faker.Hacker.Noun()} и {_faker.Hacker.Verb()} {_faker.Hacker.Noun()}"
                 };
 
-                projects.Add(project);
+
+                await _projectsRepo.CreateAsync(project);
 
                 await _projectEmployeesRepo.AddEmployeeAsync(supervisor, project.Id, Core.Enums.RoleInProject.Supervisor);
                 await _projectEmployeesRepo.AddEmployeeAsync(manager, project.Id, Core.Enums.RoleInProject.Manager);
             }
-
-            return projects;
         }
 
         private static void Shuffle(List<Guid> employees)

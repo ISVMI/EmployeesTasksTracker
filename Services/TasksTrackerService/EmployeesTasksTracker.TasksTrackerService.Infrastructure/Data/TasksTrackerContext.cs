@@ -6,7 +6,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Data
     public class TasksTrackerContext : DbContext
     {
         public TasksTrackerContext(DbContextOptions<TasksTrackerContext> options) : base(options) { }
-        
+
         public DbSet<Employee> Employees { get; set; }
         public DbSet<Project> Projects { get; set; }
         public DbSet<Core.Models.Task> Tasks { get; set; }
@@ -18,7 +18,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Data
         {
 
             modelBuilder.Entity<TaskEmployee>()
-                .HasKey(te => new { te.TaskId, te.EmployeeId, te.EmployeeRoleInTask});
+                .HasKey(te => new { te.TaskId, te.EmployeeId, te.EmployeeRoleInTask });
 
             modelBuilder.Entity<TaskEmployee>()
                 .HasOne(te => te.Task)

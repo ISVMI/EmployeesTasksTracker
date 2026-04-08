@@ -1,7 +1,6 @@
 ﻿using Bogus;
 using EmployeesTasksTracker.TasksTrackerService.Core.Enums;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
-using EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.DataSeeding
 {
@@ -12,18 +11,24 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.DataSeeding
         private readonly IEmployeesRepo _employeesRepo;
         private readonly ITasksGroupsRepo _tasksGroupsRepo;
         private readonly IProjectsRepo _projectsRepo;
+        private readonly ITasksRepo _tasksRepo;
 
-        public TasksGenerator(ITaskEmployeeRepo taskEmployeeRepo, IEmployeesRepo employeesRepo, ITasksGroupsRepo tasksGroupsRepo, IProjectsRepo projectsRepo)
+        public TasksGenerator(
+            ITasksRepo tasksRepo, 
+            ITaskEmployeeRepo taskEmployeeRepo,
+            IEmployeesRepo employeesRepo, 
+            ITasksGroupsRepo tasksGroupsRepo,
+            IProjectsRepo projectsRepo)
         {
+            _tasksRepo = tasksRepo;
             _taskEmployeeRepo = taskEmployeeRepo;
             _employeesRepo = employeesRepo;
             _tasksGroupsRepo = tasksGroupsRepo;
             _projectsRepo = projectsRepo;
         }
 
-        public async Task<List<Core.Models.Task>> GenerateTasksAsync(int count)
+        public async Task GenerateTasksAsync(int count)
         {
-            var tasks = new List<Core.Models.Task>();
             var employees = await _employeesRepo.GetAllIds();
             var tasksGroups = await _tasksGroupsRepo.GetAllIds();
             var projects = await _projectsRepo.GetAllIds();
@@ -106,20 +111,18 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.DataSeeding
                 task.Project = await _projectsRepo.GetByIdAsync(project);
                 task.TasksGroup = await _tasksGroupsRepo.GetByIdAsync(tasksGroup);
 
-                tasks.Add(task);
+                await _tasksRepo.CreateAsync(task);
 
                 for(int j = 0; j < performers.Count; j++)
                 {
-                    await _taskEmployeeRepo.AddEmployeeAsync(performers[i], task.Id, RoleInTask.Performer);
+                    await _taskEmployeeRepo.AddEmployeeAsync(performers[j], task.Id, RoleInTask.Performer);
                 }
 
                 for (int k = 0; k < observers.Count; k++)
                 {
-                    await _taskEmployeeRepo.AddEmployeeAsync(observers[i], task.Id, RoleInTask.Observer);
+                    await _taskEmployeeRepo.AddEmployeeAsync(observers[k], task.Id, RoleInTask.Observer);
                 }
             }
-
-            return tasks;
         }
 
         private static void Shuffle(List<Guid> employees)
