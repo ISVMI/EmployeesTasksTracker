@@ -1,8 +1,12 @@
 using EmployeesTasksTracker.TasksTrackerService.Application.Extensions;
+using EmployeesTasksTracker.TasksTrackerService.Application.Interfaces;
+using EmployeesTasksTracker.TasksTrackerService.Application.Services;
 using EmployeesTasksTracker.TasksTrackerService.Infrastructure.DataSeeding;
 using EmployeesTasksTracker.TasksTrackerService.Infrastructure.Extensions;
+using EmployeesTasksTracker.TasksTrackerService.Infrastructure.ReportGeneration;
 using MassTransit;
 using Shared.Extensions;
+using Shared.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -28,10 +32,12 @@ builder.Services.AddMassTransit(config =>
     });
 });
 
-builder.Services.AddScoped<ProjectsGenerator>();
-builder.Services.AddScoped<TasksGenerator>();
-
 builder.Services.AddScoped<DbInitializer>();
+
+builder.Services.AddScoped<ITaskReportService, TaskReportService>();
+builder.Services.AddScoped<IPdfReportGenerator, PdfReportGenerator>();
+builder.Services.AddScoped<ITasksGroupReportService, TasksGroupReportService>();
+builder.Services.AddScoped<IPdfReportGenerator, PdfReportGenerator>();
 
 var app = builder.Build();
 

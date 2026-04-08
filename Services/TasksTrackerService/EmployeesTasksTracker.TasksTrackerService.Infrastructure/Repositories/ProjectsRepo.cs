@@ -22,7 +22,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
                 throw new ArgumentNullException(nameof(project), "Given project was null!");
             }
 
-            if (await _context.Projects.AnyAsync(p => p.Name == project.Name, token))
+            if (await _context.Projects.AnyAsync(p => p.Name == project.Name && p.Description == project.Description, token))
             {
                 throw new DomainException("Such project already exists");
             }
@@ -76,5 +76,16 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
             await _context.SaveChangesAsync(token);
             return project;
         }
+        /*public async Task<Project> GetProjectByTaskId(Guid taskId, CancellationToken token = default)
+        {
+            var project = _context.Projects.Where(p => p.Tasks.Any(t => t.Id == taskId)).SingleOrDefault();
+
+            if(project == null)
+            {
+                throw new DomainException($"Project with task id: {taskId} not found!");
+            }
+
+            return project;
+        }*/
     }
 }
