@@ -23,11 +23,13 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.EntityFrameworkCore.Relational" Version="9.0.10" />
+    <PackageReference Include="QuestPDF" Version="2026.2.4" />
   </ItemGroup>
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\Shared\Shared.csproj" />
     <ProjectReference Include="..\..\..\EmployeesTasksTracker.TasksTrackerService.Core\EmployeesTasksTracker.TasksTrackerService.Core.csproj" />
+    <ProjectReference Include="..\EmployeesTasksTracker.TasksTrackerService.Application\EmployeesTasksTracker.TasksTrackerService.Application.csproj" />
   </ItemGroup>
 
 </Project>

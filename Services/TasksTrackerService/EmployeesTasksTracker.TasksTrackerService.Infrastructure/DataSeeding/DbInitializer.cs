@@ -5,18 +5,21 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.DataSeeding
 {
     public class DbInitializer
     {
+        private readonly ITasksRepo _tasksRepo;
         private readonly ITaskEmployeeRepo _taskEmployeeRepo;
         private readonly IEmployeesRepo _employeesRepo;
         private readonly ITasksGroupsRepo _tasksGroupsRepo;
         private readonly IProjectsRepo _projectsRepo;
         private readonly IProjectEmployeeRepo _projectEmployeesRepo;
 
-        public DbInitializer(ITaskEmployeeRepo taskEmployeeRepo,
+        public DbInitializer(ITasksRepo tasksRepo,
+            ITaskEmployeeRepo taskEmployeeRepo,
             IEmployeesRepo employeesRepo,
             ITasksGroupsRepo tasksGroupsRepo,
             IProjectsRepo projectsRepo,
             IProjectEmployeeRepo projectEmployeeRepo)
         {
+            _tasksRepo = tasksRepo;
             _taskEmployeeRepo = taskEmployeeRepo;
             _employeesRepo = employeesRepo;
             _tasksGroupsRepo = tasksGroupsRepo;
@@ -42,15 +45,10 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.DataSeeding
             if (!context.Projects.Any())
             {
 
-                var generator = new ProjectsGenerator(_employeesRepo, _projectEmployeesRepo);
+                var generator = new ProjectsGenerator(_projectsRepo, _employeesRepo, _projectEmployeesRepo);
 
-                var projects = await generator.GenerateProjectsAsync(20);
-
-                if (projects.Count > 0)
-                {
-                    await context.Projects.AddRangeAsync(projects);
-                    await context.SaveChangesAsync();
-                }
+                await generator.GenerateProjectsAsync(20);
+                await context.SaveChangesAsync();
             }
 
             if (!context.TasksGroups.Any())
@@ -68,15 +66,11 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.DataSeeding
             if (!context.Tasks.Any())
             {
 
-                var genereator = new TasksGenerator(_taskEmployeeRepo, _employeesRepo, _tasksGroupsRepo, _projectsRepo);
+                var genereator = new TasksGenerator(_tasksRepo, _taskEmployeeRepo, _employeesRepo, _tasksGroupsRepo, _projectsRepo);
 
-                var tasks = await genereator.GenerateTasksAsync(120);
+                await genereator.GenerateTasksAsync(120);
 
-                if (tasks.Count > 0)
-                {
-                    await context.Tasks.AddRangeAsync(tasks);
-                    await context.SaveChangesAsync();
-                }
+                await context.SaveChangesAsync();
             }
         }
     }

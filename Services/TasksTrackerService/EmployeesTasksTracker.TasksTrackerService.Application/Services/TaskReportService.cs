@@ -1,25 +1,34 @@
-﻿using EmployeesTasksTracker.TasksService.Application.Interfaces;
-using EmployeesTasksTracker.TasksService.Core.Interfaces;
+﻿using EmployeesTasksTracker.TasksTrackerService.Application.Interfaces;
+using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
+using EmployeesTasksTracker.TasksTrackerService.Core.Models;
+using MassTransit;
 using Shared.DTOs;
 using Shared.Exceptions;
 using Shared.Methods;
 using Shared.Models;
 
-namespace EmployeesTasksTracker.TasksService.Application.Services
+namespace EmployeesTasksTracker.TasksTrackerService.Application.Services
 {
     public class TaskReportService : ITaskReportService
     {
         private readonly ITasksRepo _repo;
-        private readonly IProjectsClient _projectsClient;
-        private readonly ITasksGroupsClient _tasksGroupClient;
-        private readonly IEmployeesClient _employeesClient;
+        private readonly IProjectsRepo _projectsRepo;
+        private readonly ITasksGroupsRepo _tasksGroupRepo;
+        private readonly ITaskEmployeeRepo _taskEmployeeRepo;
+        private readonly IEmployeesRepo _employeesRepo;
 
-        public TaskReportService(ITasksRepo repo, IProjectsClient projectsClient, ITasksGroupsClient tasksGroupsClient, IEmployeesClient employeesClient)
+        public TaskReportService(
+            ITasksRepo repo,
+            IProjectsRepo projectsRepo,
+            ITasksGroupsRepo tasksGroupsRepo,
+            ITaskEmployeeRepo taskEmployeeRepo,
+            IEmployeesRepo employeesRepo)
         {
             _repo = repo;
-            _projectsClient = projectsClient;
-            _tasksGroupClient = tasksGroupsClient;
-            _employeesClient = employeesClient;
+            _projectsRepo = projectsRepo;
+            _tasksGroupRepo = tasksGroupsRepo;
+            _taskEmployeeRepo = taskEmployeeRepo;
+            _employeesRepo = employeesRepo;
         }
 
         public async Task<TaskReportModel> GetTaskReportDataAsync(Guid id, CancellationToken cancellationToken = default)
@@ -28,27 +37,37 @@ namespace EmployeesTasksTracker.TasksService.Application.Services
             {
                 var task = await _repo.GetByIdAsync(id, cancellationToken);
 
-                var project = await _projectsClient.GetProjectName(task.Project, cancellationToken);
+                var project = await _projectsRepo.GetByIdAsync(task.ProjectId, cancellationToken);
 
-                var tasksGroup = await _tasksGroupClient.GetTasksGroupName(task.TasksGroup, cancellationToken);
+                var tasksGroup = await _tasksGroupRepo.GetByIdAsync(task.TasksGroupId, cancellationToken);
 
-                var performers = new List<EmployeeForReportDTO>();
+                var tasksEmployees = await _taskEmployeeRepo.GetAllById(task.Id, null, cancellationToken);
 
-                for (int i = 0; i < task.Performers.Count; i++)
+                var performers = new List<Employee>();
+
+                var observers = new List<Employee>();
+
+                var performersForReport = new List<EmployeeForReportDTO>();
+
+                var observersForReport = new List<EmployeeForReportDTO>();
+
+                foreach(var relation in tasksEmployees)
                 {
-                    var performer = await _employeesClient.GetEmployeeInfo(task.Performers[i], cancellationToken);
+                    var employee = await _employeesRepo.GetByIdAsync(relation.EmployeeId, cancellationToken);
 
-                    performers.Add(performer);
-                }
+                    if (relation.EmployeeRoleInTask == Core.Enums.RoleInTask.Performer)
+                    {
+                        performers.Add(employee);
+                    }
+                    else
+                    {
+                        observers.Add(employee);
+                    }
+                };
 
-                var observers = new List<EmployeeForReportDTO>();
+                AddEmployeesForReport(performers, performersForReport);
 
-                for (int i = 0; i < task.Observers.Count; i++)
-                {
-                    var observer = await _employeesClient.GetEmployeeInfo(task.Observers[i], cancellationToken);
-
-                    observers.Add(observer);
-                }
+                AddEmployeesForReport(observers, observersForReport);
 
                 return new TaskReportModel
                 {
@@ -59,16 +78,31 @@ namespace EmployeesTasksTracker.TasksService.Application.Services
                     CreatedAt = task.CreatedAt.ToString("dd.MM.yyyy HH:mm"),
                     Status = EnumsHumanizer.Translate(task.Status.ToString()),
                     Priority = EnumsHumanizer.Translate(task.Priority.ToString()),
-                    ProjectName = project,
-                    TaskGroupName = tasksGroup,
-                    Performers = performers,
-                    Observers = observers
+                    ProjectName = project.Name,
+                    TaskGroupName = tasksGroup.Name,
+                    Performers = performersForReport,
+                    Observers = observersForReport
                 };
             }
             catch (Exception ex)
             {
                 throw new DomainException($"Could not get task report data {ex.Message}");
             }
+        }
+
+        private static void AddEmployeesForReport(List<Employee> employees, List<EmployeeForReportDTO> employeesForReport)
+        {
+            Parallel.ForEach(employees, (employee) =>
+            {
+                employeesForReport.Add(new EmployeeForReportDTO
+                {
+                    Name = employee.Name,
+                    Surname = employee.Surname,
+                    Patronymic = employee.Patronymic,
+                    Role = EnumsHumanizer.Translate(employee.Role.ToString())
+                });
+            });
+
         }
     }
 }
