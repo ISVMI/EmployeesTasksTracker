@@ -1,7 +1,6 @@
 ﻿using EmployeesTasksTracker.TasksTrackerService.Application.Interfaces;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using EmployeesTasksTracker.TasksTrackerService.Core.Models;
-using MassTransit;
 using Shared.DTOs;
 using Shared.Exceptions;
 using Shared.Methods;
