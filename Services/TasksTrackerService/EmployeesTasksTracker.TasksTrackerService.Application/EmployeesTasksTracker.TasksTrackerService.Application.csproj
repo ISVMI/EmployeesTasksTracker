@@ -13,7 +13,7 @@
 
   <ItemGroup>
     <ProjectReference Include="..\..\..\Common\Shared\Shared.csproj" />
-    <ProjectReference Include="..\..\..\EmployeesTasksTracker.TasksTrackerService.Core\EmployeesTasksTracker.TasksTrackerService.Core.csproj" />
+    <ProjectReference Include="..\EmployeesTasksTracker.TasksTrackerService.Core\EmployeesTasksTracker.TasksTrackerService.Core.csproj" />
   </ItemGroup>
 
 </Project>
