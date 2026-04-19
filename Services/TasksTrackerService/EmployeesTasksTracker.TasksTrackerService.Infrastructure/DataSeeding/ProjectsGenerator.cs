@@ -1,6 +1,7 @@
 ﻿using Bogus;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using EmployeesTasksTracker.TasksTrackerService.Core.Models;
+using Npgsql;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.DataSeeding
 {
@@ -8,24 +9,20 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.DataSeeding
     {
         private static readonly Faker _faker = new("ru");
         private readonly IEmployeesRepo _employeesRepo;
-        private readonly IProjectEmployeeRepo _projectEmployeesRepo;
-        private readonly IProjectsRepo _projectsRepo;
 
-        public ProjectsGenerator(IProjectsRepo projectsRepo, IEmployeesRepo employeesRepo, IProjectEmployeeRepo projectEmployeeRepo)
+        public ProjectsGenerator(IEmployeesRepo employeesRepo)
         {
             _employeesRepo = employeesRepo;
-            _projectEmployeesRepo = projectEmployeeRepo;
-            _projectsRepo = projectsRepo;
         }
 
-        public async System.Threading.Tasks.Task GenerateProjectsAsync(int count)
+        public async System.Threading.Tasks.Task GenerateProjectsAsync(int count, int batchSize, string connectionString)
         {
-            var employees = await _employeesRepo.GetAllIds();
 
-            if (employees == null)
-            {
-                throw new ArgumentNullException(nameof(employees), "There were no employees!");
-            }
+            var projectsBatch = new List<Project>();
+
+            var projectEmployeeBatch = new List<ProjectEmployee>();
+
+            var employees = await _employeesRepo.GetAllIds();
 
             var employeesList = employees.ToList();
 
@@ -35,8 +32,14 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.DataSeeding
 
             for (int i = 0; i < count; i++)
             {
-                var manager = employeesShuffled.Dequeue();
-                var supervisor = employeesShuffled.Dequeue();
+
+                if (employees == null)
+                {
+                    throw new ArgumentNullException(nameof(employees), "There were no employees!");
+                }
+
+                var managerId = employeesShuffled.Dequeue();
+                var supervisorId = employeesShuffled.Dequeue();
                 var name = _faker.Hacker.Adjective();
                 var capitalizedName = char.ToUpper(name[0]) + name[1..];
 
@@ -46,12 +49,82 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.DataSeeding
                     Description = $"Проект позволяет {_faker.Hacker.Verb()} {_faker.Hacker.Noun()} и {_faker.Hacker.Verb()} {_faker.Hacker.Noun()}"
                 };
 
+                if (projectsBatch.Count > batchSize)
+                {
+                    await InsertprojectsAsync(projectsBatch, connectionString);
+                    await InsertProjectEmployeesAsync(projectEmployeeBatch, connectionString);
 
-                await _projectsRepo.CreateAsync(project);
+                    projectsBatch.Clear();
+                    projectEmployeeBatch.Clear();
+                }
 
-                await _projectEmployeesRepo.AddEmployeeAsync(supervisor, project.Id, Core.Enums.RoleInProject.Supervisor);
-                await _projectEmployeesRepo.AddEmployeeAsync(manager, project.Id, Core.Enums.RoleInProject.Manager);
+                projectsBatch.Add(project);
+
+                var supervisor = new ProjectEmployee
+                {
+                    ProjectId = project.Id,
+                    EmployeeId = supervisorId,
+                    EmployeeRoleInProject = Core.Enums.RoleInProject.Supervisor
+                };
+
+                var manager = new ProjectEmployee
+                {
+                    ProjectId = project.Id,
+                    EmployeeId = managerId,
+                    EmployeeRoleInProject = Core.Enums.RoleInProject.Supervisor
+                };
+
+                projectEmployeeBatch.Add(supervisor);
+                projectEmployeeBatch.Add(manager);
+
             }
+
+            if (projectsBatch.Count > 0)
+            {
+                await InsertprojectsAsync(projectsBatch, connectionString);
+                await InsertProjectEmployeesAsync(projectEmployeeBatch, connectionString);
+            }
+        }
+
+        private static async System.Threading.Tasks.Task InsertprojectsAsync(List<Project> projectsBatch, string connectionString)
+        {
+            await using var connection = new NpgsqlConnection(connectionString);
+
+            await connection.OpenAsync();
+
+            await using var writer = connection.BeginBinaryImport(@" COPY ""Projects"" 
+                                    (""Id"", ""Name"", ""Description"")
+                                    FROM STDIN (FORMAT BINARY)");
+
+            foreach (var project in projectsBatch)
+            {
+                writer.StartRow();
+                writer.Write(project.Id);
+                writer.Write(project.Name);
+                writer.Write(project.Description);
+            }
+
+            await writer.CompleteAsync();
+        }
+
+        private static async System.Threading.Tasks.Task InsertProjectEmployeesAsync(List<ProjectEmployee> projectsEmployeesBatch, string connectionString)
+        {
+            await using var connection = new NpgsqlConnection(connectionString);
+
+            await connection.OpenAsync();
+
+            await using var writer = connection.BeginBinaryImport(@" COPY ""ProjectEmployees"" 
+                                    (""ProjectId"", ""EmployeeId"", ""EmployeeRoleInProject"")
+                                    FROM STDIN (FORMAT BINARY)");
+
+            foreach (var projectEmployee in projectsEmployeesBatch)
+            {
+                writer.StartRow();
+                writer.Write(projectEmployee.ProjectId);
+                writer.Write(projectEmployee.EmployeeId);
+                writer.Write((int)projectEmployee.EmployeeRoleInProject);
+            }
+            await writer.CompleteAsync();
         }
 
         private static void Shuffle(List<Guid> employees)
@@ -60,7 +133,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.DataSeeding
 
             for (int i = employees.Count - 1; i > 0; i--)
             {
-                int j = random.Next(0, i - 1);
+                int j = random.Next(0, i + 1);
 
                 (employees[i], employees[j]) = (employees[j], employees[i]);
             }
