@@ -1,9 +1,11 @@
-﻿using System.Reflection;
-using System.Text.Json;
-using Bogus;
+﻿using Bogus;
 using Bogus.DataSets;
 using EmployeesTasksTracker.TasksTrackerService.Core.Enums;
 using EmployeesTasksTracker.TasksTrackerService.Core.Models;
+using Npgsql;
+using Shared.Methods;
+using System.Reflection;
+using System.Text.Json;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.DataSeeding
 {
@@ -11,37 +13,57 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.DataSeeding
     {
         private static readonly Faker _faker = new("ru");
 
-        public static async Task<List<Employee>> GenerateEmployeesAsync(int count)
+        public static async System.Threading.Tasks.Task GenerateEmployees(int count, int batchSize, string connectionString)
         {
-            var employees = new List<Employee>();
-            var malePatronymics = await GetPatronymics("Male");
-            var femalePatronymics = await GetPatronymics("Female");
+            var employees = BatchesGenerator.GenerateBatches<Employee>(count, batchSize, EmployeesGenerator.GenerateEmployee);
 
-            if (malePatronymics != null && femalePatronymics != null)
+            await Parallel.ForEachAsync(employees, new ParallelOptions {MaxDegreeOfParallelism = 4 }, async (batch, _) =>
             {
-                for (int i = 0; i < count; i++)
+                await using var connection = new NpgsqlConnection(connectionString);
+
+                await connection.OpenAsync();
+
+                await using var writer = connection.BeginBinaryImport(@" COPY ""Employees"" 
+                                    (""Id"", ""Name"", ""Surname"", ""Patronymic"", ""Role"", ""UserName"")
+                                    FROM STDIN (FORMAT BINARY)");
+
+                foreach (var employee in batch)
                 {
-                    var employeeGender = _faker.PickRandom(Name.Gender.Male, Name.Gender.Female);
-                    var stringGender = employeeGender.ToString();
-                    var employee = new Employee
-                    {
-                        Name = _faker.Name.FirstName(employeeGender),
-                        Surname = _faker.Name.LastName(employeeGender),
-                        Patronymic = stringGender == "Male" ?
-                        _faker.PickRandom(malePatronymics) :
-                        _faker.PickRandom(femalePatronymics),
-                        Role = _faker.PickRandom<EmployeeRole>(),
-                        UserName = _faker.Random.AlphaNumeric(14)
-                    };
-
-                    employees.Add(employee);
+                    writer.StartRow();
+                    writer.Write(employee.Id);
+                    writer.Write(employee.Name);
+                    writer.Write(employee.Surname);
+                    writer.Write(employee.Patronymic);
+                    writer.Write((int)employee.Role);
+                    writer.Write(employee.UserName);
                 }
-            }
 
-            return employees;
+                await writer.CompleteAsync();
+            });
         }
 
-        private static async Task<string[]?> GetPatronymics(string gender)
+        private static Employee GenerateEmployee()
+        {
+            var malePatronymics = GetPatronymics("Male");
+            var femalePatronymics = GetPatronymics("Female");
+
+            var employeeGender = _faker.PickRandom(Name.Gender.Male, Name.Gender.Female);
+            var stringGender = employeeGender.ToString();
+            var employee = new Employee
+            {
+                Name = _faker.Name.FirstName(employeeGender),
+                Surname = _faker.Name.LastName(employeeGender),
+                Patronymic = stringGender == "Male" ?
+                _faker.PickRandom(malePatronymics) :
+                _faker.PickRandom(femalePatronymics),
+                Role = _faker.PickRandom<EmployeeRole>(),
+                UserName = _faker.Random.AlphaNumeric(14)
+            };
+
+            return employee;
+        }
+
+        private static string[]? GetPatronymics(string gender)
         {
             if (gender == null)
             {
@@ -50,7 +72,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.DataSeeding
 
             var assembly = Assembly.GetExecutingAssembly();
 
-            string fileName = "";
+            string fileName;
 
             if (gender == "Male")
             {
@@ -63,7 +85,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.DataSeeding
 
             try
             {
-                var json = await GetJsonContentAsync(assembly, fileName);
+                var json = GetJsonContent(assembly, fileName);
 
                 var patronymics = JsonSerializer.Deserialize<string[]>(json);
 
@@ -89,17 +111,17 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.DataSeeding
             return resourceName;
         }
 
-        private static async Task<string> GetJsonContentAsync(Assembly assembly, string fileName)
+        private static string GetJsonContent(Assembly assembly, string fileName)
         {
             try
             {
                 var resourceName = GetResourceName(assembly, fileName);
 
-                await using var stream = assembly.GetManifestResourceStream(resourceName);
+                using var stream = assembly.GetManifestResourceStream(resourceName);
 
                 using var reader = new StreamReader(stream);
 
-                var json = await reader.ReadToEndAsync();
+                var json = reader.ReadToEnd();
 
                 return json;
             }

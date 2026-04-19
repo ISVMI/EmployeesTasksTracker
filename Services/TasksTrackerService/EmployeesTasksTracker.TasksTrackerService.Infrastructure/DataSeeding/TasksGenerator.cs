@@ -1,49 +1,46 @@
 ﻿using Bogus;
 using EmployeesTasksTracker.TasksTrackerService.Core.Enums;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
+using EmployeesTasksTracker.TasksTrackerService.Core.Models;
+using Npgsql;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.DataSeeding
 {
     public class TasksGenerator
     {
         private static readonly Faker _faker = new("ru");
-        private readonly ITaskEmployeeRepo _taskEmployeeRepo;
         private readonly IEmployeesRepo _employeesRepo;
         private readonly ITasksGroupsRepo _tasksGroupsRepo;
         private readonly IProjectsRepo _projectsRepo;
-        private readonly ITasksRepo _tasksRepo;
+        private static readonly Random _random = new Random();
 
         public TasksGenerator(
-            ITasksRepo tasksRepo,
-            ITaskEmployeeRepo taskEmployeeRepo,
             IEmployeesRepo employeesRepo,
             ITasksGroupsRepo tasksGroupsRepo,
             IProjectsRepo projectsRepo)
         {
-            _tasksRepo = tasksRepo;
-            _taskEmployeeRepo = taskEmployeeRepo;
             _employeesRepo = employeesRepo;
             _tasksGroupsRepo = tasksGroupsRepo;
             _projectsRepo = projectsRepo;
         }
 
-        public async Task GenerateTasksAsync(int count)
+        public async System.Threading.Tasks.Task GenerateTasksAsync(int count, int batchSize, string connectionString)
         {
             var employees = await _employeesRepo.GetAllIds();
             var tasksGroups = await _tasksGroupsRepo.GetAllIds();
             var projects = await _projectsRepo.GetAllIds();
 
-            if (employees == null)
+            if (!employees.Any())
             {
                 throw new ArgumentNullException(nameof(employees), "There were no employees!");
             }
 
-            if (tasksGroups == null)
+            if (!tasksGroups.Any())
             {
                 throw new ArgumentNullException(nameof(tasksGroups), "There were no tasks groups!");
             }
 
-            if (projects == null)
+            if (!projects.Any())
             {
                 throw new ArgumentNullException(nameof(projects), "There were no projects!");
             }
@@ -62,6 +59,9 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.DataSeeding
 
             var tasksGroup = tasksGroupsShuffled.Dequeue();
             var project = projectsShuffled.Dequeue();
+
+            var tasksBatch = new List<Core.Models.Task>(batchSize);
+            var tasksEmployeesBatch = new List<TaskEmployee>(batchSize * 3);
 
             for (int i = 0; i < count; i++)
             {
@@ -108,31 +108,52 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.DataSeeding
                     Priority = _faker.PickRandom<Priority>()
                 };
 
-                task.Project = await _projectsRepo.GetByIdAsync(project);
-                task.TasksGroup = await _tasksGroupsRepo.GetByIdAsync(tasksGroup);
+                tasksBatch.Add(task);
 
-                await _tasksRepo.CreateAsync(task);
-
-                for (int j = 0; j < performers.Count; j++)
+                foreach (var performer in performers)
                 {
-                    await _taskEmployeeRepo.AddEmployeeAsync(performers[j], task.Id, RoleInTask.Performer);
+                    tasksEmployeesBatch.Add(new TaskEmployee
+                    {
+                        TaskId = task.Id,
+                        EmployeeId = performer,
+                        EmployeeRoleInTask = RoleInTask.Performer
+                    });
                 }
 
-                for (int k = 0; k < observers.Count; k++)
+                foreach (var observer in observers)
                 {
-                    await _taskEmployeeRepo.AddEmployeeAsync(observers[k], task.Id, RoleInTask.Observer);
+                    tasksEmployeesBatch.Add(new TaskEmployee
+                    {
+                        TaskId = task.Id,
+                        EmployeeId = observer,
+                        EmployeeRoleInTask = RoleInTask.Observer
+                    });
+                }
+
+                if (tasksBatch.Count >= batchSize)
+                {
+                    await InsertTasks(tasksBatch, connectionString);
+                    await InsertTasksEmployees(tasksEmployeesBatch, connectionString);
+
+                    tasksBatch.Clear();
+                    tasksEmployeesBatch.Clear();
                 }
             }
+
+            if (tasksBatch.Count > 0)
+            {
+                await InsertTasks(tasksBatch, connectionString);
+                await InsertTasksEmployees(tasksEmployeesBatch, connectionString);
+            }
+
         }
 
         private static void Shuffle(List<Guid> employees)
         {
 
-            var random = new Random();
-
             for (int i = employees.Count - 1; i > 0; i--)
             {
-                int j = random.Next(0, i);
+                int j = _random.Next(0, i);
 
                 (employees[i], employees[j]) = (employees[j], employees[i]);
             }
@@ -148,6 +169,53 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.DataSeeding
             }
 
             return employeesPart;
+        }
+
+        private static async System.Threading.Tasks.Task InsertTasks(List<Core.Models.Task> tasks, string connectionString)
+        {
+            await using var connection = new NpgsqlConnection(connectionString);
+
+            await connection.OpenAsync();
+
+            await using var writer = connection.BeginBinaryImport(@" COPY ""Tasks"" 
+                    (""Id"", ""Name"", ""Description"", ""ProjectId"", ""TasksGroupId"", ""Deadline"", ""CreatedAt"", ""Status"", ""Priority"")
+                    FROM STDIN (FORMAT BINARY)");
+
+            foreach (var task in tasks)
+            {
+                writer.StartRow();
+                writer.Write(task.Id);
+                writer.Write(task.Name);
+                writer.Write(task.Description);
+                writer.Write(task.ProjectId);
+                writer.Write(task.TasksGroupId);
+                writer.Write(task.Deadline);
+                writer.Write(task.CreatedAt);
+                writer.Write((int)task.Status);
+                writer.Write((int)task.Priority);
+            }
+            await writer.CompleteAsync();
+        }
+
+        private static async System.Threading.Tasks.Task InsertTasksEmployees(List<TaskEmployee> tasksEmployees, string connectionString)
+        {
+
+            await using var connection = new NpgsqlConnection(connectionString);
+
+            await connection.OpenAsync();
+
+            await using var writer = connection.BeginBinaryImport(@" COPY ""TaskEmployees"" 
+                    (""TaskId"", ""EmployeeId"", ""EmployeeRoleInTask"")
+                    FROM STDIN (FORMAT BINARY)");
+
+            foreach (var taskEmployee in tasksEmployees)
+            {
+                writer.StartRow();
+                writer.Write(taskEmployee.TaskId);
+                writer.Write(taskEmployee.EmployeeId);
+                writer.Write((int)taskEmployee.EmployeeRoleInTask);
+            }
+            await writer.CompleteAsync();
         }
     }
 }
