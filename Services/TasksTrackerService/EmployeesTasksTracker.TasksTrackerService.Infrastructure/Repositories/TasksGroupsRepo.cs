@@ -68,6 +68,20 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
             return taskGroupToFind;
         }
 
+        public async Task<(IEnumerable<TasksGroup>, int)> GetPagedAsync(int page, int pageSize, CancellationToken token = default)
+        {
+            var query = _context.TasksGroups.AsNoTracking();
+
+            var items = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(token);
+
+            var totalCount = await query.CountAsync(token);
+
+            return (items, totalCount);
+        }
+
         public async Task<TasksGroup> UpdateAsync(TasksGroup taskGroup, CancellationToken token = default)
         {
             var existingTaskGroup = await GetByIdAsync(taskGroup.Id, token);

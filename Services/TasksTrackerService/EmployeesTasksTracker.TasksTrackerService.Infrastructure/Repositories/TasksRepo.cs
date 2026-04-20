@@ -1,6 +1,5 @@
 ﻿using EmployeesTasksTracker.TasksTrackerService.Core.Enums;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
-using EmployeesTasksTracker.TasksTrackerService.Core.Models;
 using EmployeesTasksTracker.TasksTrackerService.Infrastructure.Data;
 using Microsoft.EntityFrameworkCore;
 using Shared.Exceptions;
@@ -47,8 +46,16 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
             await _context.SaveChangesAsync(token);
             return true;
         }
+        public async Task<IEnumerable<Core.Models.Task>> GetAllAsync(CancellationToken token = default)
+        {
+            var query = _context.Tasks.AsNoTracking();
 
-        public async Task<IEnumerable<Core.Models.Task>> GetAllAsync(
+            var tasks = await query.ToListAsync(token);
+
+            return tasks;
+        }
+
+        public async Task<IEnumerable<Core.Models.Task>> GetAllFilteredAsync(
             Guid? employeeId = null,
             Guid? tasksGroupId = null,
             Guid? projectId = null,
@@ -59,7 +66,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
                 .Include(t => t.Project)
                 .Include(t => t.TaskEmployees)
                 .AsNoTracking()
-                .AsQueryable();
+                .AsSplitQuery();
 
             if (employeeId.HasValue && employeeId != Guid.Empty)
             {
@@ -116,13 +123,27 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
             return tasks;
         }
 
-        public async Task<Core.Models.Task> UpdateAsync(Core.Models.Task task, CancellationToken token = default)
+        public async Task<Core.Models.Task> UpdateAsync(Core.Models.Task task, CancellationToken token)
         {
                 var existingTask = await GetByIdAsync(task.Id, token);
 
                 _context.Entry(existingTask).CurrentValues.SetValues(task);
                 await _context.SaveChangesAsync(token);
                 return task;
+        }
+
+        public async Task<(IEnumerable<Core.Models.Task>, int)> GetPagedAsync(int page, int pageSize, CancellationToken token)
+        {
+            var query = _context.Tasks.AsNoTracking();
+
+            var items = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(token);
+
+            var totalCount = await query.CountAsync(token);
+
+            return (items, totalCount);
         }
     }
 }
