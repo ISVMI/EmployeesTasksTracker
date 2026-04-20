@@ -23,7 +23,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Project
 
             foreach (var item in items)
             {
-                dtoList.Add(new ProjectDTO 
+                dtoList.Add(new ProjectDTO
                 {
                     Name = item.Name,
                     Description = item.Description
@@ -32,6 +32,5 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Project
 
             return new PagedResponse<ProjectDTO>(dtoList, totalCount, request.Page, request.PageSize);
         }
-    {
     }
 }

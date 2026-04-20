@@ -16,7 +16,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
 
         public async Task<IEnumerable<TaskDTO>> Handle(GetAllTasksQuery request, CancellationToken cancellationToken)
         {
-            var tasks = await _repo.GetAllAsync(request.EmployeeId, request.TasksGroupId, request.ProjectId, cancellationToken);
+            var tasks = await _repo.GetAllFilteredAsync(request.EmployeeId, request.TasksGroupId, request.ProjectId, cancellationToken);
 
             var tasksDtoList = new List<TaskDTO>();
 
