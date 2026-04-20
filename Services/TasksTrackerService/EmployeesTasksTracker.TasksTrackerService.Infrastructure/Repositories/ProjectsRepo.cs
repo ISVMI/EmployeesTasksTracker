@@ -70,6 +70,20 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
             return projectToFind;
         }
 
+        public async Task<(IEnumerable<Project>, int)> GetPagedAsync(int page, int pageSize, CancellationToken token = default)
+        {
+            var query = _context.Projects.AsNoTracking();
+
+            var items = await query
+                .Skip((page - 1) * pageSize)
+                .Take(pageSize)
+                .ToListAsync(token);
+
+            var totalCount = await query.CountAsync(token);
+
+            return (items, totalCount);
+        }
+
         public async Task<Project> UpdateAsync(Project project, CancellationToken token = default)
         {
             var existingProject = await GetByIdAsync(project.Id, token);
@@ -78,16 +92,5 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
             await _context.SaveChangesAsync(token);
             return project;
         }
-        /*public async Task<Project> GetProjectByTaskId(Guid taskId, CancellationToken token = default)
-        {
-            var project = _context.Projects.Where(p => p.Tasks.Any(t => t.Id == taskId)).SingleOrDefault();
-
-            if(project == null)
-            {
-                throw new DomainException($"Project with task id: {taskId} not found!");
-            }
-
-            return project;
-        }*/
     }
 }

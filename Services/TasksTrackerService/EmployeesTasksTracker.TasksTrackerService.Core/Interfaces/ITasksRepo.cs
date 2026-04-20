@@ -2,13 +2,10 @@
 
 namespace EmployeesTasksTracker.TasksTrackerService.Core.Interfaces
 {
-    public interface ITasksRepo : IIdsGetter
+    public interface ITasksRepo : IRepository<Models.Task>, IIdsGetter
     {
-        Task<Guid> CreateAsync(Models.Task task, CancellationToken token = default);
-        Task<bool> DeleteAsync(Guid id, CancellationToken token = default);
-        Task<Models.Task> UpdateAsync(Models.Task task, CancellationToken token = default);
-        Task<Models.Task> GetByIdAsync(Guid id, CancellationToken token = default);
-        Task<IEnumerable<Models.Task>> GetAllAsync(Guid? employeeId = null, Guid? tasksGroupId = null, Guid? projectId = null, CancellationToken token = default);
+        Task<IEnumerable<Models.Task>> GetAllFilteredAsync(Guid? employeeId = null, Guid? tasksGroupId = null, Guid? projectId = null,
+            CancellationToken token = default);
         Task<IEnumerable<Models.Task>> GetTasksByGroupId(Guid tasksGroupId, CancellationToken cancellationToken = default);
         Task<Guid> GetProjectId(Guid tasksGroupId, CancellationToken cancellationToken = default);
     }
