@@ -19,9 +19,9 @@ namespace EmployeesTasksTracker.TasksTrackerService.Api.Controllers
         }
 
         [HttpGet("All")]
-        public async Task<IActionResult> GetAllEmployees(CancellationToken token)
+        public async Task<IActionResult> GetAllEmployees([FromQuery] int page = 1, [FromQuery] int pageSize = 20, CancellationToken token = default)
         {
-            var employees = await _mediator.Send(new GetAllEmployeesQuery(), token);
+            var employees = await _mediator.Send(new GetAllEmployeesPagedQuery(page, pageSize), token);
 
             return Ok(employees);
         }
@@ -100,7 +100,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Api.Controllers
         {
             var result = await _mediator.Send(new GetAllEmployeesIdsQuery(), token);
 
-            return Ok(result);
+            return Ok(result.Take(100));
         }
 
     }

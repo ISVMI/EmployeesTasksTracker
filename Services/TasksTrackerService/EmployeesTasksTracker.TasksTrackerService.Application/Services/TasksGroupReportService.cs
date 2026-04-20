@@ -28,7 +28,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Services
 
                 var projectId = await _tasksRepo.GetProjectId(id, cancellationToken);
 
-                var tasks = await _tasksRepo.GetAllAsync(null, id, null, cancellationToken);
+                var tasks = await _tasksRepo.GetAllFilteredAsync(null, id, null, cancellationToken);
 
                 var task = tasksGroup.Tasks.FirstOrDefault() ?? throw new DomainException($"Tasks group {tasksGroup.Name} doesn't contain any tasks!");
 

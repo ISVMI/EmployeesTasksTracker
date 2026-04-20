@@ -21,9 +21,9 @@ namespace EmployeesTasksTracker.TasksTrackerService.Api.Controllers
         }
 
         [HttpGet("All")]
-        public async Task<IActionResult> GetAllTasksGroups(CancellationToken token)
+        public async Task<IActionResult> GetAllTasksGroups([FromQuery] int page = 1, [FromQuery] int pageSize = 20, CancellationToken token = default)
         {
-            var tasksGroups = await _mediator.Send(new GetAllTasksGroupsQuery(), token);
+            var tasksGroups = await _mediator.Send(new GetAllTasksGroupsPagedQuery(page, pageSize), token);
 
             return Ok(tasksGroups);
         }
@@ -95,7 +95,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Api.Controllers
         {
             var result = await _mediator.Send(new GetAllTasksGroupsIdsQuery(), token);
 
-            return Ok(result);
+            return Ok(result.Take(100));
         }
 
         [HttpGet("GenerateReport/")]
