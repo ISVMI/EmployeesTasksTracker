@@ -76,8 +76,8 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.DataSeeding
                     tasksGroupsList.ForEach(tasksGroupsShuffled.Enqueue);
                 }
 
-                var performers = GetFewEmployees(_faker.Random.Int(1, 5), employeesShuffled);
-                var observers = GetFewEmployees(_faker.Random.Int(1, 2), employeesShuffled);
+                var performers = GetFewEmployees(_random.Next(1, 5), employeesShuffled);
+                var observers = GetFewEmployees(_random.Next(1, 2), employeesShuffled);
 
                 if (projectsShuffled.Count == 0)
                 {
