@@ -12,7 +12,7 @@ using Npgsql.EntityFrameworkCore.PostgreSQL.Metadata;
 namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Migrations
 {
     [DbContext(typeof(TasksTrackerContext))]
-    [Migration("20260410103210_InitialCreate")]
+    [Migration("20260427103430_InitialCreate")]
     partial class InitialCreate
     {
         /// <inheritdoc />
@@ -146,6 +146,12 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Migrations
                     b.HasIndex("ProjectId");
 
                     b.HasIndex("TasksGroupId");
+
+                    b.HasIndex("ProjectId", "Status")
+                        .HasFilter("\"Status\" NOT IN (4, 5)");
+
+                    b.HasIndex("TasksGroupId", "Status")
+                        .HasFilter("\"Status\" NOT IN (4, 5)");
 
                     b.ToTable("Tasks");
                 });

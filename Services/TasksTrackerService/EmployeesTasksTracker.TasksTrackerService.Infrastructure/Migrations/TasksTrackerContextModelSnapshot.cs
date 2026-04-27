@@ -144,6 +144,12 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Migrations
 
                     b.HasIndex("TasksGroupId");
 
+                    b.HasIndex("ProjectId", "Status")
+                        .HasFilter("\"Status\" NOT IN (4, 5)");
+
+                    b.HasIndex("TasksGroupId", "Status")
+                        .HasFilter("\"Status\" NOT IN (4, 5)");
+
                     b.ToTable("Tasks");
                 });
 

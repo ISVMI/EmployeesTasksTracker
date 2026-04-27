@@ -5,6 +5,6 @@ namespace EmployeesTasksTracker.TasksTrackerService.Core.Interfaces
 {
     public interface IProjectsRepo : IRepository<Project>, IIdsGetter
     {
-        //public Task<Project> GetProjectByTaskId(Guid taskId, CancellationToken token = default);
+        Task<bool> CheckDeletionCapability(Guid projectId, CancellationToken cancellationToken = default);
     }
 }
