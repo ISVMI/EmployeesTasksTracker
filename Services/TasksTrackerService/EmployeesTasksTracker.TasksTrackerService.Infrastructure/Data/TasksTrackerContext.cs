@@ -57,6 +57,21 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Data
                 .WithMany(p => p.Tasks)
                 .HasForeignKey(t => t.TasksGroupId);
 
+            modelBuilder.Entity<Core.Models.Task>()
+                .HasIndex(t => t.ProjectId);
+
+            modelBuilder.Entity<Core.Models.Task>()
+                .HasIndex(t => new { t.ProjectId, t.Status })
+                .HasFilter("[Status] NOT IN ('Canceled', 'Completed')");
+
+            modelBuilder.Entity<Core.Models.Task>()
+                .HasIndex(t => t.TasksGroupId);
+
+            modelBuilder.Entity<Core.Models.Task>()
+                .HasIndex(t => new { t.TasksGroupId, t.Status })
+                .HasFilter("[Status] NOT IN ('Canceled', 'Completed')");
+
+
             base.OnModelCreating(modelBuilder);
         }
     }
