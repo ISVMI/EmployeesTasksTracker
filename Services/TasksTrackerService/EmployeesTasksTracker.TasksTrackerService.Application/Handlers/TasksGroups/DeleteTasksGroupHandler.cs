@@ -8,27 +8,19 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.TasksGr
     public class DeleteTasksGroupHandler : IRequestHandler<DeleteTasksGroupCommand, bool>
     {
         private readonly ITasksGroupsRepo _tasksGroupsRepo;
-        private readonly ITasksRepo _tasksRepo;
 
-        public DeleteTasksGroupHandler(ITasksGroupsRepo tasksGroupsRepo, ITasksRepo tasksRepo)
+        public DeleteTasksGroupHandler(ITasksGroupsRepo tasksGroupsRepo)
         {
             _tasksGroupsRepo = tasksGroupsRepo;
-            _tasksRepo = tasksRepo;
         }
 
         public async Task<bool> Handle(DeleteTasksGroupCommand request, CancellationToken cancellationToken)
         {
-            var relatedTasks = await _tasksRepo.GetAllFilteredAsync(default, request.Id, default, cancellationToken);
+            var canDelete = await _tasksGroupsRepo.CheckDeletionCapability(request.Id, cancellationToken);
 
-            if (relatedTasks.Any())
+            if (!canDelete)
             {
-                foreach (var task in relatedTasks)
-                {
-                    if (task.Status != Core.Enums.Status.Canceled || task.Status != Core.Enums.Status.Completed) 
-                    {
-                        throw new DomainException($"Couldn't delete tasks group! Task {task.Name} is {task.Status}!");
-                    }
-                }
+                throw new DomainException($"Couldn't delete tasks group! Task isn't completed or cancelled!");
             }
 
             return await _tasksGroupsRepo.DeleteAsync(request.Id, cancellationToken);

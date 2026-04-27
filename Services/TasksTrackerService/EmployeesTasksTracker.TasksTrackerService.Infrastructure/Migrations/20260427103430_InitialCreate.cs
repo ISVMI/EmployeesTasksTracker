@@ -149,9 +149,21 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Migrations
                 column: "ProjectId");
 
             migrationBuilder.CreateIndex(
+                name: "IX_Tasks_ProjectId_Status",
+                table: "Tasks",
+                columns: new[] { "ProjectId", "Status" },
+                filter: "\"Status\" NOT IN (4, 5)");
+
+            migrationBuilder.CreateIndex(
                 name: "IX_Tasks_TasksGroupId",
                 table: "Tasks",
                 column: "TasksGroupId");
+
+            migrationBuilder.CreateIndex(
+                name: "IX_Tasks_TasksGroupId_Status",
+                table: "Tasks",
+                columns: new[] { "TasksGroupId", "Status" },
+                filter: "\"Status\" NOT IN (4, 5)");
         }
 
         /// <inheritdoc />

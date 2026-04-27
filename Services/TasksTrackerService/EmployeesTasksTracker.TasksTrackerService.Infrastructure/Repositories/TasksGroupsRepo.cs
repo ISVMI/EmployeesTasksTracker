@@ -15,6 +15,12 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
             _context = context;
         }
 
+        public async Task<bool> CheckDeletionCapability(Guid tasksGroupId, CancellationToken cancellationToken = default)
+        {
+            return await _context.Tasks.AnyAsync(t => t.TasksGroupId == tasksGroupId &&
+            (t.Status == Core.Enums.Status.Canceled || t.Status == Core.Enums.Status.Completed), cancellationToken);
+        }
+
         public async Task<Guid> CreateAsync(TasksGroup tasksGroup, CancellationToken token = default)
         {
             if (tasksGroup == null)

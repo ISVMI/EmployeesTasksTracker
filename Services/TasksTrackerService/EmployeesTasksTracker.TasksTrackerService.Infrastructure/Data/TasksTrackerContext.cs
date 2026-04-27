@@ -62,14 +62,14 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Data
 
             modelBuilder.Entity<Core.Models.Task>()
                 .HasIndex(t => new { t.ProjectId, t.Status })
-                .HasFilter("[Status] NOT IN ('Canceled', 'Completed')");
+                .HasFilter("\"Status\" NOT IN (4, 5)");
 
             modelBuilder.Entity<Core.Models.Task>()
                 .HasIndex(t => t.TasksGroupId);
 
             modelBuilder.Entity<Core.Models.Task>()
                 .HasIndex(t => new { t.TasksGroupId, t.Status })
-                .HasFilter("[Status] NOT IN ('Canceled', 'Completed')");
+                .HasFilter("\"Status\" NOT IN (4, 5)");
 
 
             base.OnModelCreating(modelBuilder);
