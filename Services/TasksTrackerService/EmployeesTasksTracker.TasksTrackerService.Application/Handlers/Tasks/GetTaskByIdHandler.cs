@@ -28,11 +28,9 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
 
             if (cachedTask == null)
             {
-                var serializedTask = JsonSerializer.Serialize(task);
-
                 var expirationTime = TimeSpan.FromMinutes(30);
 
-                await _cache.SetRecordAsync(cacheKey, serializedTask, expirationTime);
+                await _cache.SetRecordAsync(cacheKey, task, expirationTime);
             }
 
             return new TaskDTO

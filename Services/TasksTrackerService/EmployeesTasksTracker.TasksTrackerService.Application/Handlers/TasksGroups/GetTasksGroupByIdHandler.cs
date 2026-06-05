@@ -5,7 +5,6 @@ using EmployeesTasksTracker.TasksTrackerService.Core.Models;
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
 using Shared.Extensions;
-using System.Text.Json;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.TasksGroups
 {
@@ -31,11 +30,9 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.TasksGr
 
             if (cachedTasksGroup == null)
             {
-                var serializedTasksGroup = JsonSerializer.Serialize(tasksGroup);
-
                 var expirationTime = TimeSpan.FromMinutes(30);
 
-                await _cache.SetRecordAsync(cacheKey, serializedTasksGroup, expirationTime);
+                await _cache.SetRecordAsync(cacheKey, tasksGroup, expirationTime);
             }
 
             return new TasksGroupDTO

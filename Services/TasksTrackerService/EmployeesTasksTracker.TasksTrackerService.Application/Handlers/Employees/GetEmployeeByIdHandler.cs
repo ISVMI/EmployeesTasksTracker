@@ -5,7 +5,6 @@ using EmployeesTasksTracker.TasksTrackerService.Core.Models;
 using MediatR;
 using Microsoft.Extensions.Caching.Distributed;
 using Shared.Extensions;
-using System.Text.Json;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Employees
 {
@@ -31,11 +30,9 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Employe
 
             if (cachedEmployee == null)
             {
-                var serializedEmployee = JsonSerializer.Serialize(employee);
-
                 var expirationTime = TimeSpan.FromMinutes(30);
 
-                await _cache.SetRecordAsync(cacheKey, serializedEmployee, expirationTime);
+                await _cache.SetRecordAsync(cacheKey, employee, expirationTime);
             }
 
             return new EmployeeDTO

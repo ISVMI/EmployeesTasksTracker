@@ -2,6 +2,7 @@
 using Shared.Exceptions;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
+using System.Text.Json.Serialization;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Core.Models
 {
@@ -22,6 +23,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Core.Models
         public DateTime Deadline { get; set; }
         [Column("CreatedAt")]
         public DateTime CreatedAt { get; set; } = DateTime.UtcNow;
+        [JsonInclude]
         [Column("Status")]
         public Status Status { get; private set; }
         [Column("Priority")]
