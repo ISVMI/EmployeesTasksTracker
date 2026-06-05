@@ -3,6 +3,7 @@ using EmployeesTasksTracker.TasksTrackerService.Core.Enums;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using MassTransit;
 using MediatR;
+using Microsoft.Extensions.Caching.Distributed;
 using Shared.Messages;
 using Shared.Models;
 
@@ -13,12 +14,14 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
         private readonly ITasksRepo _repo;
         private readonly IBus _bus;
         private readonly ITaskEmployeeRepo _taskEmployeeRepo;
+        private readonly IDistributedCache _cache;
 
-        public AddTaskObserverHandler(ITasksRepo repo, ITaskEmployeeRepo taskEmployeeRepo, IBus bus)
+        public AddTaskObserverHandler(ITasksRepo repo, ITaskEmployeeRepo taskEmployeeRepo, IBus bus, IDistributedCache cache)
         {
             _repo = repo;
             _bus = bus;
             _taskEmployeeRepo = taskEmployeeRepo;
+            _cache = cache;
         }
 
         public async Task<Result> Handle(AddTaskObserverCommand request, CancellationToken cancellationToken)
@@ -40,6 +43,8 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
                 {
                     $"Добавился наблюдатель {request.ObserverId}"
                 };
+
+            await _cache.RemoveAsync($"task:{request.TaskId}", cancellationToken);
 
             var message = new TaskDataChanged(request.TaskId, changes, DateTime.UtcNow);
 

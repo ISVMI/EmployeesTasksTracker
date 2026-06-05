@@ -4,6 +4,7 @@ using EmployeesTasksTracker.TasksTrackerService.Core.Enums;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using MassTransit;
 using MediatR;
+using Microsoft.Extensions.Caching.Distributed;
 using Shared.Exceptions;
 using Shared.Messages;
 using Shared.Methods;
@@ -14,15 +15,19 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
     {
         private readonly ITasksRepo _repo;
         private readonly IBus _bus;
+        private readonly IDistributedCache _cache;
 
-        public EditTaskHandler(ITasksRepo repo, IBus bus)
+        public EditTaskHandler(ITasksRepo repo, IBus bus, IDistributedCache cache)
         {
             _repo = repo;
             _bus = bus;
+            _cache = cache;
         }
 
         public async Task<TaskDTO> Handle(EditTaskCommand request, CancellationToken cancellationToken)
         {
+
+            await _cache.RemoveAsync($"task:{request.TaskToEdit.Id}", cancellationToken);
 
             if (!Enum.TryParse<Priority>(request.TaskToEdit.Priority, true, out Priority priority))
             {

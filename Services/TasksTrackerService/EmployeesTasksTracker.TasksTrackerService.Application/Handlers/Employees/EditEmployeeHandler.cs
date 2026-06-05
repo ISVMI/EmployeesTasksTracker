@@ -4,6 +4,7 @@ using EmployeesTasksTracker.TasksTrackerService.Core.Enums;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using EmployeesTasksTracker.TasksTrackerService.Core.Models;
 using MediatR;
+using Microsoft.Extensions.Caching.Distributed;
 using Shared.Exceptions;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Employees
@@ -11,10 +12,12 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Employe
     public class EditEmployeeHandler : IRequestHandler<EditEmployeeCommand, EmployeeDTO>
     {
         private readonly IEmployeesRepo _repo;
+        private readonly IDistributedCache _cache;
 
-        public EditEmployeeHandler(IEmployeesRepo repo)
+        public EditEmployeeHandler(IEmployeesRepo repo, IDistributedCache cache)
         {
             _repo = repo;
+            _cache = cache;
         }
 
         public async Task<EmployeeDTO> Handle(EditEmployeeCommand request, CancellationToken cancellationToken)
@@ -35,6 +38,8 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Employe
             };
 
             await _repo.UpdateAsync(employee, cancellationToken);
+
+            await _cache.RemoveAsync($"employee:{request.EmployeeToEdit.Id}", cancellationToken);
 
             return new EmployeeDTO
             {
