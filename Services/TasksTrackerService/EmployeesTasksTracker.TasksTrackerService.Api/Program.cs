@@ -41,6 +41,8 @@ builder.Services.AddScoped<IPdfReportGenerator, PdfReportGenerator>();
 builder.Services.AddScoped<ITaskReportService, TaskReportService>();
 builder.Services.AddScoped<IPdfReportGenerator, PdfReportGenerator>();
 
+builder.Services.AddDistributedMemoryCache();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
