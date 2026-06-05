@@ -3,6 +3,7 @@ using EmployeesTasksTracker.TasksTrackerService.Core.Enums;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using MassTransit;
 using MediatR;
+using Microsoft.Extensions.Caching.Distributed;
 using Shared.Exceptions;
 using Shared.Messages;
 
@@ -12,11 +13,13 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
     {
         private readonly ITasksRepo _repo;
         private readonly IBus _bus;
+        private readonly IDistributedCache _cache;
 
-        public ChangeTaskStatusHandler(ITasksRepo repo, IBus bus)
+        public ChangeTaskStatusHandler(ITasksRepo repo, IBus bus, IDistributedCache cache)
         {
             _repo = repo;
             _bus = bus;
+            _cache = cache;
         }
 
         public async Task Handle(ChangeTaskStatusCommand request, CancellationToken cancellationToken)
@@ -47,6 +50,8 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
             existingTask.ChangeStatus(newStatusEnum);
 
             await _repo.UpdateAsync(existingTask, cancellationToken);
+
+            await _cache.RemoveAsync($"task:{request.TaskId}", cancellationToken);
 
             await _bus.Publish(message, cancellationToken);
 
