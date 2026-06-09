@@ -1,19 +1,18 @@
 ﻿using EmployeesTasksTracker.TasksTrackerService.Application.DTOs.Employees;
 using EmployeesTasksTracker.TasksTrackerService.Application.Queries.Employees;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
-using EmployeesTasksTracker.TasksTrackerService.Core.Models;
 using MediatR;
-using Microsoft.Extensions.Caching.Distributed;
-using Shared.Extensions;
+using Microsoft.Extensions.Caching.Hybrid;
+using Shared.Exceptions;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Employees
 {
     public class GetEmployeeByIdHandler : IRequestHandler<GetEmployeeByIdQuery, EmployeeDTO>
     {
         private readonly IEmployeesRepo _repo;
-        private readonly IDistributedCache _cache;
+        private readonly HybridCache _cache;
 
-        public GetEmployeeByIdHandler(IEmployeesRepo repo, IDistributedCache cache)
+        public GetEmployeeByIdHandler(IEmployeesRepo repo, HybridCache cache)
         {
             _repo = repo;
             _cache = cache;
@@ -24,25 +23,21 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Employe
 
             var cacheKey = $"employee:{request.Id}";
 
-            var cachedEmployee = await _cache.GetRecordAsync<Employee>(cacheKey);
+            var employee = await _cache.GetOrCreateAsync(
+                            cacheKey,
+                            async token => await _repo.GetByIdAsync(request.Id, cancellationToken),
+                            cancellationToken: cancellationToken);
 
-            var employee = cachedEmployee ?? await _repo.GetByIdAsync(request.Id, cancellationToken);
-
-            if (cachedEmployee == null)
-            {
-                var expirationTime = TimeSpan.FromMinutes(30);
-
-                await _cache.SetRecordAsync(cacheKey, employee, expirationTime);
-            }
-
-            return new EmployeeDTO
-            {
-                Name = employee.Name,
-                Surname = employee.Surname,
-                Patronymic = employee.Patronymic,
-                Role = employee.Role.ToString(),
-                UserName = employee.UserName
-            };
+            return employee is null
+                ? throw new NotFoundException("employee", request.Id)
+                : new EmployeeDTO
+                {
+                    Name = employee.Name,
+                    Surname = employee.Surname,
+                    Patronymic = employee.Patronymic,
+                    Role = employee.Role.ToString(),
+                    UserName = employee.UserName
+                };
         }
     }
 }

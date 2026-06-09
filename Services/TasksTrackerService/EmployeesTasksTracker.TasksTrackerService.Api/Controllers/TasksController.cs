@@ -96,25 +96,6 @@ namespace EmployeesTasksTracker.TasksTrackerService.Api.Controllers
         {
             var result = await _mediator.Send(new DeleteTaskCommand(id), token);
 
-            if (result == false)
-            {
-                var message = $"Could not delete task with id {id}";
-
-                var problem = new ProblemDetails
-                {
-                    Title = "Couldn't delete task",
-                    Status = StatusCodes.Status404NotFound,
-                    Detail = message,
-                    Instance = HttpContext.Request.Path,
-                    Extensions =
-                    {
-                        ["taskId"] = id
-                    }
-                };
-
-                return NotFound(problem);
-            }
-
             return Ok($"Successfully deleted task with id: {id}");
         }
 

@@ -1,7 +1,7 @@
 ﻿using EmployeesTasksTracker.TasksTrackerService.Application.Commands.TasksGroups;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using MediatR;
-using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Hybrid;
 using Shared.Exceptions;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.TasksGroups
@@ -9,9 +9,9 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.TasksGr
     public class DeleteTasksGroupHandler : IRequestHandler<DeleteTasksGroupCommand, bool>
     {
         private readonly ITasksGroupsRepo _tasksGroupsRepo;
-        private readonly IDistributedCache _cache;
+        private readonly HybridCache _cache;
 
-        public DeleteTasksGroupHandler(ITasksGroupsRepo tasksGroupsRepo, IDistributedCache cache)
+        public DeleteTasksGroupHandler(ITasksGroupsRepo tasksGroupsRepo, HybridCache cache)
         {
             _tasksGroupsRepo = tasksGroupsRepo;
             _cache = cache;

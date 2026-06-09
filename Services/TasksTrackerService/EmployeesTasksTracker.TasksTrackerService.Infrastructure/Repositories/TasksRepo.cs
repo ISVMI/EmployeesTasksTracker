@@ -36,7 +36,12 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
         {
             var taskToDelete = await GetByIdAsync(id, token);
 
-            if (taskToDelete.Status == Status.Active ||
+            if (taskToDelete is null)
+            {
+                throw new NotFoundException("task", id);
+            }
+
+            else if (taskToDelete.Status == Status.Active ||
                 taskToDelete.Status == Status.Testing)
             {
                 throw new DomainException($"Could not delete task with status - {taskToDelete.Status}");
@@ -95,16 +100,9 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
             return result;
         }
 
-        public async Task<Core.Models.Task> GetByIdAsync(Guid id, CancellationToken token = default)
+        public async Task<Core.Models.Task?> GetByIdAsync(Guid id, CancellationToken token = default)
         {
-            var taskToFind = await _context.Tasks
-                .Where(t => t.Id == id)
-                .SingleOrDefaultAsync(token);
-
-            if (taskToFind == null)
-            {
-                throw new DomainException($"Task with id: {id} not found!");
-            }
+            var taskToFind = await _context.Tasks.FindAsync(id, token);
 
             return taskToFind;
         }
@@ -123,13 +121,18 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
             return tasks;
         }
 
-        public async Task<Core.Models.Task> UpdateAsync(Core.Models.Task task, CancellationToken token)
+        public async Task<Core.Models.Task?> UpdateAsync(Core.Models.Task task, CancellationToken token)
         {
-                var existingTask = await GetByIdAsync(task.Id, token);
+            var existingTask = await GetByIdAsync(task.Id, token);
 
-                _context.Entry(existingTask).CurrentValues.SetValues(task);
-                await _context.SaveChangesAsync(token);
-                return task;
+            if (existingTask == null)
+            {
+                return existingTask;
+            }
+
+            _context.Entry(existingTask).CurrentValues.SetValues(task);
+            await _context.SaveChangesAsync(token);
+            return task;
         }
 
         public async Task<(IEnumerable<Core.Models.Task>, int)> GetPagedAsync(int page, int pageSize, CancellationToken token)

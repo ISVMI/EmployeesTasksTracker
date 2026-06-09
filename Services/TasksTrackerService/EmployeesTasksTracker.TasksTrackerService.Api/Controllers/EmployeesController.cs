@@ -66,31 +66,13 @@ namespace EmployeesTasksTracker.TasksTrackerService.Api.Controllers
             await _mediator.Send(new EditEmployeeCommand(editEmployeeDto), token);
 
             return Ok(editEmployeeDto);
+
         }
 
         [HttpPost("Delete/{id}")]
         public async Task<IActionResult> DeleteEmployee(Guid id, CancellationToken token)
         {
-            var result = await _mediator.Send(new DeleteEmployeeCommand(id), token);
-
-            if (result == false)
-            {
-                var message = $"Could not delete employee with id {id}";
-
-                var problem = new ProblemDetails
-                {
-                    Title = "Couldn't not delete employee",
-                    Status = StatusCodes.Status404NotFound,
-                    Detail = message,
-                    Instance = HttpContext.Request.Path,
-                    Extensions =
-                    {
-                        ["employeeId"] = id
-                    }
-                };
-
-                return NotFound(problem);
-            }
+            await _mediator.Send(new DeleteEmployeeCommand(id), token);
 
             return Ok($"Successfully deleted employee with id {id}");
         }

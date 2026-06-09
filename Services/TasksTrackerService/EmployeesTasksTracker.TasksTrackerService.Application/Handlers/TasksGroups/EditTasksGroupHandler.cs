@@ -3,16 +3,16 @@ using EmployeesTasksTracker.TasksTrackerService.Application.DTOs.TasksGroups;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using EmployeesTasksTracker.TasksTrackerService.Core.Models;
 using MediatR;
-using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Hybrid;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.TasksGroups
 {
     public class EditTasksGroupHandler : IRequestHandler<EditTasksGroupCommand, TasksGroupDTO>
     {
         private readonly ITasksGroupsRepo _repo;
-        private readonly IDistributedCache _cache;
+        private readonly HybridCache _cache;
 
-        public EditTasksGroupHandler(ITasksGroupsRepo repo, IDistributedCache cache)
+        public EditTasksGroupHandler(ITasksGroupsRepo repo, HybridCache cache)
         {
             _repo = repo;
             _cache = cache;

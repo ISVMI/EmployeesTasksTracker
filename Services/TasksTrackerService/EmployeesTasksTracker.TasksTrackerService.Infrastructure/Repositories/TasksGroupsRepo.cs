@@ -42,6 +42,11 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
         {
             var taskGroupToDelete = await GetByIdAsync(id, token);
 
+            if (taskGroupToDelete is null) 
+            {
+                throw new NotFoundException("tasksGroup", id);
+            }
+
             _context.TasksGroups.Remove(taskGroupToDelete);
             await _context.SaveChangesAsync(token);
             return true;
@@ -66,11 +71,6 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
         {
             var taskGroupToFind = await _context.TasksGroups.FindAsync(id, token);
 
-            if (taskGroupToFind == null)
-            {
-                throw new DomainException($"Tasks group with id: {id} not found!");
-            }
-
             return taskGroupToFind;
         }
 
@@ -91,6 +91,11 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
         public async Task<TasksGroup> UpdateAsync(TasksGroup taskGroup, CancellationToken token = default)
         {
             var existingTaskGroup = await GetByIdAsync(taskGroup.Id, token);
+
+            if(existingTaskGroup is null)
+            {
+                return existingTaskGroup;
+            }
 
             _context.Entry(existingTaskGroup).CurrentValues.SetValues(taskGroup);
             await _context.SaveChangesAsync(token);

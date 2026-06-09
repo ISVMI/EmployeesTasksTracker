@@ -1,19 +1,17 @@
 ﻿using EmployeesTasksTracker.TasksTrackerService.Application.DTOs.TasksGroups;
 using EmployeesTasksTracker.TasksTrackerService.Application.Queries.TasksGroups;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
-using EmployeesTasksTracker.TasksTrackerService.Core.Models;
 using MediatR;
-using Microsoft.Extensions.Caching.Distributed;
-using Shared.Extensions;
+using Microsoft.Extensions.Caching.Hybrid;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.TasksGroups
 {
     public class GetTasksGroupByIdHandler : IRequestHandler<GetTasksGroupByIdQuery, TasksGroupDTO>
     {
         private readonly ITasksGroupsRepo _repo;
-        private readonly IDistributedCache _cache;
+        private readonly HybridCache _cache;
 
-        public GetTasksGroupByIdHandler(ITasksGroupsRepo repo, IDistributedCache cache)
+        public GetTasksGroupByIdHandler(ITasksGroupsRepo repo, HybridCache cache)
         {
             _repo = repo;
             _cache = cache;
@@ -24,16 +22,12 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.TasksGr
 
             var cacheKey = $"tasksgroup:{request.Id}";
 
-            var cachedTasksGroup = await _cache.GetRecordAsync<TasksGroup>(cacheKey);
+            var cachedTasksGroup = await _cache.GetOrCreateAsync(
+                cacheKey,
+                async token => await _repo.GetByIdAsync(request.Id, cancellationToken),
+                cancellationToken: cancellationToken);
 
             var tasksGroup = cachedTasksGroup ?? await _repo.GetByIdAsync(request.Id, cancellationToken);
-
-            if (cachedTasksGroup == null)
-            {
-                var expirationTime = TimeSpan.FromMinutes(30);
-
-                await _cache.SetRecordAsync(cacheKey, tasksGroup, expirationTime);
-            }
 
             return new TasksGroupDTO
             {

@@ -2,7 +2,7 @@
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using MassTransit;
 using MediatR;
-using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Hybrid;
 using Shared.Messages;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
@@ -11,9 +11,9 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
     {
         private readonly ITasksRepo _repo;
         private readonly IBus _bus;
-        private readonly IDistributedCache _cache;
+        private readonly HybridCache _cache;
 
-        public DeleteTaskHandler(ITasksRepo repo, IBus bus, IDistributedCache cache)
+        public DeleteTaskHandler(ITasksRepo repo, IBus bus, HybridCache cache)
         {
             _repo = repo;
             _bus = bus;

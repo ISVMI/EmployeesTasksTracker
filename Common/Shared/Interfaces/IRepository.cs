@@ -4,8 +4,8 @@
     {
         Task<Guid> CreateAsync(TEntity entity, CancellationToken token = default);
         Task<bool> DeleteAsync(Guid id, CancellationToken token = default);
-        Task<TEntity> UpdateAsync(TEntity entity, CancellationToken token = default);
-        Task<TEntity> GetByIdAsync(Guid id, CancellationToken token = default);
+        Task<TEntity?> UpdateAsync(TEntity entity, CancellationToken token = default);
+        Task<TEntity?> GetByIdAsync(Guid id, CancellationToken token = default);
         Task<IEnumerable<TEntity>> GetAllAsync(CancellationToken token = default);
         Task<(IEnumerable<TEntity>, int)> GetPagedAsync(int page, int pageSize, CancellationToken token = default);
     }
