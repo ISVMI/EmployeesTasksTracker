@@ -54,7 +54,6 @@ namespace EmployeesTasksTracker.TasksTrackerService.Api.Controllers
 
             editProjectDto.Id = id;
 
-
             await _mediator.Send(new EditProjectCommand(editProjectDto), token);
 
             return Ok(editProjectDto);
@@ -64,25 +63,6 @@ namespace EmployeesTasksTracker.TasksTrackerService.Api.Controllers
         public async Task<IActionResult> DeleteProject(Guid id, CancellationToken token)
         {
             var result = await _mediator.Send(new DeleteProjectCommand(id), token);
-
-            if (result == false)
-            {
-                var message = $"Could not delete project with id {id}";
-
-                var problem = new ProblemDetails
-                {
-                    Title = "Couldn't delete project",
-                    Status = StatusCodes.Status404NotFound,
-                    Detail = message,
-                    Instance = HttpContext.Request.Path,
-                    Extensions =
-                    {
-                        ["projectId"] = id
-                    }
-                };
-
-                return NotFound(problem);
-            }
 
             return Ok($"Successfully deleted project with id {id}");
         }

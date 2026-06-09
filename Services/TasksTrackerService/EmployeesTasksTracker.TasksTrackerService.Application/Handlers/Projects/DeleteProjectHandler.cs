@@ -1,7 +1,7 @@
 ﻿using EmployeesTasksTracker.TasksTrackerService.Application.Commands.Projects;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using MediatR;
-using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Hybrid;
 using Shared.Exceptions;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Projects
@@ -9,9 +9,9 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Project
     public class DeleteProjectHandler : IRequestHandler<DeleteProjectCommand, bool>
     {
         private readonly IProjectsRepo _projectsRepo;
-        private readonly IDistributedCache _cache;
+        private readonly HybridCache _cache;
 
-        public DeleteProjectHandler(IProjectsRepo projectsRepo, IDistributedCache cache)
+        public DeleteProjectHandler(IProjectsRepo projectsRepo, HybridCache cache)
         {
             _projectsRepo = projectsRepo;
             _cache = cache;

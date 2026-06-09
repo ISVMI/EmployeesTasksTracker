@@ -68,25 +68,6 @@ namespace EmployeesTasksTracker.TasksTrackerService.Api.Controllers
         {
             var result = await _mediator.Send(new DeleteTasksGroupCommand(id), token);
 
-            if (result == false)
-            {
-                var message = $"Could not delete tasks group with id {id}";
-
-                var problem = new ProblemDetails
-                {
-                    Title = "Couldn't delete tasks group",
-                    Status = StatusCodes.Status400BadRequest,
-                    Detail = message,
-                    Instance = HttpContext.Request.Path,
-                    Extensions =
-                    {
-                        ["tasksGroupId"] = id
-                    }
-                };
-
-                return NotFound(problem);
-            }
-
             return Ok($"Successfully deleted tasks group with id {id}");
         }
 

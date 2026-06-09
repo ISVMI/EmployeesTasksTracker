@@ -42,6 +42,11 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
         {
             var projectToDelete = await GetByIdAsync(id, token);
 
+            if(projectToDelete is null)
+            {
+                throw new NotFoundException("project", id);
+            }
+
             _context.Projects.Remove(projectToDelete);
             await _context.SaveChangesAsync(token);
             return true;
@@ -64,14 +69,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
 
         public async Task<Project> GetByIdAsync(Guid id, CancellationToken token = default)
         {
-            var projectToFind = await _context.Projects
-                .Where(p => p.Id == id)
-                .SingleOrDefaultAsync(token);
-
-            if (projectToFind == null)
-            {
-                throw new DomainException($"Project with id: {id} not found!");
-            }
+            var projectToFind = await _context.Projects.FindAsync(id, token);
 
             return projectToFind;
         }
@@ -93,6 +91,11 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
         public async Task<Project> UpdateAsync(Project project, CancellationToken token = default)
         {
             var existingProject = await GetByIdAsync(project.Id, token);
+
+            if (existingProject is null) 
+            {
+                return existingProject;
+            }
 
             _context.Entry(existingProject).CurrentValues.SetValues(project);
             await _context.SaveChangesAsync(token);

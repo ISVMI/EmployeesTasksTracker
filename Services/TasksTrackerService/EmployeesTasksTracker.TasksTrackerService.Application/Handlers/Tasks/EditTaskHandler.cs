@@ -4,7 +4,7 @@ using EmployeesTasksTracker.TasksTrackerService.Core.Enums;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using MassTransit;
 using MediatR;
-using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Hybrid;
 using Shared.Exceptions;
 using Shared.Messages;
 using Shared.Methods;
@@ -15,9 +15,9 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
     {
         private readonly ITasksRepo _repo;
         private readonly IBus _bus;
-        private readonly IDistributedCache _cache;
+        private readonly HybridCache _cache;
 
-        public EditTaskHandler(ITasksRepo repo, IBus bus, IDistributedCache cache)
+        public EditTaskHandler(ITasksRepo repo, IBus bus, HybridCache cache)
         {
             _repo = repo;
             _bus = bus;
@@ -34,15 +34,14 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
                 throw new DomainException($"Unknown priority {request.TaskToEdit.Priority}");
             }
 
-            var taskToEdit = new Core.Models.Task
-            {
-                Id = request.TaskToEdit.Id,
-                Name = request.TaskToEdit.Name,
-                CreatedAt = request.TaskToEdit.CreatedAt,
-                Deadline = request.TaskToEdit.Deadline,
-                Description = request.TaskToEdit.Description,
-                Priority = priority
-            };
+            var taskToEdit = await _repo.GetByIdAsync(request.TaskToEdit.Id, cancellationToken)
+                ?? throw new NotFoundException("task", request.TaskToEdit.Id);
+
+            taskToEdit.Name = request.TaskToEdit.Name;
+            taskToEdit.CreatedAt = request.TaskToEdit.CreatedAt;
+            taskToEdit.Deadline = request.TaskToEdit.Deadline;
+            taskToEdit.Description = request.TaskToEdit.Description;
+            taskToEdit.Priority = priority;
 
             var existingTask = await _repo.GetByIdAsync(taskToEdit.Id, cancellationToken);
 
@@ -55,7 +54,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
 
             var changes = ChangesTracker.GetChanges(existingTask, taskToEdit);
 
-            await _repo.UpdateAsync(taskToEdit, cancellationToken);
+            var editedTask = await _repo.UpdateAsync(taskToEdit, cancellationToken);
 
             if (changes.Any())
             {
@@ -64,15 +63,17 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
                 await _bus.Publish(message, cancellationToken);
             }
 
-            return new TaskDTO
-            {
-                Name = taskToEdit.Name,
-                CreatedAt = taskToEdit.CreatedAt,
-                Deadline = taskToEdit.Deadline,
-                Description = taskToEdit.Description,
-                Priority = taskToEdit.Priority.ToString(),
-                Status = taskToEdit.Status.ToString()
-            };
+            return editedTask is null
+                ? throw new NotFoundException("task", request.TaskToEdit.Id)
+                : new TaskDTO
+                {
+                    Name = taskToEdit.Name,
+                    CreatedAt = taskToEdit.CreatedAt,
+                    Deadline = taskToEdit.Deadline,
+                    Description = taskToEdit.Description,
+                    Priority = taskToEdit.Priority.ToString(),
+                    Status = taskToEdit.Status.ToString()
+                };
         }
     }
 }

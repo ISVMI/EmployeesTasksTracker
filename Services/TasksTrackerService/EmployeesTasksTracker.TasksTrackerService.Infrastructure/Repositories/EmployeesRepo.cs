@@ -22,7 +22,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
                 throw new ArgumentNullException(nameof(employee), "Given employee was null!");
             }
 
-            if (await _context.Employees.AnyAsync(e => e.UserName  == employee.UserName, token))
+            if (await _context.Employees.AnyAsync(e => e.UserName == employee.UserName, token))
             {
                 throw new DomainException("Such employee already exists");
             }
@@ -34,11 +34,16 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
 
         public async Task<bool> DeleteAsync(Guid id, CancellationToken token = default)
         {
-                var employeeToDelete = await GetByIdAsync(id, token);
+            var employeeToDelete = await GetByIdAsync(id, token);
 
-                _context.Employees.Remove(employeeToDelete);
-                await _context.SaveChangesAsync(token);
-                return true;
+            if (employeeToDelete is null)
+            {
+                throw new NotFoundException("employee", id);
+            }
+
+            _context.Employees.Remove(employeeToDelete);
+            await _context.SaveChangesAsync(token);
+            return true;
         }
 
         public async Task<IEnumerable<Employee>> GetAllAsync(CancellationToken token = default)
@@ -60,11 +65,6 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
         {
             var employeeToFind = await _context.Employees.FindAsync(id, token);
 
-            if (employeeToFind == null)
-            {
-                throw new DomainException($"Employee with id: {id} not found!");
-            }
-
             return employeeToFind;
         }
 
@@ -84,11 +84,16 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
 
         public async Task<Employee> UpdateAsync(Employee employee, CancellationToken token = default)
         {
-                var existingEmployee = await GetByIdAsync(employee.Id, token);
+            var existingEmployee = await GetByIdAsync(employee.Id, token);
 
-                _context.Entry(existingEmployee).CurrentValues.SetValues(employee);
-                await _context.SaveChangesAsync(token);
-                return employee;
+            if (existingEmployee is null)
+            {
+                return existingEmployee;
+            }
+
+            _context.Entry(existingEmployee).CurrentValues.SetValues(employee);
+            await _context.SaveChangesAsync(token);
+            return employee;
         }
     }
 }

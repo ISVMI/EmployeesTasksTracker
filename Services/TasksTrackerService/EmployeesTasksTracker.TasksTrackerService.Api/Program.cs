@@ -1,3 +1,4 @@
+    using EmployeesTasksTracker.TasksTrackerService.Api;
 using EmployeesTasksTracker.TasksTrackerService.Application.Extensions;
 using EmployeesTasksTracker.TasksTrackerService.Application.Interfaces;
 using EmployeesTasksTracker.TasksTrackerService.Application.Services;
@@ -17,7 +18,7 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddInfrastructure(builder.Configuration, builder.Environment.IsDevelopment());
 builder.Services.AddApplication();
 
 builder.Services.AddMassTransit(config =>
@@ -41,7 +42,8 @@ builder.Services.AddScoped<IPdfReportGenerator, PdfReportGenerator>();
 builder.Services.AddScoped<ITaskReportService, TaskReportService>();
 builder.Services.AddScoped<IPdfReportGenerator, PdfReportGenerator>();
 
-builder.Services.AddDistributedMemoryCache();
+builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+builder.Services.AddProblemDetails();
 
 var app = builder.Build();
 
@@ -57,6 +59,8 @@ app.UseHttpsRedirection();
 app.UseAuthorization();
 
 app.UseGlobalExceptionHandler();
+
+app.UseExceptionHandler();
 
 app.MapControllers();
 

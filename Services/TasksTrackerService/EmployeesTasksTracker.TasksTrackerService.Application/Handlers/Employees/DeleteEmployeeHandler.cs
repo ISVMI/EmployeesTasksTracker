@@ -1,16 +1,16 @@
 ﻿using EmployeesTasksTracker.TasksTrackerService.Application.Commands.Employees;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using MediatR;
-using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Hybrid;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Employees
 {
     public class DeleteEmployeeHandler : IRequestHandler<DeleteEmployeeCommand, bool>
     {
         private readonly IEmployeesRepo _repo;
-        private readonly IDistributedCache _cache;
+        private readonly HybridCache _cache;
 
-        public DeleteEmployeeHandler(IEmployeesRepo repo, IDistributedCache cache)
+        public DeleteEmployeeHandler(IEmployeesRepo repo, HybridCache cache)
         {
             _repo = repo;
             _cache = cache;

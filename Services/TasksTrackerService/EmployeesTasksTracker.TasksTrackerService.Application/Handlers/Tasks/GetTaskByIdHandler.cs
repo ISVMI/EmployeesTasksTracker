@@ -2,18 +2,17 @@
 using EmployeesTasksTracker.TasksTrackerService.Application.Queries.Tasks;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using MediatR;
-using Microsoft.Extensions.Caching.Distributed;
-using Shared.Extensions;
-using System.Text.Json;
+using Microsoft.Extensions.Caching.Hybrid;
+using Shared.Exceptions;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
 {
     public class GetTaskByIdHandler : IRequestHandler<GetTaskByIdQuery, TaskDTO>
     {
         private readonly ITasksRepo _repo;
-        private readonly IDistributedCache _cache;
+        private readonly HybridCache _cache;
 
-        public GetTaskByIdHandler(ITasksRepo repo, IDistributedCache cache)
+        public GetTaskByIdHandler(ITasksRepo repo, HybridCache cache)
         {
             _repo = repo;
             _cache = cache;
@@ -22,26 +21,22 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
         {
             var cacheKey = $"task:{request.Id}";
 
-            var cachedTask = await _cache.GetRecordAsync<Core.Models.Task>(cacheKey);
+            var task = await _cache.GetOrCreateAsync(
+                cacheKey,
+                async token => await _repo.GetByIdAsync(request.Id, cancellationToken),
+                cancellationToken: cancellationToken);
 
-            var task = cachedTask ?? await _repo.GetByIdAsync(request.Id, cancellationToken);
-
-            if (cachedTask == null)
-            {
-                var expirationTime = TimeSpan.FromMinutes(30);
-
-                await _cache.SetRecordAsync(cacheKey, task, expirationTime);
-            }
-
-            return new TaskDTO
-            {
-                Name = task.Name,
-                CreatedAt = task.CreatedAt,
-                Deadline = task.Deadline,
-                Description = task.Description,
-                Priority = task.Priority.ToString(),
-                Status = task.Status.ToString(),
-            };
+            return task is null
+                ? throw new NotFoundException("task", request.Id)
+                : new TaskDTO
+                {
+                    Name = task.Name,
+                    CreatedAt = task.CreatedAt,
+                    Deadline = task.Deadline,
+                    Description = task.Description,
+                    Priority = task.Priority.ToString(),
+                    Status = task.Status.ToString(),
+                };
         }
     }
 }
