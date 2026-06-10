@@ -33,6 +33,9 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.NotificationService", "Services\Notification\EmployeesTasksTracker.NotificationService\EmployeesTasksTracker.NotificationService.csproj", "{E393C1A3-F355-F46E-33AB-AE21E374A2B2}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "TasksTrackerService", "TasksTrackerService", "{7FFA42A4-8AA8-404B-9E8A-C76ACB038ECD}"
+	ProjectSection(SolutionItems) = preProject
+		Services\TasksTrackerService\Dockerfile = Services\TasksTrackerService\Dockerfile
+	EndProjectSection
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "EmployeesTasksTracker.TasksTrackerService.Api", "Services\TasksTrackerService\EmployeesTasksTracker.TasksTrackerService.Api\EmployeesTasksTracker.TasksTrackerService.Api.csproj", "{F927107E-9448-4AB5-BC91-390DC531824E}"
 EndProject

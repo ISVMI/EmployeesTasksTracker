@@ -28,18 +28,18 @@ services:
       timeout: 3s
       retries: 5
 
-  employees-service:
+  tasks-tracker-service:
     build:
       context: .
-      dockerfile: Services/Employees/Dockerfile
-    hostname: employees-service
+      dockerfile: Services/TasksTrackerService/Dockerfile
+    hostname: tasks-tracker-service
     depends_on:
       postgres:
         condition: service_healthy
     ports:
       - "5006:80"
     environment:
-      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=Employees;Username=postgres;Password=pa55w0rd!"
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=TasksTracker;Username=postgres;Password=pa55w0rd!"
       RabbitMq__Host: "rabbitmq"
       RabbitMq__Username: "guest"
       RabbitMq__Password: "guest"
@@ -55,7 +55,7 @@ services:
         condition: service_healthy
       rabbitmq:
         condition: service_healthy
-      tasks-service:
+      tasks-tracker-service:
         condition: service_started
     ports:
       - "5004:80"
@@ -72,76 +72,13 @@ services:
       dockerfile: Services/Notification/Dockerfile
     hostname: notification-service
     depends_on:
-      tasks-service:
+      tasks-tracker-service:
         condition: service_started
       rabbitmq:
         condition: service_healthy
     ports:
       - "5005:80"
     environment:
-      RabbitMq__Host: "rabbitmq"
-      RabbitMq__Username: "guest"
-      RabbitMq__Password: "guest"
-      ASPNETCORE_URLS: "http://+:80"
-
-  projects-service:
-    build:
-      context: .
-      dockerfile: Services/Projects/Dockerfile
-    hostname: projects-service
-    depends_on:
-      postgres:
-        condition: service_healthy
-      employees-service:
-        condition: service_started
-    ports:
-      - "5003:80"
-    environment:
-      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=Projects;Username=postgres;Password=pa55w0rd!"
-      RabbitMq__Host: "rabbitmq"
-      RabbitMq__Username: "guest"
-      RabbitMq__Password: "guest"
-      ASPNETCORE_URLS: "http://+:80"
-
-  tasks-service:
-    build:
-      context: .
-      dockerfile: Services/Tasks/Dockerfile
-    hostname: tasks-service
-    depends_on:
-      postgres:
-        condition: service_healthy
-      rabbitmq:
-        condition: service_healthy
-      employees-service:
-        condition: service_started
-      projects-service:
-        condition: service_started
-      tasksgroups-service :
-        condition: service_started
-    ports:
-      - "5001:80"
-    environment:
-      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=Tasks;Username=postgres;Password=pa55w0rd!"
-      RabbitMq__Host: "rabbitmq"
-      RabbitMq__Username: "guest"
-      RabbitMq__Password: "guest"
-      ASPNETCORE_URLS: "http://+:80"
-
-  tasksgroups-service:
-    build:
-      context: .
-      dockerfile: Services/TasksGroups/Dockerfile
-    hostname: tasksgroups-service
-    depends_on:
-      postgres:
-        condition: service_healthy
-      projects-service:
-        condition: service_started
-    ports:
-      - "5002:80"
-    environment:
-      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=TasksGroups;Username=postgres;Password=pa55w0rd!"
       RabbitMq__Host: "rabbitmq"
       RabbitMq__Username: "guest"
       RabbitMq__Password: "guest"
