@@ -15,7 +15,7 @@ COPY . ./
 
 RUN dotnet publish "Services/TasksTrackerService/EmployeesTasksTracker.TasksTrackerService.Api/EmployeesTasksTracker.TasksTrackerService.Api.csproj" -c Release -o /app/publish
 
-FROM mcr.microsoft.com/dotnet/sdk:9.
+FROM mcr.microsoft.com/dotnet/sdk:9.0
 WORKDIR /app
 COPY --from=build /app/publish .
 ENTRYPOINT ["dotnet", "EmployeesTasksTracker.TasksTrackerService.Api.dll"]
