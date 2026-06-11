@@ -1,4 +1,11 @@
-services:    
+services:
+
+  redis:
+    image: redis:7-alpine
+    container_name: redis
+    ports: 
+      - 6379:6379
+
   postgres:
     image: postgres:18
     hostname: postgres
@@ -12,7 +19,7 @@ services:
       interval: 5s
       timeout: 3s
       retries: 5
-
+  
   rabbitmq:
     image: rabbitmq:management
     hostname: rabbitmq
@@ -40,6 +47,7 @@ services:
       - "5006:80"
     environment:
       ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=TasksTracker;Username=postgres;Password=pa55w0rd!"
+      ConnectionStrings__Redis: "redis:6379"
       RabbitMq__Host: "rabbitmq"
       RabbitMq__Username: "guest"
       RabbitMq__Password: "guest"
@@ -60,7 +68,7 @@ services:
     ports:
       - "5004:80"
     environment:
-      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=History;Username=postgres;Password=pa55w0rd!"
+      ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=History;Username=postgres;Password=pa55w0rd"
       RabbitMq__Host: "rabbitmq"
       RabbitMq__Username: "guest"
       RabbitMq__Password: "guest"
