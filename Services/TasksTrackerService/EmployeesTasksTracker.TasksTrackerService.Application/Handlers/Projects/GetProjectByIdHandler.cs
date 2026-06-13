@@ -3,6 +3,7 @@ using EmployeesTasksTracker.TasksTrackerService.Application.Queries.Projects;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.Logging;
 using Shared.Exceptions;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Projects
@@ -11,11 +12,13 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Project
     {
         private readonly IProjectsRepo _repo;
         private readonly HybridCache _cache;
+        private readonly ILogger<GetProjectByIdHandler> _logger;
 
-        public GetProjectByIdHandler(IProjectsRepo repo, HybridCache cache)
+        public GetProjectByIdHandler(IProjectsRepo repo, HybridCache cache, ILogger<GetProjectByIdHandler> logger)
         {
             _repo = repo;
             _cache = cache;
+            _logger = logger;
         }
 
         public async Task<ProjectDTO> Handle(GetProjectByIdQuery request, CancellationToken cancellationToken)
@@ -26,11 +29,11 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Project
             var project = await _cache.GetOrCreateAsync(
                 cacheKey,
                 async token => await _repo.GetByIdAsync(request.Id, cancellationToken),
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken) ?? throw new NotFoundException("project", request.Id);
 
-            return project is null
-                ? throw new NotFoundException("project", request.Id)
-                : new ProjectDTO
+                _logger.LogInformation("Successfully found project {ProjectName}", project.Name);
+
+            return new ProjectDTO
                 {
                     Name = project.Name,
                     Description = project.Description

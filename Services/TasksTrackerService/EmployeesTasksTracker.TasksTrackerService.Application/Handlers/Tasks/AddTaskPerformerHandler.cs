@@ -3,7 +3,8 @@ using EmployeesTasksTracker.TasksTrackerService.Core.Enums;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using MassTransit;
 using MediatR;
-using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.Logging;
 using Shared.Messages;
 using Shared.Models;
 
@@ -14,14 +15,21 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
         private readonly ITasksRepo _repo;
         private readonly IBus _bus;
         private readonly ITaskEmployeeRepo _taskEmployeeRepo;
-        private readonly IDistributedCache _cache;
+        private readonly HybridCache _cache;
+        private readonly ILogger<AddTaskPerformerHandler> _logger;
 
-        public AddTaskPerformerHandler(ITasksRepo repo, ITaskEmployeeRepo taskEmployeeRepo, IBus bus, IDistributedCache cache)
+        public AddTaskPerformerHandler(
+            ITasksRepo repo,
+            ITaskEmployeeRepo taskEmployeeRepo,
+            IBus bus,
+            HybridCache cache,
+            ILogger<AddTaskPerformerHandler> logger)
         {
             _repo = repo;
             _bus = bus;
             _taskEmployeeRepo = taskEmployeeRepo;
             _cache = cache;
+            _logger = logger;
         }
 
         public async Task<Result> Handle(AddTaskPerformerCommand request, CancellationToken cancellationToken)
@@ -58,6 +66,8 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
             await _bus.Publish(message, cancellationToken);
 
             await _bus.Publish(secondMessage, cancellationToken);
+
+            _logger.LogInformation("Successfully added performer with id {performerId} for task {taskId}", request.PerformerId, request.TaskId);
 
             return Result.Success();
         }

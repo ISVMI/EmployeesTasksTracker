@@ -3,6 +3,8 @@ using EmployeesTasksTracker.TasksTrackerService.Application.Queries.TasksGroups;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.Logging;
+using Shared.Exceptions;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.TasksGroups
 {
@@ -10,11 +12,13 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.TasksGr
     {
         private readonly ITasksGroupsRepo _repo;
         private readonly HybridCache _cache;
+        private readonly Logger<GetTasksGroupByIdHandler> _logger;
 
-        public GetTasksGroupByIdHandler(ITasksGroupsRepo repo, HybridCache cache)
+        public GetTasksGroupByIdHandler(ITasksGroupsRepo repo, HybridCache cache, Logger<GetTasksGroupByIdHandler> logger)
         {
             _repo = repo;
             _cache = cache;
+            _logger = logger;
         }
 
         public async Task<TasksGroupDTO> Handle(GetTasksGroupByIdQuery request, CancellationToken cancellationToken)
@@ -22,12 +26,12 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.TasksGr
 
             var cacheKey = $"tasksgroup:{request.Id}";
 
-            var cachedTasksGroup = await _cache.GetOrCreateAsync(
+            var tasksGroup = await _cache.GetOrCreateAsync(
                 cacheKey,
                 async token => await _repo.GetByIdAsync(request.Id, cancellationToken),
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken) ?? throw new NotFoundException("tasksGroup", request.Id);
 
-            var tasksGroup = cachedTasksGroup ?? await _repo.GetByIdAsync(request.Id, cancellationToken);
+            _logger.LogInformation("Successfully found tasks group {tasksGroupName}", tasksGroup.Name);
 
             return new TasksGroupDTO
             {

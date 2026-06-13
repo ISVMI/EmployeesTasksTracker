@@ -3,6 +3,7 @@ using EmployeesTasksTracker.TasksTrackerService.Application.DTOs.Projects;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.Logging;
 using Shared.Exceptions;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Projects
@@ -11,11 +12,13 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Project
     {
         private readonly IProjectsRepo _repo;
         private readonly HybridCache _cache;
+        private readonly ILogger<EditProjectHandler> _logger;
 
-        public EditProjectHandler(IProjectsRepo repo, HybridCache cache)
+        public EditProjectHandler(IProjectsRepo repo, HybridCache cache, ILogger<EditProjectHandler> logger)
         {
             _repo = repo;
             _cache = cache;
+            _logger = logger;
         }
 
         public async Task<ProjectDTO> Handle(EditProjectCommand request, CancellationToken cancellationToken)
@@ -31,11 +34,11 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Project
 
             await _cache.RemoveAsync($"project:{request.ProjectToEdit.Id}", cancellationToken);
 
-            var editedProject = await _repo.UpdateAsync(projectToEdit, cancellationToken);
+            var editedProject = await _repo.UpdateAsync(projectToEdit, cancellationToken) ?? throw new NotFoundException("project", request.ProjectToEdit.Id);
 
-            return editedProject is null
-                ? throw new NotFoundException("project", request.ProjectToEdit.Id)
-                : new ProjectDTO
+            _logger.LogInformation("Successfully edited project with id {projectId}", editedProject.Id);
+
+            return new ProjectDTO
                 {
                     Name = projectToEdit.Name,
                     Description = projectToEdit.Description

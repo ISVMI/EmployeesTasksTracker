@@ -18,7 +18,9 @@ builder.Services.AddControllers();
 builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
-builder.Services.AddInfrastructure(builder.Configuration, builder.Environment.IsDevelopment());
+builder.Services.AddInfrastructure(builder.Configuration);
+builder.Services.AddCaching(builder.Configuration, builder.Environment.IsDevelopment());
+builder.Services.AddObservability(builder.Configuration, "tasks-tracker-service");
 builder.Services.AddApplication();
 
 builder.Services.AddMassTransit(config =>

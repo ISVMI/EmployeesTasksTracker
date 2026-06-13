@@ -2,16 +2,19 @@
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using EmployeesTasksTracker.TasksTrackerService.Core.Models;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.TasksGroups
 {
     public class CreateTasksGroupHandler : IRequestHandler<CreateTasksGroupCommand, Guid>
     {
         private readonly ITasksGroupsRepo _repo;
+        private readonly ILogger<CreateTasksGroupHandler> _logger;
 
-        public CreateTasksGroupHandler(ITasksGroupsRepo repo)
+        public CreateTasksGroupHandler(ITasksGroupsRepo repo, ILogger<CreateTasksGroupHandler> logger)
         {
             _repo = repo;
+            _logger = logger;
         }
 
         public async Task<Guid> Handle(CreateTasksGroupCommand request, CancellationToken cancellationToken)
@@ -21,9 +24,11 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.TasksGr
                 Name = request.TasksGroup.Name
             };
 
-            await _repo.CreateAsync(newTasksGroup, cancellationToken);
+            var result = await _repo.CreateAsync(newTasksGroup, cancellationToken);
 
-            return newTasksGroup.Id;
+            _logger.LogInformation("Successfully created tasks group {tasksGroupId}", result);
+
+            return result;
         }
     }
 }

@@ -3,6 +3,7 @@ using EmployeesTasksTracker.TasksTrackerService.Application.Queries.Employees;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.Logging;
 using Shared.Exceptions;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Employees
@@ -11,11 +12,13 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Employe
     {
         private readonly IEmployeesRepo _repo;
         private readonly HybridCache _cache;
+        private readonly ILogger<GetEmployeeByIdHandler> _logger;
 
-        public GetEmployeeByIdHandler(IEmployeesRepo repo, HybridCache cache)
+        public GetEmployeeByIdHandler(IEmployeesRepo repo, HybridCache cache, ILogger<GetEmployeeByIdHandler> logger)
         {
             _repo = repo;
             _cache = cache;
+            _logger = logger;
         }
 
         public async Task<EmployeeDTO> Handle(GetEmployeeByIdQuery request, CancellationToken cancellationToken)
@@ -26,18 +29,19 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Employe
             var employee = await _cache.GetOrCreateAsync(
                             cacheKey,
                             async token => await _repo.GetByIdAsync(request.Id, cancellationToken),
-                            cancellationToken: cancellationToken);
+                            cancellationToken: cancellationToken) ?? throw new NotFoundException("employee", request.Id);
 
-            return employee is null
-                ? throw new NotFoundException("employee", request.Id)
-                : new EmployeeDTO
-                {
-                    Name = employee.Name,
-                    Surname = employee.Surname,
-                    Patronymic = employee.Patronymic,
-                    Role = employee.Role.ToString(),
-                    UserName = employee.UserName
-                };
+            _logger.LogInformation("Found employee {Surname} {Name} {Patronymic}", employee.Surname, employee.Name, employee.Patronymic);
+
+            return new EmployeeDTO
+            {
+                Name = employee.Name,
+                Surname = employee.Surname,
+                Patronymic = employee.Patronymic,
+                Role = employee.Role.ToString(),
+                UserName = employee.UserName
+            };
         }
     }
+}
 }
