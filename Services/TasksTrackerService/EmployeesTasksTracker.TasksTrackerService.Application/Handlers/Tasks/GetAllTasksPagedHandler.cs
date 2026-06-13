@@ -2,6 +2,7 @@
 using EmployeesTasksTracker.TasksTrackerService.Application.Queries.Tasks;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Shared.DTOs;
 using Shared.Methods;
 
@@ -10,10 +11,12 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
     internal class GetAllTasksPagedHandler : IRequestHandler<GetAllTasksPagedQuery, PagedResponse<TaskDTO>>
     {
         private readonly ITasksRepo _repo;
+        private readonly ILogger<GetAllTasksPagedHandler> _logger;
 
-        public GetAllTasksPagedHandler(ITasksRepo repo)
+        public GetAllTasksPagedHandler(ITasksRepo repo, ILogger<GetAllTasksPagedHandler> logger)
         {
             _repo = repo;
+            _logger = logger;
         }
 
         public async Task<PagedResponse<TaskDTO>> Handle(GetAllTasksPagedQuery request, CancellationToken token)
@@ -34,6 +37,8 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
                     Priority = EnumsHumanizer.Translate(item.Priority.ToString())
                 });
             }
+
+            _logger.LogInformation("Successfully got {totalCount} tasks", totalCount);
 
             return new PagedResponse<TaskDTO>(dtoList, totalCount, request.Page, request.PageSize);
         }

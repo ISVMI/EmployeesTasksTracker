@@ -2,16 +2,19 @@
 using EmployeesTasksTracker.TasksTrackerService.Application.Queries.Tasks;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
 {
     public class GetAllTasksHandler : IRequestHandler<GetAllTasksQuery, IEnumerable<TaskDTO>>
     {
         private readonly ITasksRepo _repo;
+        private readonly ILogger<GetAllTasksHandler> _logger;
 
-        public GetAllTasksHandler(ITasksRepo repo)
+        public GetAllTasksHandler(ITasksRepo repo, ILogger<GetAllTasksHandler> logger)
         {
             _repo = repo;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<TaskDTO>> Handle(GetAllTasksQuery request, CancellationToken cancellationToken)
@@ -32,7 +35,9 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
                     Status = task.Status.ToString(),
                 });
             }
-            
+
+            _logger.LogInformation("Successfully got {totalCount} tasks", tasks.Count());
+
             return tasksDtoList;
         }
     }

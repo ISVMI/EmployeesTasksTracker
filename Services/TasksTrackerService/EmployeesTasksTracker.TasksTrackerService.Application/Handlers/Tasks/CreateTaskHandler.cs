@@ -3,7 +3,7 @@ using EmployeesTasksTracker.TasksTrackerService.Core.Enums;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using MassTransit;
 using MediatR;
-using Shared.DTOs;
+using Microsoft.Extensions.Logging;
 using Shared.Exceptions;
 using Shared.Messages;
 
@@ -13,11 +13,13 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
     {
         private readonly ITasksRepo _repo;
         private readonly IBus _bus;
+        private readonly ILogger<CreateTaskHandler> _logger;
 
-        public CreateTaskHandler(ITasksRepo repo, IBus bus)
+        public CreateTaskHandler(ITasksRepo repo, IBus bus, ILogger<CreateTaskHandler> logger)
         {
             _repo = repo;
             _bus = bus;
+            _logger = logger;
         }
 
         public async Task<Guid> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
@@ -60,7 +62,11 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
                 Status = request.Task.Status
             };
 
-            return newTask.Id;
+            await _bus.Publish(message);
+
+            _logger.LogInformation("Successfully created new task with id {taskId}", taskId);
+
+            return taskId;
         }
     }
 }

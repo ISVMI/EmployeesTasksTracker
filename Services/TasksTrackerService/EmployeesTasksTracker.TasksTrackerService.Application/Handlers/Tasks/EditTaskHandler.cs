@@ -5,6 +5,7 @@ using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.Logging;
 using Shared.Exceptions;
 using Shared.Messages;
 using Shared.Methods;
@@ -16,12 +17,14 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
         private readonly ITasksRepo _repo;
         private readonly IBus _bus;
         private readonly HybridCache _cache;
+        private readonly ILogger<EditTaskHandler> _logger;
 
-        public EditTaskHandler(ITasksRepo repo, IBus bus, HybridCache cache)
+        public EditTaskHandler(ITasksRepo repo, IBus bus, HybridCache cache, ILogger<EditTaskHandler> logger)
         {
             _repo = repo;
             _bus = bus;
             _cache = cache;
+            _logger = logger;
         }
 
         public async Task<TaskDTO> Handle(EditTaskCommand request, CancellationToken cancellationToken)
@@ -54,7 +57,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
 
             var changes = ChangesTracker.GetChanges(existingTask, taskToEdit);
 
-            var editedTask = await _repo.UpdateAsync(taskToEdit, cancellationToken);
+            var editedTask = await _repo.UpdateAsync(taskToEdit, cancellationToken) ?? throw new NotFoundException("task", request.TaskToEdit.Id);
 
             if (changes.Any())
             {
@@ -63,9 +66,9 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
                 await _bus.Publish(message, cancellationToken);
             }
 
-            return editedTask is null
-                ? throw new NotFoundException("task", request.TaskToEdit.Id)
-                : new TaskDTO
+            _logger.LogInformation("Successfully edited task with id {taskId}", editedTask.Id);
+
+            return new TaskDTO
                 {
                     Name = taskToEdit.Name,
                     CreatedAt = taskToEdit.CreatedAt,

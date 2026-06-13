@@ -2,17 +2,20 @@
 using EmployeesTasksTracker.TasksTrackerService.Application.Queries.Projects;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Shared.DTOs;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Projects
 {
-    internal class GetAllTasksPagedHandler : IRequestHandler<GetAllProjectsPagedQuery, PagedResponse<ProjectDTO>>
+    internal class GetAllProjectsPagedHandler : IRequestHandler<GetAllProjectsPagedQuery, PagedResponse<ProjectDTO>>
     {
         private readonly IProjectsRepo _repo;
+        private readonly ILogger<GetAllProjectsPagedHandler> _logger;
 
-        public GetAllTasksPagedHandler(IProjectsRepo repo)
+        public GetAllProjectsPagedHandler(IProjectsRepo repo, ILogger<GetAllProjectsPagedHandler> logger)
         {
             _repo = repo;
+            _logger = logger;
         }
 
         public async Task<PagedResponse<ProjectDTO>> Handle(GetAllProjectsPagedQuery request, CancellationToken token)
@@ -29,6 +32,8 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Project
                     Description = item.Description
                 });
             }
+
+            _logger.LogInformation("Successfully got {totalCount} projects", totalCount);
 
             return new PagedResponse<ProjectDTO>(dtoList, totalCount, request.Page, request.PageSize);
         }

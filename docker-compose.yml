@@ -47,7 +47,6 @@ services:
       - "5006:80"
     environment:
       ConnectionStrings__DefaultConnection: "Host=postgres;Port=5432;Database=TasksTracker;Username=postgres;Password=pa55w0rd!"
-      ConnectionStrings__Redis: "redis:6379"
       RabbitMq__Host: "rabbitmq"
       RabbitMq__Username: "guest"
       RabbitMq__Password: "guest"

@@ -2,6 +2,7 @@
 using EmployeesTasksTracker.TasksTrackerService.Application.Queries.Employees;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Employees
 {
@@ -9,10 +10,12 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Employe
     {
 
         private readonly IEmployeesRepo _repo;
+        private readonly ILogger<GetAllEmployeesHandler> _logger;
 
-        public GetAllEmployeesHandler(IEmployeesRepo repo)
+        public GetAllEmployeesHandler(IEmployeesRepo repo, ILogger<GetAllEmployeesHandler> logger)
         {
             _repo = repo;
+            _logger = logger;
         }
         public async Task<IEnumerable<EmployeeDTO>> Handle(GetAllEmployeesQuery request, CancellationToken cancellationToken)
         {
@@ -31,6 +34,8 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Employe
                     UserName = employee.UserName
                 });
             }
+
+            _logger.LogInformation("Successfully got {totalCount} employees", employees.Count());
 
             return employeesDtoList;
 

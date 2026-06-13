@@ -3,6 +3,7 @@ using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.Logging;
 using Shared.Messages;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
@@ -12,12 +13,14 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
         private readonly ITasksRepo _repo;
         private readonly IBus _bus;
         private readonly HybridCache _cache;
+        private readonly ILogger<DeleteTaskHandler> _logger;
 
-        public DeleteTaskHandler(ITasksRepo repo, IBus bus, HybridCache cache)
+        public DeleteTaskHandler(ITasksRepo repo, IBus bus, HybridCache cache, ILogger<DeleteTaskHandler> logger)
         {
             _repo = repo;
             _bus = bus;
             _cache = cache;
+            _logger = logger;
         }
         public async Task<bool> Handle(DeleteTaskCommand request, CancellationToken cancellationToken)
         {
@@ -28,7 +31,11 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
 
             await _cache.RemoveAsync($"task:{request.Id}", cancellationToken);
 
-            return await _repo.DeleteAsync(request.Id, cancellationToken);
+            var result = await _repo.DeleteAsync(request.Id, cancellationToken);
+
+            _logger.LogInformation("Successfully deleted task with id {taskId}", request.Id);
+
+            return result;
         }
     }
 }

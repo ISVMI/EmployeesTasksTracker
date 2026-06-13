@@ -2,16 +2,19 @@
 using EmployeesTasksTracker.TasksTrackerService.Application.Queries.TasksGroups;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.TasksGroups
 {
     public class GetAllTasksGroupsHandler : IRequestHandler<GetAllTasksGroupsQuery, IEnumerable<TasksGroupDTO>>
     {
         private readonly ITasksGroupsRepo _repo;
+        private readonly ILogger<GetAllTasksGroupsHandler> _logger;
 
-        public GetAllTasksGroupsHandler(ITasksGroupsRepo repo)
+        public GetAllTasksGroupsHandler(ITasksGroupsRepo repo, ILogger<GetAllTasksGroupsHandler> logger)
         {
             _repo = repo;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<TasksGroupDTO>> Handle(GetAllTasksGroupsQuery request, CancellationToken cancellationToken)
@@ -27,6 +30,8 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.TasksGr
                     Name = taskGroup.Name
                 });
             }
+
+            _logger.LogInformation("Successfully found tasks group {tasksGroupName}", tasksGroups.Count());
 
             return tasksGroupsDtoList;
         }

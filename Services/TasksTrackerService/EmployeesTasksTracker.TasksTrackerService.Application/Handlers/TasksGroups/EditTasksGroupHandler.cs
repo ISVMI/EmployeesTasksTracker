@@ -4,6 +4,7 @@ using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using EmployeesTasksTracker.TasksTrackerService.Core.Models;
 using MediatR;
 using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.Logging;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.TasksGroups
 {
@@ -11,11 +12,13 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.TasksGr
     {
         private readonly ITasksGroupsRepo _repo;
         private readonly HybridCache _cache;
+        private readonly ILogger<EditTasksGroupHandler> _logger;
 
-        public EditTasksGroupHandler(ITasksGroupsRepo repo, HybridCache cache)
+        public EditTasksGroupHandler(ITasksGroupsRepo repo, HybridCache cache, ILogger<EditTasksGroupHandler> logger)
         {
             _repo = repo;
             _cache = cache;
+            _logger = logger;
         }
 
         public async Task<TasksGroupDTO> Handle(EditTasksGroupCommand request, CancellationToken cancellationToken)
@@ -29,6 +32,8 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.TasksGr
             await _repo.UpdateAsync(tasksGroupToEdit,cancellationToken);
 
             await _cache.RemoveAsync($"tasksgroup:{request.TasksGroupToEdit.Id}", cancellationToken);
+
+            _logger.LogInformation("Successfully edited tasks group {tasksGroupId}", request.TasksGroupToEdit.Id);
 
             return new TasksGroupDTO
             {

@@ -2,18 +2,21 @@
 using EmployeesTasksTracker.TasksTrackerService.Application.Queries.Employees;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using MediatR;
+using Microsoft.Extensions.Logging;
 using Shared.DTOs;
 using Shared.Methods;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Employees
 {
-    internal class GetAllTasksPagedHandler : IRequestHandler<GetAllEmployeesPagedQuery, PagedResponse<EmployeeDTO>>
+    internal class GetAllEmployeesPagedHandler : IRequestHandler<GetAllEmployeesPagedQuery, PagedResponse<EmployeeDTO>>
     {
         private readonly IEmployeesRepo _repo;
+        private readonly ILogger<GetAllEmployeesPagedHandler> _logger;
 
-        public GetAllTasksPagedHandler(IEmployeesRepo repo)
+        public GetAllEmployeesPagedHandler(IEmployeesRepo repo, ILogger<GetAllEmployeesPagedHandler> logger)
         {
             _repo = repo;
+            _logger = logger;
         }
 
         public async Task<PagedResponse<EmployeeDTO>> Handle(GetAllEmployeesPagedQuery request, CancellationToken token)
@@ -33,6 +36,8 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Employe
                     Role = EnumsHumanizer.Translate(item.Role.ToString())
                 });
             }
+
+            _logger.LogInformation("Successfully got {totalCount} employees", totalCount);
 
             return new PagedResponse<EmployeeDTO>(dtoList, totalCount, request.Page, request.PageSize);
         }

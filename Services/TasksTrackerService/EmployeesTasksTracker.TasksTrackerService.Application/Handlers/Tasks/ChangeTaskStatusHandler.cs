@@ -3,7 +3,7 @@ using EmployeesTasksTracker.TasksTrackerService.Core.Enums;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using MassTransit;
 using MediatR;
-using Microsoft.Extensions.Caching.Distributed;
+using Microsoft.Extensions.Caching.Hybrid;
 using Shared.Exceptions;
 using Shared.Messages;
 
@@ -13,13 +13,15 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
     {
         private readonly ITasksRepo _repo;
         private readonly IBus _bus;
-        private readonly IDistributedCache _cache;
+        private readonly HybridCache _cache;
+        private readonly ILogger<ChangeTaskStatusHandler> _logger;
 
-        public ChangeTaskStatusHandler(ITasksRepo repo, IBus bus, IDistributedCache cache)
+        public ChangeTaskStatusHandler(ITasksRepo repo, IBus bus, HybridCache cache, ILogger<ChangeTaskStatusHandler> logger)
         {
             _repo = repo;
             _bus = bus;
             _cache = cache;
+            _logger = logger;
         }
 
         public async Task Handle(ChangeTaskStatusCommand request, CancellationToken cancellationToken)
@@ -52,6 +54,11 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
             await _repo.UpdateAsync(existingTask, cancellationToken);
 
             await _cache.RemoveAsync($"task:{request.TaskId}", cancellationToken);
+
+            _logger.LogInformation("Successfully changed status from {oldStatus} to {newStatus} for task: {taskName}", 
+                existingTask.Status, 
+                request.NewStatus, 
+                existingTask.Name);
 
             await _bus.Publish(message, cancellationToken);
 

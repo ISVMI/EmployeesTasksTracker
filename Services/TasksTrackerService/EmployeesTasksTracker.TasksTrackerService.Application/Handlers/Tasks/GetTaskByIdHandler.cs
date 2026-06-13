@@ -3,6 +3,7 @@ using EmployeesTasksTracker.TasksTrackerService.Application.Queries.Tasks;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.Logging;
 using Shared.Exceptions;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
@@ -11,11 +12,13 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
     {
         private readonly ITasksRepo _repo;
         private readonly HybridCache _cache;
+        private readonly ILogger<GetTaskByIdHandler> _logger;
 
-        public GetTaskByIdHandler(ITasksRepo repo, HybridCache cache)
+        public GetTaskByIdHandler(ITasksRepo repo, HybridCache cache, ILogger<GetTaskByIdHandler> logger)
         {
             _repo = repo;
             _cache = cache;
+            _logger = logger;
         }
         public async Task<TaskDTO> Handle(GetTaskByIdQuery request, CancellationToken cancellationToken)
         {
@@ -24,11 +27,11 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
             var task = await _cache.GetOrCreateAsync(
                 cacheKey,
                 async token => await _repo.GetByIdAsync(request.Id, cancellationToken),
-                cancellationToken: cancellationToken);
+                cancellationToken: cancellationToken) ?? throw new NotFoundException("task", request.Id);
 
-            return task is null
-                ? throw new NotFoundException("task", request.Id)
-                : new TaskDTO
+            _logger.LogInformation("Successfully found task {taskName}", task.Name);
+
+            return new TaskDTO
                 {
                     Name = task.Name,
                     CreatedAt = task.CreatedAt,

@@ -2,6 +2,7 @@
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using MediatR;
 using Microsoft.Extensions.Caching.Hybrid;
+using Microsoft.Extensions.Logging;
 using Shared.Exceptions;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.TasksGroups
@@ -10,11 +11,13 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.TasksGr
     {
         private readonly ITasksGroupsRepo _tasksGroupsRepo;
         private readonly HybridCache _cache;
+        private readonly ILogger<DeleteTasksGroupHandler> _logger;
 
-        public DeleteTasksGroupHandler(ITasksGroupsRepo tasksGroupsRepo, HybridCache cache)
+        public DeleteTasksGroupHandler(ITasksGroupsRepo tasksGroupsRepo, HybridCache cache, ILogger<DeleteTasksGroupHandler> logger)
         {
             _tasksGroupsRepo = tasksGroupsRepo;
             _cache = cache;
+            _logger = logger;
         }
 
         public async Task<bool> Handle(DeleteTasksGroupCommand request, CancellationToken cancellationToken)
@@ -27,6 +30,8 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.TasksGr
             {
                 throw new DomainException($"Couldn't delete tasks group! Task isn't completed or cancelled!");
             }
+
+            _logger.LogInformation("Successfully deleted tasks group with id {tasksGroupId}", request.Id);
 
             return await _tasksGroupsRepo.DeleteAsync(request.Id, cancellationToken);
         }
