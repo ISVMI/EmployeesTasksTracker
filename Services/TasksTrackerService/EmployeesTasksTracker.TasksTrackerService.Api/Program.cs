@@ -6,6 +6,7 @@ using EmployeesTasksTracker.TasksTrackerService.Infrastructure.DataSeeding;
 using EmployeesTasksTracker.TasksTrackerService.Infrastructure.Extensions;
 using EmployeesTasksTracker.TasksTrackerService.Infrastructure.ReportGeneration;
 using MassTransit;
+using Serilog;
 using Shared.Extensions;
 using Shared.Interfaces;
 
@@ -13,59 +14,78 @@ var builder = WebApplication.CreateBuilder(args);
 
 // Add services to the container.
 
-builder.Services.AddControllers();
-// Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
-builder.Services.AddEndpointsApiExplorer();
-builder.Services.AddSwaggerGen();
+Log.Logger = new LoggerConfiguration()
+    .ReadFrom.Configuration(builder.Configuration)
+    .CreateLogger();
 
-builder.Services.AddInfrastructure(builder.Configuration);
-builder.Services.AddCaching(builder.Configuration, builder.Environment.IsDevelopment());
-builder.Services.AddObservability(builder.Configuration, "tasks-tracker-service");
-builder.Services.AddApplication();
+builder.Host.UseSerilog();
 
-builder.Services.AddMassTransit(config =>
+try
 {
-    config.UsingRabbitMq((context, cfg) =>
+    Log.Information("Starting web host");
+
+    builder.Services.AddControllers();
+    // Learn more about configuring Swagger/OpenAPI at https://aka.ms/aspnetcore/swashbuckle
+    builder.Services.AddEndpointsApiExplorer();
+    builder.Services.AddSwaggerGen();
+
+    builder.Services.AddInfrastructure(builder.Configuration);
+    builder.Services.AddCaching(builder.Configuration, builder.Environment.IsDevelopment());
+    builder.Services.AddObservability(builder.Configuration, "tasks-tracker-service");
+    builder.Services.AddApplication();
+
+    builder.Services.AddMassTransit(config =>
     {
-        cfg.Host(builder.Configuration["RabbitMQHost"], h =>
+        config.UsingRabbitMq((context, cfg) =>
         {
-            h.Username("guest");
-            h.Password("guest");
+            cfg.Host(builder.Configuration["RabbitMQHost"], h =>
+            {
+                h.Username("guest");
+                h.Password("guest");
+            });
         });
     });
-});
 
-builder.Services.AddScoped<ProjectsGenerator>();
-builder.Services.AddScoped<TasksGenerator>();
-builder.Services.AddScoped<DbInitializer>();
+    builder.Services.AddScoped<ProjectsGenerator>();
+    builder.Services.AddScoped<TasksGenerator>();
+    builder.Services.AddScoped<DbInitializer>();
 
-builder.Services.AddScoped<ITasksGroupReportService, TasksGroupReportService>();
-builder.Services.AddScoped<IPdfReportGenerator, PdfReportGenerator>();
-builder.Services.AddScoped<ITaskReportService, TaskReportService>();
-builder.Services.AddScoped<IPdfReportGenerator, PdfReportGenerator>();
+    builder.Services.AddScoped<ITasksGroupReportService, TasksGroupReportService>();
+    builder.Services.AddScoped<IPdfReportGenerator, PdfReportGenerator>();
+    builder.Services.AddScoped<ITaskReportService, TaskReportService>();
+    builder.Services.AddScoped<IPdfReportGenerator, PdfReportGenerator>();
 
-builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
-builder.Services.AddProblemDetails();
+    builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
+    builder.Services.AddProblemDetails();
 
-var app = builder.Build();
+    var app = builder.Build();
 
-// Configure the HTTP request pipeline.
-if (app.Environment.IsDevelopment())
-{
-    app.UseSwagger();
-    app.UseSwaggerUI();
+    // Configure the HTTP request pipeline.
+    if (app.Environment.IsDevelopment())
+    {
+        app.UseSwagger();
+        app.UseSwaggerUI();
+    }
+
+    app.UseHttpsRedirection();
+
+    app.UseAuthorization();
+
+    app.UseGlobalExceptionHandler();
+
+    app.UseExceptionHandler();
+
+    app.MapControllers();
+
+    await app.Services.AddDatabaseInitialization();
+
+    app.Run();
 }
-
-app.UseHttpsRedirection();
-
-app.UseAuthorization();
-
-app.UseGlobalExceptionHandler();
-
-app.UseExceptionHandler();
-
-app.MapControllers();
-
-await app.Services.AddDatabaseInitialization();
-
-app.Run();
+catch (Exception ex)
+{
+    Log.Fatal(ex, "Host has terminated unexpectedly");
+}
+finally
+{
+    Log.CloseAndFlush();
+}
