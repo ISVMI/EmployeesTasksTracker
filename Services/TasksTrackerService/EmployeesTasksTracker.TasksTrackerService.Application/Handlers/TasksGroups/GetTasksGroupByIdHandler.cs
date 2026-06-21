@@ -12,9 +12,9 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.TasksGr
     {
         private readonly ITasksGroupsRepo _repo;
         private readonly HybridCache _cache;
-        private readonly Logger<GetTasksGroupByIdHandler> _logger;
+        private readonly ILogger<GetTasksGroupByIdHandler> _logger;
 
-        public GetTasksGroupByIdHandler(ITasksGroupsRepo repo, HybridCache cache, Logger<GetTasksGroupByIdHandler> logger)
+        public GetTasksGroupByIdHandler(ITasksGroupsRepo repo, HybridCache cache, ILogger<GetTasksGroupByIdHandler> logger)
         {
             _repo = repo;
             _cache = cache;

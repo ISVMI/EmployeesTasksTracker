@@ -55,25 +55,27 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Extensions
 
         public static void AddObservability(this IServiceCollection services, IConfiguration configuration, string serviceName)
         {
-            var resourceBuilder = ResourceBuilder.CreateDefault().AddService(serviceName);
+            var tracingEndpoint = configuration["Tracing"];
 
             services.AddOpenTelemetry()
                 .WithTracing(tracing => tracing
-                .SetResourceBuilder(resourceBuilder)
+                .ConfigureResource(resource => resource.AddService(serviceName))
                 .AddAspNetCoreInstrumentation()
+                .AddHttpClientInstrumentation()
                 .AddEntityFrameworkCoreInstrumentation()
-                .AddSource("MassTransit")
                 .AddOtlpExporter(options =>
                 {
-                    options.Endpoint = new Uri(configuration["OTEL_EXPORTER_OTPL_ENDPOINT"] ?? "http://localhost:4317");
+                    options.Endpoint = new Uri($"http://{tracingEndpoint}/v1/traces");
+                    options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.HttpProtobuf;
                 }))
                 .WithMetrics(metrics => metrics
-                .SetResourceBuilder(resourceBuilder)
                 .AddAspNetCoreInstrumentation()
                 .AddRuntimeInstrumentation()
+                .AddProcessInstrumentation()
                 .AddOtlpExporter(options =>
-                {
-                    options.Endpoint = new Uri(configuration["OTEL_EXPORTER_OTPL_ENDPOINT"] ?? "http://localhost:4317");
+                {       
+                    options.Endpoint = new Uri($"http://{tracingEndpoint}/v1/metrics");
+                    options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.HttpProtobuf;
                 }));
         }
 

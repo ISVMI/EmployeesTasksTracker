@@ -44,4 +44,3 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Employe
         }
     }
 }
-}
