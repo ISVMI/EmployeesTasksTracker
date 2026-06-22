@@ -16,7 +16,7 @@
 
                 if (oldValue != newValue) 
                 {
-                    changes.Add($"{prop.Name} изменено с {oldValue} на {newValue}");
+                    changes.Add($"{prop.Name} changed from {oldValue} to {newValue}");
                 }
             }
 
