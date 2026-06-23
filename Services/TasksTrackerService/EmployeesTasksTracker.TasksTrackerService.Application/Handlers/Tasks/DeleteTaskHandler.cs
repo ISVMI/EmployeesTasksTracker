@@ -25,13 +25,13 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
         public async Task<bool> Handle(DeleteTaskCommand request, CancellationToken cancellationToken)
         {
 
-            var message = new TaskDeleted(request.Id, DateTime.UtcNow);
-
-            await _bus.Publish(message, cancellationToken);
-
             await _cache.RemoveAsync($"task:{request.Id}", cancellationToken);
 
             var result = await _repo.DeleteAsync(request.Id, cancellationToken);
+
+            var message = new TaskDeleted(request.Id, DateTime.UtcNow);
+
+            await _bus.Publish(message, cancellationToken);
 
             _logger.LogInformation("Successfully deleted task with id {taskId}", request.Id);
 
