@@ -1,13 +1,15 @@
-﻿using FluentAssertions;
-using NSubstitute;
-using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
-using EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks;
-using MassTransit;
-using Microsoft.Extensions.Logging;
+﻿using Task = EmployeesTasksTracker.TasksTrackerService.Core.Models.Task;
 using EmployeesTasksTracker.TasksTrackerService.Application.Commands.Tasks;
 using EmployeesTasksTracker.TasksTrackerService.Application.DTOs.Tasks;
-using Shared.Messages;
+using EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks;
+using EmployeesTasksTracker.TasksTrackerService.Core.Enums;
+using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
+using FluentAssertions;
+using MassTransit;
+using Microsoft.Extensions.Logging;
+using NSubstitute;
 using Shared.Exceptions;
+using Shared.Messages;
 
 namespace xUnit
 {
@@ -26,10 +28,8 @@ namespace xUnit
             _handler = new CreateTaskHandler(_repoMock, _busMock, _loggerMock);
         }
 
-        //Tests of create task command handler
-
         [Fact]
-        public async Task Handle_ValidCommand_ShouldCreateTaskPublishEventAndReturnId()
+        public async System.Threading.Tasks.Task Handle_ValidCommand_ShouldCreateTaskPublishEventAndReturnId()
         {
             //Arrange
             var expectedTaskId = Guid.NewGuid();
@@ -45,7 +45,7 @@ namespace xUnit
                 Status = "Backlog"
             });
 
-            _repoMock.CreateAsync(Arg.Any<EmployeesTasksTracker.TasksTrackerService.Core.Models.Task>(), cancellationToken).Returns(expectedTaskId);
+            _repoMock.CreateAsync(Arg.Any<Task>(), cancellationToken).Returns(expectedTaskId);
 
             //Act
             var result = await _handler.Handle(command, cancellationToken);
@@ -53,7 +53,7 @@ namespace xUnit
             //Assert
             result.Should().Be(expectedTaskId);
 
-            await _repoMock.Received(1).CreateAsync(Arg.Is<EmployeesTasksTracker.TasksTrackerService.Core.Models.Task>(t =>
+            await _repoMock.Received(1).CreateAsync(Arg.Is<Task>(t =>
             t.Name == command.Task.Name && t.Priority.ToString() == command.Task.Priority), cancellationToken);
 
             await _busMock.Received(1).Publish(Arg.Is<TaskCreated>(m =>
@@ -67,7 +67,7 @@ namespace xUnit
         }
 
         [Fact]
-        public async Task Handle_InvalidPriority_ShouldThrowDomainException()
+        public async System.Threading.Tasks.Task Handle_InvalidPriority_ShouldThrowDomainException()
         {
             //arrange
             var command = new CreateTaskCommand(new CreateTaskDTO
@@ -81,19 +81,19 @@ namespace xUnit
             });
 
             //Act
-            Func<Task> act = async () => await _handler.Handle(command, CancellationToken.None);
+            Func<System.Threading.Tasks.Task> act = async () => await _handler.Handle(command, CancellationToken.None);
 
             //Assert
             await act.Should().ThrowAsync<DomainException>()
                 .WithMessage("Unknown priority SuperHigh");
 
-            await _repoMock.DidNotReceive().CreateAsync(Arg.Any<EmployeesTasksTracker.TasksTrackerService.Core.Models.Task>(), Arg.Any<CancellationToken>());
+            await _repoMock.DidNotReceive().CreateAsync(Arg.Any<Task>(), Arg.Any<CancellationToken>());
 
             await _busMock.DidNotReceive().Publish(Arg.Any<TaskCreated>());
         }
 
         [Fact]
-        public async Task Handle_InvalidStatus_ShouldThrowDomainException()
+        public async System.Threading.Tasks.Task Handle_InvalidStatus_ShouldThrowDomainException()
         {
             //arrange
             var command = new CreateTaskCommand(new CreateTaskDTO
@@ -107,13 +107,44 @@ namespace xUnit
             });
 
             //Act
-            Func<Task> act = async () => await _handler.Handle(command, CancellationToken.None);
+            Func<System.Threading.Tasks.Task> act = async () => await _handler.Handle(command, CancellationToken.None);
 
             //Assert
             await act.Should().ThrowAsync<DomainException>()
                 .WithMessage("Unknown status Invalid");
 
-            await _repoMock.DidNotReceive().CreateAsync(Arg.Any<EmployeesTasksTracker.TasksTrackerService.Core.Models.Task>(), Arg.Any<CancellationToken>());
+            await _repoMock.DidNotReceive().CreateAsync(Arg.Any<Task>(), Arg.Any<CancellationToken>());
+
+            await _busMock.DidNotReceive().Publish(Arg.Any<TaskCreated>());
+        }
+
+        [Fact]
+        public async System.Threading.Tasks.Task Handle_NullTask_ShouldThrowArgumentNullException()
+        {
+            //Arrange
+            var taskId = Guid.NewGuid();
+            var cancellationToken = CancellationToken.None;
+
+            var existingTask = new Task
+            {
+                Id = taskId,
+                Name = "Test task",
+                Description = "Description",
+                CreatedAt = DateTime.UtcNow,
+                Deadline = DateTime.UtcNow + TimeSpan.FromDays(60),
+                Priority = Priority.Low
+            };
+
+            var command = new CreateTaskCommand(null);
+
+            //Act
+            Func<System.Threading.Tasks.Task> act = async () => await _handler.Handle(command, cancellationToken);
+
+            //Assert
+            act.Should().ThrowAsync<NotFoundException>()
+                .WithMessage("Given task was null!");
+
+            await _repoMock.DidNotReceive().CreateAsync(Arg.Any<Task>(), Arg.Any<CancellationToken>());
 
             await _busMock.DidNotReceive().Publish(Arg.Any<TaskCreated>());
         }

@@ -1,9 +1,9 @@
-﻿using EmployeesTasksTracker.TasksTrackerService.Application.Commands.Tasks;
+﻿using Task = EmployeesTasksTracker.TasksTrackerService.Core.Models.Task;
+using EmployeesTasksTracker.TasksTrackerService.Application.Commands.Tasks;
 using EmployeesTasksTracker.TasksTrackerService.Application.DTOs.Tasks;
 using EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks;
 using EmployeesTasksTracker.TasksTrackerService.Core.Enums;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
-using EmployeesTasksTracker.TasksTrackerService.Core.Models;
 using FluentAssertions;
 using MassTransit;
 using Microsoft.Extensions.Caching.Hybrid;
@@ -11,7 +11,6 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Shared.Exceptions;
 using Shared.Messages;
-using Task = EmployeesTasksTracker.TasksTrackerService.Core.Models.Task;
 
 namespace xUnit
 {
@@ -31,8 +30,6 @@ namespace xUnit
             _loggerMock = Substitute.For<ILogger<EditTaskHandler>>();
             _handler = new EditTaskHandler(_repoMock, _busMock, _cacheMock, _loggerMock);
         }
-
-        //Tests of edit task command handler
 
         [Fact]
         public async System.Threading.Tasks.Task Handle_ValidCommand_ShouldEditTaskPublishEventAndReturnDTO()
@@ -95,57 +92,76 @@ namespace xUnit
             Arg.Any<Exception>(),
                 Arg.Any<Func<object, Exception, string>>());
         }
-/*
+
         [Fact]
         public async System.Threading.Tasks.Task Handle_InvalidPriority_ShouldThrowDomainException()
         {
             //arrange
-            var command = new CreateTaskCommand(new CreateTaskDTO
+            var taskId = Guid.NewGuid();
+            var cancellationToken = CancellationToken.None;
+
+            var command = new EditTaskCommand(new EditTaskDTO
             {
+                Id = taskId,
                 Name = "Invalid priority task",
                 Description = "Description",
                 CreatedAt = DateTime.UtcNow,
                 Deadline = DateTime.UtcNow + TimeSpan.FromDays(60),
-                Priority = "SuperHigh",
-                Status = "Backlog"
+                Priority = "SuperHigh"
             });
 
             //Act
-            Func<Task> act = async () => await _handler.Handle(command, CancellationToken.None);
+            Func<System.Threading.Tasks.Task> act = async() => await _handler.Handle(command, cancellationToken);
 
             //Assert
             await act.Should().ThrowAsync<DomainException>()
                 .WithMessage("Unknown priority SuperHigh");
 
-            await _repoMock.DidNotReceive().CreateAsync(Arg.Any<EmployeesTasksTracker.TasksTrackerService.Core.Models.Task>(), Arg.Any<CancellationToken>());
+            await _repoMock.DidNotReceive().UpdateAsync(Arg.Any<Task>(), Arg.Any<CancellationToken>());
 
-            await _busMock.DidNotReceive().Publish(Arg.Any<TaskCreated>());
+            await _busMock.DidNotReceive().Publish(Arg.Any<TaskDataChanged>());
         }
 
         [Fact]
-        public async System.Threading.Tasks.Task Handle_InvalidStatus_ShouldThrowDomainException()
+        public async System.Threading.Tasks.Task Handle_InvalidTaskId_ShouldThrowNotFoundException()
         {
-            //arrange
-            var command = new CreateTaskCommand(new CreateTaskDTO
+            //Arrange
+            var taskId = Guid.NewGuid();
+            var wrongId = Guid.NewGuid();
+            var cancellationToken = CancellationToken.None;
+
+            var existingTask = new Task
             {
-                Name = "Invalid priority task",
+                Id = taskId,
+                Name = "Test task",
                 Description = "Description",
                 CreatedAt = DateTime.UtcNow,
                 Deadline = DateTime.UtcNow + TimeSpan.FromDays(60),
-                Priority = "Low",
-                Status = "Invalid"
+                Priority = Priority.Low
+            };
+
+            var command = new EditTaskCommand(new EditTaskDTO
+            {
+                Id = wrongId,
+                Name = "Changed task",
+                Description = "Description",
+                CreatedAt = DateTime.UtcNow,
+                Deadline = DateTime.UtcNow + TimeSpan.FromDays(60),
+                Priority = "Medium"
             });
 
+            _repoMock.GetByIdAsync(taskId, cancellationToken).Returns(existingTask);
+
             //Act
-            Func<Task> act = async () => await _handler.Handle(command, CancellationToken.None);
+            Func<System.Threading.Tasks.Task> act = async () => await _handler.Handle(command, cancellationToken);
 
             //Assert
-            await act.Should().ThrowAsync<DomainException>()
-                .WithMessage("Unknown status Invalid");
+            act.Should().ThrowAsync<NotFoundException>()
+                .WithMessage($"Entity task with key {wrongId} was not found!");
 
-            await _repoMock.DidNotReceive().CreateAsync(Arg.Any<EmployeesTasksTracker.TasksTrackerService.Core.Models.Task>(), Arg.Any<CancellationToken>());
+            await _repoMock.DidNotReceive().UpdateAsync(Arg.Any<Task>(), Arg.Any<CancellationToken>());
 
-            await _busMock.DidNotReceive().Publish(Arg.Any<TaskCreated>());
-        }*/
+            await _busMock.DidNotReceive().Publish(Arg.Any<TaskDataChanged>());
+        }
     }
 }
