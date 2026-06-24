@@ -5,12 +5,12 @@ using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
+using Shared.Exceptions;
 using Shared.Messages;
-using Shared.Models;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
 {
-    public class AddTaskObserverHandler : IRequestHandler<AddTaskObserverCommand, Result>
+    public class AddTaskObserverHandler : IRequestHandler<AddTaskObserverCommand>
     {
         private readonly ITasksRepo _repo;
         private readonly IBus _bus;
@@ -32,9 +32,9 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
             _logger = logger;
         }
 
-        public async Task<Result> Handle(AddTaskObserverCommand request, CancellationToken cancellationToken)
+        public async Task Handle(AddTaskObserverCommand request, CancellationToken cancellationToken)
         {
-            var task = await _repo.GetByIdAsync(request.TaskId, cancellationToken);
+            var task = await _repo.GetByIdAsync(request.TaskId, cancellationToken) ?? throw new NotFoundException("task", request.TaskId);
 
             var employeeProject = await _taskEmployeeRepo.GetAllById(request.TaskId, request.ObserverId, cancellationToken);
 
@@ -42,14 +42,14 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
             {
                 var employeeRole = employeeProject.First().EmployeeRoleInTask;
 
-                return Result.Failure($"Employee with id: {request.ObserverId} already assigned as {employeeRole}!");
+                throw new DomainException($"Employee with id: {request.ObserverId} already assigned as {employeeRole}!");
             }
 
             await _taskEmployeeRepo.AddEmployeeAsync(request.ObserverId, request.TaskId, RoleInTask.Observer, cancellationToken);
 
             var changes = new List<string>
                 {
-                    $"Добавился наблюдатель {request.ObserverId}"
+                    $"Added observer with id: {request.ObserverId}"
                 };
 
             await _cache.RemoveAsync($"task:{request.TaskId}", cancellationToken);
@@ -68,8 +68,6 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
             await _bus.Publish(secondMessage, cancellationToken);
 
             _logger.LogInformation("Successfully added observer with id {observerId} for task {taskId}", request.ObserverId, request.TaskId);
-
-            return Result.Success();
         }
     }
 }

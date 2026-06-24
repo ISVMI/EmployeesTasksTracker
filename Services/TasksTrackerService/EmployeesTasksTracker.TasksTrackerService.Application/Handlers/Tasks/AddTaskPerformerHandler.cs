@@ -5,12 +5,12 @@ using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
+using Shared.Exceptions;
 using Shared.Messages;
-using Shared.Models;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
 {
-    public class AddTaskPerformerHandler : IRequestHandler<AddTaskPerformerCommand, Result>
+    public class AddTaskPerformerHandler : IRequestHandler<AddTaskPerformerCommand>
     {
         private readonly ITasksRepo _repo;
         private readonly IBus _bus;
@@ -32,7 +32,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
             _logger = logger;
         }
 
-        public async Task<Result> Handle(AddTaskPerformerCommand request, CancellationToken cancellationToken)
+        public async Task Handle(AddTaskPerformerCommand request, CancellationToken cancellationToken)
         {
             var task = await _repo.GetByIdAsync(request.TaskId, cancellationToken);
 
@@ -42,14 +42,14 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
             {
                 var employeeRole = employeeTask.First().EmployeeRoleInTask;
 
-                return Result.Failure($"Employee with id: {request.PerformerId} already assigned as {employeeRole}!");
+                throw new DomainException($"Employee with id: {request.PerformerId} already assigned as {employeeRole}!");
             }
 
             await _taskEmployeeRepo.AddEmployeeAsync(request.PerformerId, request.TaskId, RoleInTask.Observer, cancellationToken);
 
             var changes = new List<string>
                 {
-                    $"Добавился исполнитель {request.PerformerId}"
+                    $"Added performer with id: {request.PerformerId}"
                 };
 
             await _cache.RemoveAsync($"task:{request.TaskId}", cancellationToken);
@@ -68,8 +68,6 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
             await _bus.Publish(secondMessage, cancellationToken);
 
             _logger.LogInformation("Successfully added performer with id {performerId} for task {taskId}", request.PerformerId, request.TaskId);
-
-            return Result.Success();
         }
     }
 }
