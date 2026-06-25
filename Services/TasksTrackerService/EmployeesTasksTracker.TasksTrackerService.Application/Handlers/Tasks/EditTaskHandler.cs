@@ -53,7 +53,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
 
             if (existingTask.Status != taskToEdit.Status)
             {
-                existingTask.ChangeStatus(taskToEdit.Status);
+                existingTask.ChangeStatus(taskToEdit.Status, true);
             }
 
             taskToEdit.Name = request.TaskToEdit.Name;

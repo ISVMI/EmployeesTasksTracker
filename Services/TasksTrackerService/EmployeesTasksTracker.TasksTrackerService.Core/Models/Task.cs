@@ -30,11 +30,13 @@ namespace EmployeesTasksTracker.TasksTrackerService.Core.Models
         public Priority Priority { get; set; }
         public ICollection<TaskEmployee> TaskEmployees { get; set; } = new HashSet<TaskEmployee>();
 
-        public void ChangeStatus(Status newStatus)
+        public void ChangeStatus(Status newStatus, bool actionIsEdit = false)
         {
-            if (newStatus == null)
+
+            if (actionIsEdit)
             {
-                throw new ArgumentNullException(nameof(newStatus), "Given status was null!");
+                Status = newStatus;
+                return;
             }
 
             if (Status == Status.Completed)
@@ -56,12 +58,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Core.Models
                 {
                     case Status.Backlog:
                         {
-                            if (Status != Status.Backlog)
-                            {
-                                throw new DomainException(exMessage);
-                            }
-
-                            return;
+                            throw new DomainException(exMessage);
                         }
 
                     case Status.Current:

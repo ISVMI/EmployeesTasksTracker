@@ -84,7 +84,7 @@ namespace xUnit
             t.Id == command.TaskToEdit.Id && t.Priority.ToString() == command.TaskToEdit.Priority), cancellationToken);
 
             await _busMock.Received(1).Publish(Arg.Is<TaskDataChanged>(m =>
-            m.Changes.SequenceEqual(changes)));
+            m.Changes.SequenceEqual(changes)), cancellationToken);
 
             _loggerMock.Received(1).Log(LogLevel.Information,
                 Arg.Any<EventId>(),

@@ -24,7 +24,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
 
         public async Task<Guid> Handle(CreateTaskCommand request, CancellationToken cancellationToken)
         {
-            
+
             if (!Enum.TryParse<Priority>(request.Task.Priority, true, out Priority priority))
             {
                 throw new DomainException($"Unknown priority {request.Task.Priority}");
@@ -47,7 +47,12 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
             //Changing task status from default if needed 
             if (newTask.Status != status)
             {
-                newTask.ChangeStatus(status);
+                if (status == Status.Backlog || status == Status.Current)
+                {
+                    newTask.ChangeStatus(status);
+                }
+
+                throw new DomainException($"Could not create task with status - {status}!");
             }
 
             var taskId = await _repo.CreateAsync(newTask, cancellationToken);

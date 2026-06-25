@@ -28,6 +28,11 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
         public async Task Handle(ChangeTaskStatusCommand request, CancellationToken cancellationToken)
         {
 
+            if(request.NewStatus is null)
+            {
+                throw new ArgumentNullException(nameof(request),"Given status was null!");
+            }
+
             if (!Enum.TryParse<Status>(request.NewStatus, true, out Status newStatusEnum))
             {
                 throw new DomainException($"Unknown status {request.NewStatus}");
@@ -35,9 +40,17 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
 
             var existingTask = await _repo.GetByIdAsync(request.TaskId, cancellationToken);
 
+            var oldStatus = existingTask.Status.ToString();
+
+            existingTask.ChangeStatus(newStatusEnum);
+
+            await _repo.UpdateAsync(existingTask, cancellationToken);
+
+            await _cache.RemoveAsync($"task:{request.TaskId}", cancellationToken);
+
             var changes = new List<string>
                 {
-                    $"Статус изменился с {existingTask.Status} на {request.NewStatus}"
+                    $"Status changed from {oldStatus} to {request.NewStatus}"
                 };
 
             var message = new TaskDataChanged(request.TaskId, changes, DateTime.UtcNow);
@@ -46,18 +59,12 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
             {
                 TaskId = request.TaskId,
                 TaskName = existingTask.Name,
-                OldStatus = existingTask.Status.ToString(),
+                OldStatus = oldStatus,
                 NewStatus = request.NewStatus
             };
 
-            existingTask.ChangeStatus(newStatusEnum);
-
-            await _repo.UpdateAsync(existingTask, cancellationToken);
-
-            await _cache.RemoveAsync($"task:{request.TaskId}", cancellationToken);
-
             _logger.LogInformation("Successfully changed status from {oldStatus} to {newStatus} for task: {taskName}", 
-                existingTask.Status, 
+                oldStatus, 
                 request.NewStatus, 
                 existingTask.Name);
 
