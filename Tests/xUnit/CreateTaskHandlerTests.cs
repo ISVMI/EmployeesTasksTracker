@@ -119,6 +119,37 @@ namespace xUnit
         }
 
         [Fact]
+        public async System.Threading.Tasks.Task Handle_WrongStatusForCreation_ShouldThrowDomainException()
+        {
+            //Arrange
+            var expectedTaskId = Guid.NewGuid();
+            var cancellationToken = CancellationToken.None;
+
+            var command = new CreateTaskCommand(new CreateTaskDTO
+            {
+                Name = "Test task",
+                Description = "Description",
+                CreatedAt = DateTime.UtcNow,
+                Deadline = DateTime.UtcNow + TimeSpan.FromDays(60),
+                Priority = "Low",
+                Status = "Testing"
+            });
+
+            _repoMock.CreateAsync(Arg.Any<Task>(), cancellationToken).Returns(expectedTaskId);
+
+            //Act
+            Func<System.Threading.Tasks.Task> act = async () => await _handler.Handle(command, cancellationToken);
+
+            //Assert
+            await act.Should().ThrowAsync<DomainException>()
+                .WithMessage($"Could not create task with status - Testing!");
+
+            await _repoMock.DidNotReceive().CreateAsync(Arg.Any<Task>(), Arg.Any<CancellationToken>());
+
+            await _busMock.DidNotReceive().Publish(Arg.Any<TaskCreated>());
+        }
+
+        [Fact]
         public async System.Threading.Tasks.Task Handle_NullTask_ShouldThrowArgumentNullException()
         {
             //Arrange

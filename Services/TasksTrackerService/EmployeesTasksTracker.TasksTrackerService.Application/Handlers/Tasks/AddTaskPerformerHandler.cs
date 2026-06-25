@@ -36,11 +36,11 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
         {
             var task = await _repo.GetByIdAsync(request.TaskId, cancellationToken);
 
-            var employeeTask = await _taskEmployeeRepo.GetAllById(request.TaskId, request.PerformerId, cancellationToken);
+            var taskEmployee = await _taskEmployeeRepo.GetAllById(request.TaskId, request.PerformerId, cancellationToken);
 
-            if (employeeTask.Any()) 
+            if (taskEmployee.Any()) 
             {
-                var employeeRole = employeeTask.First().EmployeeRoleInTask;
+                var employeeRole = taskEmployee.First().EmployeeRoleInTask;
 
                 throw new DomainException($"Employee with id: {request.PerformerId} already assigned as {employeeRole}!");
             }
