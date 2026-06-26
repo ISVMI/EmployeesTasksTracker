@@ -12,7 +12,7 @@ using NSubstitute;
 using Shared.Exceptions;
 using Shared.Messages;
 
-namespace xUnit
+namespace xUnit.TaskTests
 {
     public class EditTaskHandlerTests
     {
