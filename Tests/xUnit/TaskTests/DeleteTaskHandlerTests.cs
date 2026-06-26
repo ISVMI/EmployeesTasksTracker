@@ -11,7 +11,7 @@ using NSubstitute;
 using Shared.Exceptions;
 using Shared.Messages;
 using NSubstitute.ExceptionExtensions;
-namespace xUnit
+namespace xUnit.TaskTests
 {
     public class DeleteTaskHandlerTests
     {

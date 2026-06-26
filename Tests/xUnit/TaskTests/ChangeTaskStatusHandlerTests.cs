@@ -11,7 +11,7 @@ using Shared.Exceptions;
 using Shared.Messages;
 using Task = EmployeesTasksTracker.TasksTrackerService.Core.Models.Task;
 
-namespace xUnit
+namespace xUnit.TaskTests
 {
     public class ChangeTaskStatusHandlerTests
     {
