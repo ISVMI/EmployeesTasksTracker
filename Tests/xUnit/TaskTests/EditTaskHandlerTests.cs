@@ -5,30 +5,30 @@ using EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks;
 using EmployeesTasksTracker.TasksTrackerService.Core.Enums;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using FluentAssertions;
-using MassTransit;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Shared.Exceptions;
 using Shared.Messages;
+using Shared.Interfaces;
 
 namespace xUnit.TaskTests
 {
     public class EditTaskHandlerTests
     {
         private readonly ITasksRepo _repoMock;
-        private readonly IBus _busMock;
         private readonly ILogger<EditTaskHandler> _loggerMock;
+        private readonly IKafkaProducer _kafkaProducer;
         private readonly HybridCache _cacheMock;
         private readonly EditTaskHandler _handler;
 
         public EditTaskHandlerTests()
         {
             _repoMock = Substitute.For<ITasksRepo>();
-            _busMock = Substitute.For<IBus>();
             _cacheMock = Substitute.For<HybridCache>();
             _loggerMock = Substitute.For<ILogger<EditTaskHandler>>();
-            _handler = new EditTaskHandler(_repoMock, _busMock, _cacheMock, _loggerMock);
+            _kafkaProducer = Substitute.For<IKafkaProducer>();
+            _handler = new EditTaskHandler(_repoMock, _kafkaProducer, _cacheMock, _loggerMock);
         }
 
         [Fact]
@@ -83,8 +83,8 @@ namespace xUnit.TaskTests
             await _repoMock.Received(1).UpdateAsync(Arg.Is<Task>(t =>
             t.Id == command.TaskToEdit.Id && t.Priority.ToString() == command.TaskToEdit.Priority), cancellationToken);
 
-            await _busMock.Received(1).Publish(Arg.Is<TaskDataChanged>(m =>
-            m.Changes.SequenceEqual(changes)), cancellationToken);
+            await _kafkaProducer.Received(1).PublishAsync(Arg.Is<TaskDataChanged>(m =>
+            m.Changes.SequenceEqual(changes)));
 
             _loggerMock.Received(1).Log(LogLevel.Information,
                 Arg.Any<EventId>(),
@@ -119,7 +119,7 @@ namespace xUnit.TaskTests
 
             await _repoMock.DidNotReceive().UpdateAsync(Arg.Any<Task>(), Arg.Any<CancellationToken>());
 
-            await _busMock.DidNotReceive().Publish(Arg.Any<TaskDataChanged>());
+            await _kafkaProducer.DidNotReceive().PublishAsync(Arg.Any<TaskDataChanged>());
         }
 
         [Fact]
@@ -161,7 +161,7 @@ namespace xUnit.TaskTests
 
             await _repoMock.DidNotReceive().UpdateAsync(Arg.Any<Task>(), Arg.Any<CancellationToken>());
 
-            await _busMock.DidNotReceive().Publish(Arg.Any<TaskDataChanged>());
+            await _kafkaProducer.DidNotReceive().PublishAsync(Arg.Any<TaskDataChanged>());
         }
     }
 }

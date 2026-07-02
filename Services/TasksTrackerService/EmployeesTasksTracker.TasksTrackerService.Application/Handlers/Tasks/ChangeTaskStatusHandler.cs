@@ -6,6 +6,7 @@ using MediatR;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
 using Shared.Exceptions;
+using Shared.Interfaces;
 using Shared.Messages;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
@@ -14,13 +15,19 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
     {
         private readonly ITasksRepo _repo;
         private readonly IBus _bus;
+        private readonly IKafkaProducer _kafkaProducer;
         private readonly HybridCache _cache;
         private readonly ILogger<ChangeTaskStatusHandler> _logger;
 
-        public ChangeTaskStatusHandler(ITasksRepo repo, IBus bus, HybridCache cache, ILogger<ChangeTaskStatusHandler> logger)
+        public ChangeTaskStatusHandler(ITasksRepo repo,
+            IBus bus,
+            IKafkaProducer kafkaProducer,
+            HybridCache cache,
+            ILogger<ChangeTaskStatusHandler> logger)
         {
             _repo = repo;
             _bus = bus;
+            _kafkaProducer = kafkaProducer;
             _cache = cache;
             _logger = logger;
         }
@@ -68,7 +75,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
                 request.NewStatus, 
                 existingTask.Name);
 
-            await _bus.Publish(message, cancellationToken);
+            await _kafkaProducer.PublishAsync(message);
 
             await _bus.Publish(secondMessage, cancellationToken);
 
