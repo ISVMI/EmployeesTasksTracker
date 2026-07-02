@@ -41,11 +41,6 @@ namespace EmployeesTasksTracker.HistoryService.Infrastructure.Repositories
 
             var changesByQuery = await changesByTaskIdQuery.ToListAsync(cancellationToken);
 
-            if (!changesByQuery.Any()) 
-            {
-                throw new Exception($"History for task with id {taskId} was not found");
-            }
-
             return changesByQuery;
         }
     }

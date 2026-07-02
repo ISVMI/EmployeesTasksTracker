@@ -1,7 +1,6 @@
-using EmployeesTasksTracker.HistoryService.Infrastructure.Extensions;
 using EmployeesTasksTracker.HistoryService.Application.Extensions;
-using MassTransit;
 using EmployeesTasksTracker.HistoryService.Infrastructure.Consumers;
+using EmployeesTasksTracker.HistoryService.Infrastructure.Extensions;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -15,24 +14,7 @@ builder.Services.AddSwaggerGen();
 builder.Services.AddInfrastructure(builder.Configuration);
 builder.Services.AddApplication();
 
-builder.Services.AddMassTransit(config =>
-{
-    config.AddConsumer<TaskDataChangedConsumer>();
-
-    config.UsingRabbitMq((context, cfg) =>
-    {
-        cfg.Host(builder.Configuration["RabbitMQHost"], h =>
-        {
-            h.Username("guest");
-            h.Password("guest");
-        });
-
-        cfg.ReceiveEndpoint("task-data-changed", e =>
-        {
-            e.ConfigureConsumer<TaskDataChangedConsumer>(context);
-        });
-    });
-});
+builder.Services.AddHostedService<KafkaConsumerService>();
 
 var app = builder.Build();
 

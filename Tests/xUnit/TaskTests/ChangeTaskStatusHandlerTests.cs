@@ -8,6 +8,7 @@ using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Shared.Exceptions;
+using Shared.Interfaces;
 using Shared.Messages;
 using Task = EmployeesTasksTracker.TasksTrackerService.Core.Models.Task;
 
@@ -19,6 +20,7 @@ namespace xUnit.TaskTests
         private readonly IBus _busMock;
         private readonly HybridCache _cacheMock;
         private readonly ILogger<ChangeTaskStatusHandler> _loggerMock;
+        private readonly IKafkaProducer _kafkaProducer;
         private readonly ChangeTaskStatusHandler _handler;
 
         public ChangeTaskStatusHandlerTests()
@@ -27,7 +29,8 @@ namespace xUnit.TaskTests
             _busMock = Substitute.For<IBus>();
             _cacheMock = Substitute.For<HybridCache>();
             _loggerMock = Substitute.For<ILogger<ChangeTaskStatusHandler>>();
-            _handler = new ChangeTaskStatusHandler(_repoMock, _busMock, _cacheMock, _loggerMock);
+            _kafkaProducer = Substitute.For<IKafkaProducer>();
+            _handler = new ChangeTaskStatusHandler(_repoMock, _busMock,_kafkaProducer, _cacheMock, _loggerMock);
         }
 
         [Fact]
@@ -67,8 +70,8 @@ namespace xUnit.TaskTests
             await _repoMock.Received(1).UpdateAsync(Arg.Is<Task>(t =>
             t.Id == command.TaskId), cancellationToken);
 
-            await _busMock.Received(1).Publish(Arg.Is<TaskDataChanged>(m =>
-            m.Changes.SequenceEqual(changes)), cancellationToken);
+            await _kafkaProducer.Received(1).PublishAsync(Arg.Is<TaskDataChanged>(m =>
+            m.Changes.SequenceEqual(changes)));
 
             await _busMock.Received(1).Publish(Arg.Is<TaskStatusChanged>(m =>
             m.TaskId == command.TaskId 

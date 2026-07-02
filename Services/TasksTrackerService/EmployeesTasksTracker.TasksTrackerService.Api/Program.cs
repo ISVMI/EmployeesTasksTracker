@@ -1,3 +1,4 @@
+using Confluent.Kafka;
 using EmployeesTasksTracker.TasksTrackerService.Api;
 using EmployeesTasksTracker.TasksTrackerService.Application.Extensions;
 using EmployeesTasksTracker.TasksTrackerService.Application.Interfaces;
@@ -9,6 +10,7 @@ using MassTransit;
 using Serilog;
 using Shared.Extensions;
 using Shared.Interfaces;
+using Shared.InterfacesImplementation;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -45,6 +47,18 @@ try
             });
         });
     });
+
+    builder.Services.AddSingleton<IProducer<string, string>>(sp =>
+    {
+        var config = new ProducerConfig
+        {
+            BootstrapServers = builder.Configuration["Kafka:Host"]
+        };
+
+        return new ProducerBuilder<string, string>(config).Build();
+    });
+
+    builder.Services.AddSingleton<IKafkaProducer, KafkaProducer>();
 
     builder.Services.AddScoped<ProjectsGenerator>();
     builder.Services.AddScoped<TasksGenerator>();

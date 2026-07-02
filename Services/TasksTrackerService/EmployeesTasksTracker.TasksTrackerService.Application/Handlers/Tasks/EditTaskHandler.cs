@@ -2,27 +2,27 @@
 using EmployeesTasksTracker.TasksTrackerService.Application.DTOs.Tasks;
 using EmployeesTasksTracker.TasksTrackerService.Core.Enums;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
-using MassTransit;
 using MediatR;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
 using Shared.Exceptions;
 using Shared.Messages;
 using Shared.Methods;
+using Shared.Interfaces;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
 {
     public class EditTaskHandler : IRequestHandler<EditTaskCommand, TaskDTO>
     {
         private readonly ITasksRepo _repo;
-        private readonly IBus _bus;
+        private readonly IKafkaProducer _kafkaProducer;
         private readonly HybridCache _cache;
         private readonly ILogger<EditTaskHandler> _logger;
 
-        public EditTaskHandler(ITasksRepo repo, IBus bus, HybridCache cache, ILogger<EditTaskHandler> logger)
+        public EditTaskHandler(ITasksRepo repo, IKafkaProducer kafkaProducer, HybridCache cache, ILogger<EditTaskHandler> logger)
         {
             _repo = repo;
-            _bus = bus;
+            _kafkaProducer = kafkaProducer;
             _cache = cache;
             _logger = logger;
         }
@@ -70,7 +70,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
             {
                 var message = new TaskDataChanged(existingTask.Id, changes, DateTime.UtcNow);
 
-                await _bus.Publish(message, cancellationToken);
+                await _kafkaProducer.PublishAsync(message);
             }
 
             _logger.LogInformation("Successfully edited task with id {taskId}", editedTask.Id);

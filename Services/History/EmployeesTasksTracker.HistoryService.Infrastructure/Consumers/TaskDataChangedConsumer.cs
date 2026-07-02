@@ -1,39 +1,86 @@
-﻿using EmployeesTasksTracker.HistoryService.Core.Interfaces;
+﻿using Confluent.Kafka;
+using EmployeesTasksTracker.HistoryService.Core.Interfaces;
 using EmployeesTasksTracker.HistoryService.Core.Models;
-using MassTransit;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Hosting;
+using Microsoft.Extensions.Logging;
 using Shared.Messages;
+using System.Text.Json;
 
 namespace EmployeesTasksTracker.HistoryService.Infrastructure.Consumers
 {
-    public class TaskDataChangedConsumer : IConsumer<TaskDataChanged>
+    public class KafkaConsumerService : BackgroundService
     {
+        private readonly IServiceScopeFactory _scopeFactory;
+        private readonly IConfiguration _configuration;
         private readonly ITaskChangesRepo _repo;
+        private readonly ILogger<KafkaConsumerService> _logger;
 
-        public TaskDataChangedConsumer(ITaskChangesRepo repo)
+        public KafkaConsumerService(
+            IServiceScopeFactory scopeFactory,
+            IConfiguration configuration,
+            ITaskChangesRepo repo,
+            ILogger<KafkaConsumerService> logger)
         {
+            _scopeFactory = scopeFactory;
+            _configuration = configuration;
             _repo = repo;
+            _logger = logger;
         }
 
-        public async Task Consume(ConsumeContext<TaskDataChanged> context)
+        protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            try
+            var config = new ConsumerConfig
             {
-                Console.WriteLine($"Trying to write changes history for task with id {context.Message.TaskId} to the database...");
+                BootstrapServers = _configuration["Kafka:Host"],
+                GroupId = "history-service",
+                AutoOffsetReset = AutoOffsetReset.Earliest,
+                AllowAutoCreateTopics = true
+            };
 
-                var taskChanges = new TaskChanges
+            using var consumer = new ConsumerBuilder<string, string>(config).Build();
+
+            while (!cancellationToken.IsCancellationRequested)
+            {
+                try
                 {
-                    TaskId = context.Message.TaskId,
-                    ChangedAt = context.Message.ChangedAt,
-                    Changes = context.Message.Changes.ToList()
-                };
-
-                await _repo.CreateTaskChangesRecord(taskChanges);
-
-                Console.WriteLine("Successfully wrote changes to the database!");
+                    consumer.Subscribe(_configuration["Kafka:Topic"]);
+                    break;
+                }
+                catch
+                {
+                    _logger.LogWarning("Kafka not ready, retrying...");
+                    await Task.Delay(2000, cancellationToken);
+                }
             }
-            catch (Exception ex) 
+
+            while (!cancellationToken.IsCancellationRequested)
             {
-                Console.WriteLine(ex.Message);
+                try
+                {
+                    var result = consumer.Consume(cancellationToken);
+
+                    var message = JsonSerializer.Deserialize<TaskDataChanged>(result.Message.Value);
+
+                    using var scope = _scopeFactory.CreateScope();
+
+                    var taskChanges = new TaskChanges
+                    {
+                        TaskId = message.TaskId,
+                        ChangedAt = message.ChangedAt,
+                        Changes = message.Changes.ToList()
+                    };
+
+                    await _repo.CreateTaskChangesRecord(taskChanges, cancellationToken);
+
+                    consumer.Commit(result);
+                }
+                catch (Exception ex) 
+                {
+                    _logger.LogError(ex, "Kafka consume error");
+                }
+                
             }
         }
     }
