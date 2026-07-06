@@ -49,6 +49,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
 
             var oldStatus = existingTask.Status.ToString();
 
+            //Changing status using Task entity method
             existingTask.ChangeStatus(newStatusEnum);
 
             await _repo.UpdateAsync(existingTask, cancellationToken);
