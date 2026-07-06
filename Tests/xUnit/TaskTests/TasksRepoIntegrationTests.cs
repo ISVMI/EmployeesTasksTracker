@@ -10,7 +10,7 @@ using StackExchange.Redis;
 using Xunit;
 using Task = EmployeesTasksTracker.TasksTrackerService.Core.Models.Task;
 
-namespace xUnit.TaskTests
+namespace Testing.TaskTests
 {
     public class TasksRepoIntegrationTests
     {

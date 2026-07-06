@@ -12,7 +12,7 @@ using Shared.Interfaces;
 using Shared.Messages;
 using Task = EmployeesTasksTracker.TasksTrackerService.Core.Models.Task;
 
-namespace xUnit.TaskTests
+namespace Testing.TaskTests
 {
     public class ChangeTaskStatusHandlerTests
     {
