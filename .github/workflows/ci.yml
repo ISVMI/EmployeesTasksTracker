@@ -16,7 +16,9 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: 9.0.x
-
+      - name: List SDKs
+        run: dotnet --list-sdks
+        
       - name: Restore dependencies
         run: dotnet restore EmployeesTasksTracker.sln
 
