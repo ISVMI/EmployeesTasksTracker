@@ -7,6 +7,7 @@ using FluentAssertions;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
 using StackExchange.Redis;
+using Xunit;
 using Task = EmployeesTasksTracker.TasksTrackerService.Core.Models.Task;
 
 namespace xUnit.TaskTests
