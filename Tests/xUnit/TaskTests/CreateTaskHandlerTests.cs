@@ -11,7 +11,7 @@ using NSubstitute;
 using Shared.Exceptions;
 using Shared.Messages;
 
-namespace xUnit.TaskTests
+namespace Testing.TaskTests
 {
     public class CreateTaskHandlerTests
     {

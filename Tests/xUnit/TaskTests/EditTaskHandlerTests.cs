@@ -12,7 +12,7 @@ using Shared.Exceptions;
 using Shared.Messages;
 using Shared.Interfaces;
 
-namespace xUnit.TaskTests
+namespace Testing.TaskTests
 {
     public class EditTaskHandlerTests
     {
