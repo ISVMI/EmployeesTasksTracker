@@ -1,16 +1,13 @@
-﻿using Bogus.DataSets;
-using EmployeesTasksTracker.TasksTrackerService.Core.Enums;
+﻿using EmployeesTasksTracker.TasksTrackerService.Core.Enums;
 using EmployeesTasksTracker.TasksTrackerService.Core.Models;
 using EmployeesTasksTracker.TasksTrackerService.Infrastructure.Data;
 using EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories;
 using FluentAssertions;
 using Microsoft.Data.Sqlite;
 using Microsoft.EntityFrameworkCore;
-using StackExchange.Redis;
-using Xunit;
 using Task = EmployeesTasksTracker.TasksTrackerService.Core.Models.Task;
 
-namespace Testing.TaskTests
+namespace IntegrationTests.TaskTests
 {
     public class TasksRepoIntegrationTests
     {
