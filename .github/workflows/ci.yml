@@ -5,7 +5,7 @@ on:
   pull_request:
 
 jobs:
-  build-and-test:
+  build:
     runs-on: ubuntu-latest
 
     steps:
@@ -15,15 +15,62 @@ jobs:
       - name: Setup .NET 9.0 SDK
         uses: actions/setup-dotnet@v4
         with:
-          dotnet-version: 9.0.x
-      - name: List SDKs
-        run: dotnet --list-sdks
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      
+      - name: Cache NuGet packages
+        uses: action/cache@v4
+        with:
+          path: ~/.nuget/packages
+          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
+          restore-keys: |
+            nuget-${{ runner.os }}
         
       - name: Restore dependencies
         run: dotnet restore EmployeesTasksTracker.sln
 
       - name: Build
-        run: dotnet build EmployeesTasksTracker.sln --configuration Release --no-restore
+        run: dotnet build EmployeesTasksTracker.sln --configuration $BUILD_CONFIGURATION Release --no-restore
 
-      - name: Run tests
-        run: dotnet test EmployeesTasksTracker.sln --configuration Release --no-build
+  unit-tests:
+
+    runs-on: ubuntu-latest
+
+    needs: build
+
+    steps:
+
+      - uses: actions/checkout@v4
+      - uses: actions/setus-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      
+      - name: Restore packages
+        run: dotnet restore EmployeesTasksTracker.sln
+        
+      - name: Run unit tests
+        run: dotnet test Tests\UnitTests\UnitTests.csproj \
+          --configuration $BUILD_CONFIGURATION \
+          --no-build \
+          --verbosity normal
+          
+  integration-tests:
+
+    runs-on: ubuntu-latest
+
+    needs: build
+
+    steps:
+
+      - uses: actions/checkout@v4
+      - uses: actions/setus-dotnet@v4
+        with:
+          dotnet-version: ${{ env.DOTNET_VERSION }}
+      
+      - name: Restore packages
+        run: dotnet restore EmployeesTasksTracker.sln
+        
+      - name: Run integration tests
+        run: dotnet test Tests\IntegrationTests\IntegrationTests.csproj \
+          --configuration $BUILD_CONFIGURATION \
+          --no-build \
+          --verbosity normal
