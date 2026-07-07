@@ -18,8 +18,8 @@
   </ItemGroup>
 
   <ItemGroup>
-    <ProjectReference Include="..\Services\TasksTrackerService\EmployeesTasksTracker.TasksTrackerService.Core\EmployeesTasksTracker.TasksTrackerService.Core.csproj" />
-    <ProjectReference Include="..\Services\TasksTrackerService\EmployeesTasksTracker.TasksTrackerService.Infrastructure\EmployeesTasksTracker.TasksTrackerService.Infrastructure.csproj" />
+    <ProjectReference Include="..\..\Services\TasksTrackerService\EmployeesTasksTracker.TasksTrackerService.Core\EmployeesTasksTracker.TasksTrackerService.Core.csproj" />
+    <ProjectReference Include="..\..\Services\TasksTrackerService\EmployeesTasksTracker.TasksTrackerService.Infrastructure\EmployeesTasksTracker.TasksTrackerService.Infrastructure.csproj" />
   </ItemGroup>
 
   <ItemGroup>
