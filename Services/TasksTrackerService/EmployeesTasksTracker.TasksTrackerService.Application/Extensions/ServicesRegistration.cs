@@ -1,7 +1,7 @@
-﻿using EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Projects;
+﻿using EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Employees;
+using EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Projects;
 using EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks;
 using EmployeesTasksTracker.TasksTrackerService.Application.Handlers.TasksGroups;
-using EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Employees;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 

@@ -50,7 +50,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Services
 
                 var observersForReport = new List<EmployeeForReportDTO>();
 
-                foreach(var relation in tasksEmployees)
+                foreach (var relation in tasksEmployees)
                 {
                     var employee = await _employeesRepo.GetByIdAsync(relation.EmployeeId, cancellationToken);
 
@@ -62,7 +62,8 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Services
                     {
                         observers.Add(employee);
                     }
-                };
+                }
+                ;
 
                 AddEmployeesForReport(performers, performersForReport);
 

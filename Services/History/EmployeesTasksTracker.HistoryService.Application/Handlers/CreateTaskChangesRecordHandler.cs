@@ -27,7 +27,7 @@ namespace EmployeesTasksTracker.HistoryService.Application.Handlers
 
                 return taskChangesId;
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 var message = $"Could not create record of task changes {ex.Message}";
 

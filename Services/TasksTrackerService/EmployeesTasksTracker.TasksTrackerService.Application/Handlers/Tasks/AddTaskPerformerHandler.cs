@@ -38,7 +38,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
 
             var taskEmployee = await _taskEmployeeRepo.GetAllById(request.TaskId, request.PerformerId, cancellationToken);
 
-            if (taskEmployee.Any()) 
+            if (taskEmployee.Any())
             {
                 var employeeRole = taskEmployee.First().EmployeeRoleInTask;
 

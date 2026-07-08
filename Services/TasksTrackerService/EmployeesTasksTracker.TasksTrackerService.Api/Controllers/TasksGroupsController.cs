@@ -1,8 +1,8 @@
+using EmployeesTasksTracker.TasksTrackerService.Application.Commands.TasksGroups;
+using EmployeesTasksTracker.TasksTrackerService.Application.DTOs.TasksGroups;
+using EmployeesTasksTracker.TasksTrackerService.Application.Queries.TasksGroups;
 using MediatR;
 using Microsoft.AspNetCore.Mvc;
-using EmployeesTasksTracker.TasksTrackerService.Application.Commands.TasksGroups;
-using EmployeesTasksTracker.TasksTrackerService.Application.Queries.TasksGroups;
-using EmployeesTasksTracker.TasksTrackerService.Application.DTOs.TasksGroups;
 using Shared.Interfaces;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Api.Controllers
@@ -82,11 +82,11 @@ namespace EmployeesTasksTracker.TasksTrackerService.Api.Controllers
         [HttpGet("GenerateReport/")]
         public async Task<IActionResult> GenerateReport(Guid Id, CancellationToken token)
         {
-                var pdfBytes = await _reportGenerator.GenerateReportAsync(Id, token);
+            var pdfBytes = await _reportGenerator.GenerateReportAsync(Id, token);
 
-                var fileName = $"task_report_{Id}_{DateTime.Now:yyyyMMddHHmm}.pdf";
+            var fileName = $"task_report_{Id}_{DateTime.Now:yyyyMMddHHmm}.pdf";
 
-                return File(pdfBytes, "application/pdf", fileName);
+            return File(pdfBytes, "application/pdf", fileName);
         }
     }
 }

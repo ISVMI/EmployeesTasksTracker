@@ -32,14 +32,14 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
             _logger.LogInformation("Successfully found task {taskName}", task.Name);
 
             return new TaskDTO
-                {
-                    Name = task.Name,
-                    CreatedAt = task.CreatedAt,
-                    Deadline = task.Deadline,
-                    Description = task.Description,
-                    Priority = task.Priority.ToString(),
-                    Status = task.Status.ToString(),
-                };
+            {
+                Name = task.Name,
+                CreatedAt = task.CreatedAt,
+                Deadline = task.Deadline,
+                Description = task.Description,
+                Priority = task.Priority.ToString(),
+                Status = task.Status.ToString(),
+            };
         }
     }
 }

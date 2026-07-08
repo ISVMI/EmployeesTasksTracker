@@ -14,7 +14,7 @@
                 var oldValue = prop.GetValue(OldData)?.ToString();
                 var newValue = prop.GetValue(newData)?.ToString();
 
-                if (oldValue != newValue) 
+                if (oldValue != newValue)
                 {
                     changes.Add($"{prop.Name} changed from {oldValue} to {newValue}");
                 }

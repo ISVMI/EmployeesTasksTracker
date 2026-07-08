@@ -76,11 +76,11 @@ namespace EmployeesTasksTracker.HistoryService.Infrastructure.Consumers
 
                     consumer.Commit(result);
                 }
-                catch (Exception ex) 
+                catch (Exception ex)
                 {
                     _logger.LogError(ex, "Kafka consume error");
                 }
-                
+
             }
         }
     }

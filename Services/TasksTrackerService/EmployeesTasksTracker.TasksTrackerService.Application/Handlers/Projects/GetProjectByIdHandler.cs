@@ -31,13 +31,13 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Project
                 async token => await _repo.GetByIdAsync(request.Id, cancellationToken),
                 cancellationToken: cancellationToken) ?? throw new NotFoundException("project", request.Id);
 
-                _logger.LogInformation("Successfully found project {ProjectName}", project.Name);
+            _logger.LogInformation("Successfully found project {ProjectName}", project.Name);
 
             return new ProjectDTO
-                {
-                    Name = project.Name,
-                    Description = project.Description
-                };
+            {
+                Name = project.Name,
+                Description = project.Description
+            };
         }
     }
 }

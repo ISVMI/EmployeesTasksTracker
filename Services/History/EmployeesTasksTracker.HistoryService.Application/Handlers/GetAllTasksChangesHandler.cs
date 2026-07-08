@@ -19,11 +19,11 @@ namespace EmployeesTasksTracker.HistoryService.Application.Handlers
 
         public async Task<IEnumerable<TaskChangesDTO>> Handle(GetAllTasksChangesQuery request, CancellationToken cancellationToken)
         {
-                var taskChanges = await _repo.GetAllChanges(cancellationToken);
+            var taskChanges = await _repo.GetAllChanges(cancellationToken);
 
-                var result = _mapper.Map<IEnumerable<TaskChangesDTO>>(taskChanges);
+            var result = _mapper.Map<IEnumerable<TaskChangesDTO>>(taskChanges);
 
-                return result;
+            return result;
         }
     }
 }

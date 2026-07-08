@@ -24,7 +24,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Api.Controllers
         public async Task<IActionResult> GetAllTasks(
             Guid? employeeId,
             Guid? tasksGroupId,
-            Guid? projectId, 
+            Guid? projectId,
             [FromQuery] int page = 1,
             [FromQuery] int pageSize = 20,
             CancellationToken token = default)

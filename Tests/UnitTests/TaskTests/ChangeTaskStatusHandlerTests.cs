@@ -30,7 +30,7 @@ namespace Testing.TaskTests
             _cacheMock = Substitute.For<HybridCache>();
             _loggerMock = Substitute.For<ILogger<ChangeTaskStatusHandler>>();
             _kafkaProducer = Substitute.For<IKafkaProducer>();
-            _handler = new ChangeTaskStatusHandler(_repoMock, _busMock,_kafkaProducer, _cacheMock, _loggerMock);
+            _handler = new ChangeTaskStatusHandler(_repoMock, _busMock, _kafkaProducer, _cacheMock, _loggerMock);
         }
 
         [Fact]
@@ -74,8 +74,8 @@ namespace Testing.TaskTests
             m.Changes.SequenceEqual(changes)));
 
             await _busMock.Received(1).Publish(Arg.Is<TaskStatusChanged>(m =>
-            m.TaskId == command.TaskId 
-            && m.OldStatus == oldStatus 
+            m.TaskId == command.TaskId
+            && m.OldStatus == oldStatus
             && m.NewStatus == newStatus), cancellationToken);
 
             _loggerMock.Received(1).Log(LogLevel.Information,
@@ -110,7 +110,7 @@ namespace Testing.TaskTests
             _repoMock.GetByIdAsync(taskId, cancellationToken).Returns(existingTask);
 
             //Act
-            Func<System.Threading.Tasks.Task> act = async ()=> await _handler.Handle(command, cancellationToken);
+            Func<System.Threading.Tasks.Task> act = async () => await _handler.Handle(command, cancellationToken);
 
             //Assert
             await act.Should().ThrowAsync<DomainException>()

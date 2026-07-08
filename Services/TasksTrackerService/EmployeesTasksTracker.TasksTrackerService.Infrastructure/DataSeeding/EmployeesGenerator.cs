@@ -17,7 +17,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.DataSeeding
         {
             var employees = BatchesGenerator.GenerateBatches<Employee>(count, batchSize, EmployeesGenerator.GenerateEmployee);
 
-            await Parallel.ForEachAsync(employees, new ParallelOptions {MaxDegreeOfParallelism = 4 }, async (batch, _) =>
+            await Parallel.ForEachAsync(employees, new ParallelOptions { MaxDegreeOfParallelism = 4 }, async (batch, _) =>
             {
                 await using var connection = new NpgsqlConnection(connectionString);
 

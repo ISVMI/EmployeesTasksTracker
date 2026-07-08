@@ -15,9 +15,9 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
 
         public async Task<Guid> Handle(GetProjectIdQuery request, CancellationToken cancellationToken)
         {
-                var projectId = await _repo.GetProjectId(request.TasksGroupId, cancellationToken);
+            var projectId = await _repo.GetProjectId(request.TasksGroupId, cancellationToken);
 
-                return projectId;
+            return projectId;
         }
     }
 }

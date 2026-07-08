@@ -36,7 +36,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
                 throw new DomainException($"Both parameters were null");
             }
 
-            if (employeeId == null) 
+            if (employeeId == null)
             {
                 return _context.ProjectEmployees.Where(pe => pe.ProjectId == projectId).ToList();
             }

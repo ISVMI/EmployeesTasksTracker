@@ -42,7 +42,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
         {
             var projectToDelete = await GetByIdAsync(id, token);
 
-            if(projectToDelete is null)
+            if (projectToDelete is null)
             {
                 throw new NotFoundException("project", id);
             }
@@ -92,7 +92,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
         {
             var existingProject = await GetByIdAsync(project.Id, token);
 
-            if (existingProject is null) 
+            if (existingProject is null)
             {
                 return existingProject;
             }

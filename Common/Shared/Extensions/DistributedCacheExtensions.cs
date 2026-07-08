@@ -37,7 +37,7 @@ namespace Shared.Extensions
         {
             var jsonData = await cache.GetStringAsync(recordId);
 
-            if (jsonData is null) 
+            if (jsonData is null)
             {
                 return default;
             }

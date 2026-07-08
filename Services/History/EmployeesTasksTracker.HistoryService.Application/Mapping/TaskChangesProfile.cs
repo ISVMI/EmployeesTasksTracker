@@ -6,7 +6,7 @@ namespace EmployeesTasksTracker.HistoryService.Application.Mapping
 {
     public class TaskChangesProfile : Profile
     {
-        public TaskChangesProfile() 
+        public TaskChangesProfile()
         {
             CreateMap<TaskChanges, TaskChangesDTO>();
             CreateMap<TaskChangesDTO, TaskChanges>();

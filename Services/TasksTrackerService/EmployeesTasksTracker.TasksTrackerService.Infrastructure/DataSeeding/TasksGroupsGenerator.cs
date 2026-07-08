@@ -37,16 +37,16 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.DataSeeding
         private static TasksGroup GenerateTasksGroup()
         {
 
-            var actions = new [] {"Внедрить", "Реализовать", "Разработать", "Создать", "Спроектировать"};
+            var actions = new[] { "Внедрить", "Реализовать", "Разработать", "Создать", "Спроектировать" };
 
-                var tasksGroup = new TasksGroup
-                {
-                    Name = $"{_faker.PickRandom(actions)} {_faker.Hacker.Adjective()} {_faker.Hacker.Noun()}"
-                };
+            var tasksGroup = new TasksGroup
+            {
+                Name = $"{_faker.PickRandom(actions)} {_faker.Hacker.Adjective()} {_faker.Hacker.Noun()}"
+            };
 
             return tasksGroup;
         }
 
-        
+
     }
 }

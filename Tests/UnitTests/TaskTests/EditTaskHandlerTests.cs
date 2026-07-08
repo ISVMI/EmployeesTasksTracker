@@ -1,5 +1,4 @@
-﻿using Task = EmployeesTasksTracker.TasksTrackerService.Core.Models.Task;
-using EmployeesTasksTracker.TasksTrackerService.Application.Commands.Tasks;
+﻿using EmployeesTasksTracker.TasksTrackerService.Application.Commands.Tasks;
 using EmployeesTasksTracker.TasksTrackerService.Application.DTOs.Tasks;
 using EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks;
 using EmployeesTasksTracker.TasksTrackerService.Core.Enums;
@@ -9,8 +8,9 @@ using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Shared.Exceptions;
-using Shared.Messages;
 using Shared.Interfaces;
+using Shared.Messages;
+using Task = EmployeesTasksTracker.TasksTrackerService.Core.Models.Task;
 
 namespace Testing.TaskTests
 {
@@ -111,7 +111,7 @@ namespace Testing.TaskTests
             });
 
             //Act
-            Func<System.Threading.Tasks.Task> act = async() => await _handler.Handle(command, cancellationToken);
+            Func<System.Threading.Tasks.Task> act = async () => await _handler.Handle(command, cancellationToken);
 
             //Assert
             await act.Should().ThrowAsync<DomainException>()

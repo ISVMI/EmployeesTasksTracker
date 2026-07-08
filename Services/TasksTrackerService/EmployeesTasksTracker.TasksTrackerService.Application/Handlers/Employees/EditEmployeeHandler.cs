@@ -47,13 +47,13 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Employe
             _logger.LogInformation("Successfully edited employee with id {EmployeeId}", employee.Id);
 
             return new EmployeeDTO
-                {
-                    Name = employee.Name,
-                    Surname = employee.Surname,
-                    Patronymic = employee.Patronymic,
-                    Role = employee.Role.ToString(),
-                    UserName = employee.UserName
-                };
+            {
+                Name = employee.Name,
+                Surname = employee.Surname,
+                Patronymic = employee.Patronymic,
+                Role = employee.Role.ToString(),
+                UserName = employee.UserName
+            };
         }
     }
 }

@@ -16,7 +16,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Api
         public async ValueTask<bool> TryHandleAsync(HttpContext httpContext, Exception exception, CancellationToken cancellationToken)
         {
 
-            _logger.LogError("{errorMessage}",exception?.Message);
+            _logger.LogError("{errorMessage}", exception?.Message);
 
             var (statusCode, title) = exception switch
             {

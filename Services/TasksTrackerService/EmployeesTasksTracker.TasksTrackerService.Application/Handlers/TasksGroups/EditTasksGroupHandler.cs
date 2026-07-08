@@ -29,7 +29,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.TasksGr
                 Name = request.TasksGroupToEdit.Name
             };
 
-            await _repo.UpdateAsync(tasksGroupToEdit,cancellationToken);
+            await _repo.UpdateAsync(tasksGroupToEdit, cancellationToken);
 
             await _cache.RemoveAsync($"tasksgroup:{request.TasksGroupToEdit.Id}", cancellationToken);
 

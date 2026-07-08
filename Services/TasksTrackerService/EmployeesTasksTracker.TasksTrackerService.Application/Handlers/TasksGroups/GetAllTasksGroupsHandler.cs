@@ -23,7 +23,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.TasksGr
 
             var tasksGroupsDtoList = new List<TasksGroupDTO>();
 
-            foreach (var taskGroup in tasksGroups) 
+            foreach (var taskGroup in tasksGroups)
             {
                 tasksGroupsDtoList.Add(new TasksGroupDTO
                 {
