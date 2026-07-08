@@ -5,7 +5,7 @@ namespace Shared.Extensions
 {
     public static class ApplicationBuilderExtensions
     {
-        public static IApplicationBuilder UseGlobalExceptionHandler(this IApplicationBuilder app) 
+        public static IApplicationBuilder UseGlobalExceptionHandler(this IApplicationBuilder app)
         {
             app.UseMiddleware<GlobalExceptionHandlingMiddleware>();
 

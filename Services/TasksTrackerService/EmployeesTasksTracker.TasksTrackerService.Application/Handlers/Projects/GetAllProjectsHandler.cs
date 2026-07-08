@@ -23,7 +23,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Project
 
             var projectsDtoList = new List<ProjectDTO>();
 
-            foreach (var project in projects) 
+            foreach (var project in projects)
             {
                 projectsDtoList.Add(new ProjectDTO
                 {

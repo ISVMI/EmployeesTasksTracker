@@ -1,16 +1,14 @@
-﻿using Task = EmployeesTasksTracker.TasksTrackerService.Core.Models.Task;
-using EmployeesTasksTracker.TasksTrackerService.Application.Commands.Tasks;
+﻿using EmployeesTasksTracker.TasksTrackerService.Application.Commands.Tasks;
 using EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks;
-using EmployeesTasksTracker.TasksTrackerService.Core.Enums;
 using EmployeesTasksTracker.TasksTrackerService.Core.Interfaces;
 using FluentAssertions;
 using MassTransit;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
 using NSubstitute;
+using NSubstitute.ExceptionExtensions;
 using Shared.Exceptions;
 using Shared.Messages;
-using NSubstitute.ExceptionExtensions;
 namespace Testing.TaskTests
 {
     public class DeleteTaskHandlerTests

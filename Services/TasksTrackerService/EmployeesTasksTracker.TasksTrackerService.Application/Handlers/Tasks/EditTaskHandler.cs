@@ -6,9 +6,9 @@ using MediatR;
 using Microsoft.Extensions.Caching.Hybrid;
 using Microsoft.Extensions.Logging;
 using Shared.Exceptions;
+using Shared.Interfaces;
 using Shared.Messages;
 using Shared.Methods;
-using Shared.Interfaces;
 
 namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
 {
@@ -29,7 +29,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
 
         public async Task<TaskDTO> Handle(EditTaskCommand request, CancellationToken cancellationToken)
         {
-            
+
             await _cache.RemoveAsync($"task:{request.TaskToEdit.Id}", cancellationToken);
 
             if (!Enum.TryParse<Priority>(request.TaskToEdit.Priority, true, out Priority priority))

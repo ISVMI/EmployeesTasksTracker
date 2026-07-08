@@ -35,7 +35,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Employe
                 Role = employeeRole,
                 UserName = request.Employee.UserName
             };
-            
+
             var result = await _repo.CreateAsync(employee, cancellationToken);
 
             _logger.LogInformation("New employee created with id {EmployeeId}", result);

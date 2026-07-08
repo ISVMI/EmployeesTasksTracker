@@ -1,6 +1,4 @@
-﻿using Shared.DTOs;
-
-namespace Shared.Messages
+﻿namespace Shared.Messages
 {
     public record TaskCreated
     {

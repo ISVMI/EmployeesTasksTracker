@@ -1,5 +1,4 @@
-﻿using Task = EmployeesTasksTracker.TasksTrackerService.Core.Models.Task;
-using EmployeesTasksTracker.TasksTrackerService.Application.Commands.Tasks;
+﻿using EmployeesTasksTracker.TasksTrackerService.Application.Commands.Tasks;
 using EmployeesTasksTracker.TasksTrackerService.Application.DTOs.Tasks;
 using EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks;
 using EmployeesTasksTracker.TasksTrackerService.Core.Enums;
@@ -10,6 +9,7 @@ using Microsoft.Extensions.Logging;
 using NSubstitute;
 using Shared.Exceptions;
 using Shared.Messages;
+using Task = EmployeesTasksTracker.TasksTrackerService.Core.Models.Task;
 
 namespace Testing.TaskTests
 {

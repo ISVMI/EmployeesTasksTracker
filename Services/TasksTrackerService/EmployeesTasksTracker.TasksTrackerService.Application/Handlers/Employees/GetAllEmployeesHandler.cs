@@ -23,7 +23,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Employe
 
             var employeesDtoList = new List<EmployeeDTO>();
 
-            foreach (var employee in employees) 
+            foreach (var employee in employees)
             {
                 employeesDtoList.Add(new EmployeeDTO
                 {

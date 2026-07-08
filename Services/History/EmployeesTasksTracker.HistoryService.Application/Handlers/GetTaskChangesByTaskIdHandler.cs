@@ -27,7 +27,7 @@ namespace EmployeesTasksTracker.HistoryService.Application.Handlers
 
                 return result;
             }
-            catch (Exception ex) 
+            catch (Exception ex)
             {
                 var message = $"Could not get changes by task id {ex.Message}";
 

@@ -29,7 +29,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
             await _context.SaveChangesAsync(token);
         }
 
-        public async Task<IEnumerable<TaskEmployee>> GetAllById (Guid? taskId = null, Guid? employeeId = null, CancellationToken token = default)
+        public async Task<IEnumerable<TaskEmployee>> GetAllById(Guid? taskId = null, Guid? employeeId = null, CancellationToken token = default)
         {
             if (taskId == null && employeeId == null)
             {

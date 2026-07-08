@@ -73,7 +73,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Extensions
                 .AddRuntimeInstrumentation()
                 .AddProcessInstrumentation()
                 .AddOtlpExporter(options =>
-                {       
+                {
                     options.Endpoint = new Uri($"http://{tracingEndpoint}/v1/metrics");
                     options.Protocol = OpenTelemetry.Exporter.OtlpExportProtocol.HttpProtobuf;
                 }));

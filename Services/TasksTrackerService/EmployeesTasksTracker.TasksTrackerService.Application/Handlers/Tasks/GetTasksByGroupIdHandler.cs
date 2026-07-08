@@ -19,24 +19,24 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
 
         public async Task<IEnumerable<TaskForReportDTO>> Handle(GetTasksByGroupIdQuery request, CancellationToken cancellationToken)
         {
-                var tasks = await _repo.GetTasksByGroupId(request.TasksGroupId, cancellationToken);
+            var tasks = await _repo.GetTasksByGroupId(request.TasksGroupId, cancellationToken);
 
-                var tasksList = new List<TaskForReportDTO>();
+            var tasksList = new List<TaskForReportDTO>();
 
-                foreach (var task in tasks) 
+            foreach (var task in tasks)
+            {
+                var taskDTO = new TaskForReportDTO
                 {
-                    var taskDTO = new TaskForReportDTO
-                    {
-                        Name = task.Name,
-                        Status = task.Status.ToString(),
-                        CreatedAt = task.CreatedAt.ToString("dd.MM.yyyy HH:mm"),
-                        Deadline = task.Deadline.ToString("dd.MM.yyyy HH:mm"),
-                        Description = task.Description,
-                        Priority = task.Priority.ToString()
-                    };
+                    Name = task.Name,
+                    Status = task.Status.ToString(),
+                    CreatedAt = task.CreatedAt.ToString("dd.MM.yyyy HH:mm"),
+                    Deadline = task.Deadline.ToString("dd.MM.yyyy HH:mm"),
+                    Description = task.Description,
+                    Priority = task.Priority.ToString()
+                };
 
-                    tasksList.Add(taskDTO);
-                }
+                tasksList.Add(taskDTO);
+            }
 
             _logger.LogInformation("Successfully got {totalCount} tasks by tasks group with id {tasksGroupId}", tasksList.Count(), request.TasksGroupId);
 

@@ -1,6 +1,4 @@
-﻿using System.Threading.Tasks;
-
-namespace Shared.Messages
+﻿namespace Shared.Messages
 {
     public record EmployeeAssigned
     {

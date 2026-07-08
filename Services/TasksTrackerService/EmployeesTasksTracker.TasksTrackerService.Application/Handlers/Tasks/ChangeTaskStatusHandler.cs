@@ -35,9 +35,9 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
         public async Task Handle(ChangeTaskStatusCommand request, CancellationToken cancellationToken)
         {
 
-            if(request.NewStatus is null)
+            if (request.NewStatus is null)
             {
-                throw new ArgumentNullException(nameof(request),"Given status was null!");
+                throw new ArgumentNullException(nameof(request), "Given status was null!");
             }
 
             if (!Enum.TryParse<Status>(request.NewStatus, true, out Status newStatusEnum))
@@ -71,9 +71,9 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Tasks
                 NewStatus = request.NewStatus
             };
 
-            _logger.LogInformation("Successfully changed status from {oldStatus} to {newStatus} for task: {taskName}", 
-                oldStatus, 
-                request.NewStatus, 
+            _logger.LogInformation("Successfully changed status from {oldStatus} to {newStatus} for task: {taskName}",
+                oldStatus,
+                request.NewStatus,
                 existingTask.Name);
 
             await _kafkaProducer.PublishAsync(message);

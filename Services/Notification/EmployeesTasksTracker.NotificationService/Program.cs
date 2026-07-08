@@ -12,7 +12,8 @@ builder.Services.AddEndpointsApiExplorer();
 builder.Services.AddSwaggerGen();
 
 builder.Services.AddSignalR();
-builder.Services.AddMassTransit(config => {
+builder.Services.AddMassTransit(config =>
+{
 
     config.AddConsumer<TaskStatusChangedConsumer>();
     config.AddConsumer<EmployeeAssignedConsumer>();
@@ -33,9 +34,9 @@ builder.Services.AddMassTransit(config => {
         cfg.ReceiveEndpoint("employee-assigned", e =>
         {
             e.ConfigureConsumer<EmployeeAssignedConsumer>(context);
-        }); 
+        });
     });
-    });
+});
 
 var app = builder.Build();
 

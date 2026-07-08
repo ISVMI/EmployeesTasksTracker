@@ -42,7 +42,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
         {
             var taskGroupToDelete = await GetByIdAsync(id, token);
 
-            if (taskGroupToDelete is null) 
+            if (taskGroupToDelete is null)
             {
                 throw new NotFoundException("tasksGroup", id);
             }
@@ -92,7 +92,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Infrastructure.Repositories
         {
             var existingTaskGroup = await GetByIdAsync(taskGroup.Id, token);
 
-            if(existingTaskGroup is null)
+            if (existingTaskGroup is null)
             {
                 return existingTaskGroup;
             }

@@ -39,10 +39,10 @@ namespace EmployeesTasksTracker.TasksTrackerService.Application.Handlers.Project
             _logger.LogInformation("Successfully edited project with id {projectId}", editedProject.Id);
 
             return new ProjectDTO
-                {
-                    Name = projectToEdit.Name,
-                    Description = projectToEdit.Description
-                };
+            {
+                Name = projectToEdit.Name,
+                Description = projectToEdit.Description
+            };
         }
     }
 }
