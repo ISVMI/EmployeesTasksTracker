@@ -25,6 +25,7 @@ namespace EmployeesTasksTracker.TasksTrackerService.Api
                 _ => (StatusCodes.Status500InternalServerError, "Server error")
             };
 
+            //Generating human readable form of exception
             var problemDetails = new ProblemDetails
             {
                 Status = statusCode,
