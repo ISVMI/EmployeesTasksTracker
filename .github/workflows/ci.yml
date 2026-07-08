@@ -10,6 +10,7 @@ on:
 
 jobs:
   build:
+    name: Build solution
     runs-on: ubuntu-latest
 
     steps:
@@ -20,14 +21,7 @@ jobs:
         uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
-      
-      - name: Cache NuGet packages
-        uses: actions/cache@v4
-        with:
-          path: ~/.nuget/packages
-          key: nuget-${{ runner.os }}-${{ hashFiles('**/*.csproj') }}
-          restore-keys: |
-            nuget-${{ runner.os }}
+          cache: true
         
       - name: Restore dependencies
         run: dotnet restore EmployeesTasksTracker.sln
@@ -36,7 +30,7 @@ jobs:
         run: dotnet build EmployeesTasksTracker.sln --configuration $BUILD_CONFIGURATION --no-restore
 
   tests:
-
+    name: Run tests
     runs-on: ubuntu-latest
 
     needs: build
@@ -50,11 +44,14 @@ jobs:
           - name: Integration tests
             project: Tests/IntegrationTests/IntegrationTests.csproj
     steps:
-
-      - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
+      - name: Checkout repository
+        uses: actions/checkout@v4
+      
+      - name: Setup .NET SDK
+        uses: actions/setup-dotnet@v4
         with:
           dotnet-version: ${{ env.DOTNET_VERSION }}
+          cache: true
       
       - name: Restore packages
         run: dotnet restore EmployeesTasksTracker.sln
@@ -65,22 +62,42 @@ jobs:
           --configuration $BUILD_CONFIGURATION \
           --verbosity normal
           
-  docker-build:
-
+  docker:
+    if: github.event_name == 'push' && github.ref == 'refs/heads/main'
+    name: Docker build & push
     runs-on: ubuntu-latest
 
     needs:
       - tests
 
+    strategy:
+      matrix:
+        include:
+          - name: tasks-tracker-service
+            dockerfile: Services/TasksTrackerService/Dockerfile
+
+          - name: history-service
+            dockerfile: Services/History/Dockerfile
+
+          - name: notification-service
+            dockerfile: Services/Notification/Dockerfile
+            
     steps:
+      - name: Checkout repository
+        uses: actions/checkout@v4
 
-      - uses: actions/checkout@v4
+      - name: Login to dockerhub
+        uses: docker/login-action@v3
+        with:
+          username: ${{ secrets.DOCKERHUB_USERNAME }}
+          password: ${{ secrets.DOCKERHUB_TOKEN }}
       
-      - name: Build Tasks Tracker image
-        run: docker build -t tasks-tracker:latest -f Services/TasksTrackerService/Dockerfile .
-
-      - name: Build History image
-        run: docker build -t history-service:latest -f Services/History/Dockerfile .
-
-      - name: Build Notification image
-        run: docker build -t notification-service:latest -f Services/Notification/Dockerfile .
+      - name: Build and push ${{ matrix.name}} image
+        uses: docker/build-push-action@v6
+        with:
+          context: .
+          file: ${{ matrix.dockerfile }}
+          push: true
+          tags: |
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.name}}:latest
+            ${{ secrets.DOCKERHUB_USERNAME }}/${{ matrix.name}}:${{ github.sha }}
