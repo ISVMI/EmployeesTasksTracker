@@ -35,12 +35,20 @@ jobs:
       - name: Build
         run: dotnet build EmployeesTasksTracker.sln --configuration $BUILD_CONFIGURATION --no-restore
 
-  unit-tests:
+  tests:
 
     runs-on: ubuntu-latest
 
     needs: build
 
+    strategy:
+      matrix:
+        include:
+          - name: Unit tests
+            project: Tests/UnitTests/UnitTests.csproj
+            
+          - name: Integration tests
+            project: Tests/IntegrationTests/IntegrationTests.csproj
     steps:
 
       - uses: actions/checkout@v4
@@ -51,30 +59,28 @@ jobs:
       - name: Restore packages
         run: dotnet restore EmployeesTasksTracker.sln
         
-      - name: Run unit tests
+      - name: Run ${{ matrix.name }}
         run: |
-          dotnet test Tests/UnitTests/UnitTests.csproj \
+          dotnet test ${{ matrix.project }} \
           --configuration $BUILD_CONFIGURATION \
           --verbosity normal
           
-  integration-tests:
+  docker-build:
 
     runs-on: ubuntu-latest
 
-    needs: build
+    needs:
+      - tests
 
     steps:
 
       - uses: actions/checkout@v4
-      - uses: actions/setup-dotnet@v4
-        with:
-          dotnet-version: ${{ env.DOTNET_VERSION }}
       
-      - name: Restore packages
-        run: dotnet restore EmployeesTasksTracker.sln
-        
-      - name: Run integration tests
-        run: |
-          dotnet test Tests/IntegrationTests/IntegrationTests.csproj \
-          --configuration $BUILD_CONFIGURATION \
-          --verbosity normal
+      - name: Build Tasks Tracker image
+        run: docker build -t tasks-tracker:latest -f Services/TasksTrackerService/Dockerfile .
+
+      - name: Build History image
+        run: docker build -t history-service:latest -f Services/History/Dockerfile .
+
+      - name: Build Notification image
+        run: docker build -t notification-service:latest -f Services/Notification/Dockerfile .
