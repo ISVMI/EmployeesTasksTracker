@@ -1,5 +1,9 @@
 name: CI
 
+env:
+  DOTNET_VERSION: 9.0.x
+  BUILD_CONFIGURATION: Release
+  
 on: 
   push:
   pull_request:
@@ -29,7 +33,7 @@ jobs:
         run: dotnet restore EmployeesTasksTracker.sln
 
       - name: Build
-        run: dotnet build EmployeesTasksTracker.sln --configuration $BUILD_CONFIGURATION Release --no-restore
+        run: dotnet build EmployeesTasksTracker.sln --configuration $BUILD_CONFIGURATION --no-restore
 
   unit-tests:
 
@@ -48,7 +52,8 @@ jobs:
         run: dotnet restore EmployeesTasksTracker.sln
         
       - name: Run unit tests
-        run: dotnet test Tests\UnitTests\UnitTests.csproj \
+        run: |
+          dotnet test Tests/UnitTests/UnitTests.csproj \
           --configuration $BUILD_CONFIGURATION \
           --no-build \
           --verbosity normal
@@ -70,7 +75,8 @@ jobs:
         run: dotnet restore EmployeesTasksTracker.sln
         
       - name: Run integration tests
-        run: dotnet test Tests\IntegrationTests\IntegrationTests.csproj \
+        run: |
+          dotnet test Tests/IntegrationTests/IntegrationTests.csproj \
           --configuration $BUILD_CONFIGURATION \
           --no-build \
           --verbosity normal
