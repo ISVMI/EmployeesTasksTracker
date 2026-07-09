@@ -1,20 +1,20 @@
-﻿using AutoMapper;
-using EmployeesTasksTracker.HistoryService.Application.DTOs;
+﻿using EmployeesTasksTracker.HistoryService.Application.DTOs;
 using EmployeesTasksTracker.HistoryService.Application.Queries;
 using EmployeesTasksTracker.HistoryService.Core.Interfaces;
 using MediatR;
+using Microsoft.Extensions.Logging;
 
 namespace EmployeesTasksTracker.HistoryService.Application.Handlers
 {
     public class GetTaskChangesByTaskIdHandler : IRequestHandler<GetTaskChangesByTaskIdQuery, IEnumerable<TaskChangesDTO>>
     {
         private readonly ITaskChangesRepo _repo;
-        private readonly IMapper _mapper;
+        private readonly ILogger _logger;
 
-        public GetTaskChangesByTaskIdHandler(ITaskChangesRepo repo, IMapper mapper)
+        public GetTaskChangesByTaskIdHandler(ITaskChangesRepo repo, ILogger logger)
         {
             _repo = repo;
-            _mapper = mapper;
+            _logger = logger;
         }
 
         public async Task<IEnumerable<TaskChangesDTO>> Handle(GetTaskChangesByTaskIdQuery request, CancellationToken cancellationToken)
@@ -23,15 +23,27 @@ namespace EmployeesTasksTracker.HistoryService.Application.Handlers
             {
                 var taskChanges = await _repo.GetChangesByTaskId(request.TaskId, cancellationToken);
 
-                var result = _mapper.Map<IEnumerable<TaskChangesDTO>>(taskChanges);
+                var taskChangesDtoList = new List<TaskChangesDTO>();
 
-                return result;
+                Parallel.ForEach(taskChanges, task =>
+                {
+                    taskChangesDtoList.Add(new TaskChangesDTO
+                    {
+                        TaskId = task.TaskId,
+                        ChangedAt = task.ChangedAt.ToString($"dd.MM.yyyy HH:mm:ss"),
+                        Changes = task.Changes
+                    });
+                });
+
+                _logger.LogInformation("Successfully got {changesCount} records", taskChangesDtoList.Count);
+
+                return taskChangesDtoList;
             }
             catch (Exception ex)
             {
                 var message = $"Could not get changes by task id {ex.Message}";
 
-                Console.WriteLine(message);
+                _logger.LogError(message);
 
                 throw new Exception(message);
             }
