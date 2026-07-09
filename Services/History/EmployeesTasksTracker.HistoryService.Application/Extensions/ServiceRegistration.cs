@@ -1,5 +1,4 @@
 ﻿using EmployeesTasksTracker.HistoryService.Application.Handlers;
-using EmployeesTasksTracker.HistoryService.Application.Mapping;
 using Microsoft.Extensions.DependencyInjection;
 using System.Reflection;
 
@@ -9,8 +8,6 @@ namespace EmployeesTasksTracker.HistoryService.Application.Extensions
     {
         public static IServiceCollection AddApplication(this IServiceCollection services)
         {
-            services.AddAutoMapper(cfg => cfg.AddProfile<TaskChangesProfile>(), Assembly.GetExecutingAssembly());
-
             var assemblies = new Assembly[]
             {
                 Assembly.GetExecutingAssembly(),
