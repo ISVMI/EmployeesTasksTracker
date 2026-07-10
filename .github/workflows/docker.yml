@@ -79,7 +79,10 @@ jobs:
 
       - name: Wait for containers
         run: |
-          sleep 30
+          until curl -f http://localhost:5006/api/Tasks/All;
+          do
+              sleep 2
+          done
 
       - name: Check Tasks Tracker
         run: |
