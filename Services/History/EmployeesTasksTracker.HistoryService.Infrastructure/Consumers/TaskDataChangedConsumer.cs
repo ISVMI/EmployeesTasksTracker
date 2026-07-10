@@ -31,62 +31,50 @@ namespace EmployeesTasksTracker.HistoryService.Infrastructure.Consumers
 
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
+            var config = new ConsumerConfig
+            {
+                BootstrapServers = _configuration["Kafka:Host"],
+                GroupId = "history-service",
+                AutoOffsetReset = AutoOffsetReset.Earliest,
+                AllowAutoCreateTopics = true
+            };
+
+            using var consumer = new ConsumerBuilder<string, string>(config).Build();
+
+            consumer.Subscribe(_configuration["Kafka:Topic"]);
+
             while (!cancellationToken.IsCancellationRequested)
             {
-                _logger.LogInformation("Consumer alive");
-
-                await Task.Delay(5000, cancellationToken);
-            }
-        /*var config = new ConsumerConfig
-        {
-            BootstrapServers = _configuration["Kafka:Host"],
-            GroupId = "history-service",
-            AutoOffsetReset = AutoOffsetReset.Earliest,
-            AllowAutoCreateTopics = true
-        };
-
-        using var consumer = new ConsumerBuilder<string, string>(config).Build();
-
-        while (!cancellationToken.IsCancellationRequested)
-        {
-            try
-            {
-                consumer.Subscribe(_configuration["Kafka:Topic"]);
-                break;
-            }
-            catch
-            {
-                _logger.LogWarning("Kafka not ready, retrying...");
-                await Task.Delay(2000, cancellationToken);
-            }
-        }
-
-        while (!cancellationToken.IsCancellationRequested)
-        {
-            try
-            {
-                var result = consumer.Consume(cancellationToken);
-
-                var message = JsonSerializer.Deserialize<TaskDataChanged>(result.Message.Value);
-
-                using var scope = _scopeFactory.CreateScope();
-
-                var taskChanges = new TaskChanges
+                try
                 {
-                    TaskId = message.TaskId,
-                    ChangedAt = message.ChangedAt,
-                    Changes = message.Changes.ToList()
-                };
+                    var result = consumer.Consume(TimeSpan.FromSeconds(2));
 
-                await _repo.CreateTaskChangesRecord(taskChanges, cancellationToken);
+                    if (result is null)
+                        continue;
 
-                consumer.Commit(result);
+                    var message = JsonSerializer.Deserialize<TaskDataChanged>(result.Message.Value);
+
+                    using var scope = _scopeFactory.CreateScope();
+
+                    var taskChanges = new TaskChanges
+                    {
+                        TaskId = message.TaskId,
+                        ChangedAt = message.ChangedAt,
+                        Changes = message.Changes.ToList()
+                    };
+
+                    await _repo.CreateTaskChangesRecord(taskChanges, cancellationToken);
+
+                    consumer.Commit(result);
+                }
+                catch (ConsumeException ex)
+                    when (ex.Error.Code == ErrorCode.UnknownTopicOrPart)
+                {
+                    _logger.LogWarning("Topic doesn't exist yet. Waiting...");
+
+                    await Task.Delay(2000, cancellationToken);
+                }
             }
-            catch (Exception ex)
-            {
-                _logger.LogError(ex, "Kafka consume error");
-            }*/
-
-    }
         }
     }
+}
