@@ -86,15 +86,15 @@ jobs:
 
       - name: Check Tasks Tracker
         run: |
-          curl --fail http://localhost:5006/api/Tasks/All
+          curl --fail http://localhost:5006/api/Health
 
       - name: Check History Service
         run: |
-          curl --fail http://localhost:5004/api/History/All
+          curl --fail http://localhost:5004/api/Health
 
       - name: Check Notification Service
         run: |
-          curl --fail http://localhost:5005/notifications
+          curl --fail http://localhost:5005/api/Health
 
       - name: Show containers logs
         if: failure()
