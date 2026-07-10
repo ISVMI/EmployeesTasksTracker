@@ -83,15 +83,21 @@ jobs:
           do
               sleep 2
           done
-
+          
+      - name: Tasks service logs
+        run: docker compose -f docker-compose-test.yml logs tasks-tracker-service
       - name: Check Tasks Tracker
         run: |
           curl --fail http://localhost:5006/api/Health
-
+          
+      - name: History service logs
+        run: docker compose -f docker-compose-test.yml logs history-service
       - name: Check History Service
         run: |
           curl --fail http://localhost:5004/api/Health
 
+      - name: Notification service logs
+        run: docker compose -f docker-compose-test.yml logs notification-service
       - name: Check Notification Service
         run: |
           curl --fail http://localhost:5005/api/Health
