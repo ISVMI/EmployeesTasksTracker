@@ -92,7 +92,7 @@ try
 
     app.MapControllers();
 
-    app.UseHealthChecks("api/Health");
+    app.UseHealthChecks("/api/Health");
 
     await app.Services.AddDatabaseInitialization();
 
