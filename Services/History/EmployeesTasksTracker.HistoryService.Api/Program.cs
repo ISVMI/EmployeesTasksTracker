@@ -16,6 +16,8 @@ builder.Services.AddApplication();
 
 builder.Services.AddHostedService<KafkaConsumerService>();
 
+builder.Services.AddHealthChecks();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -32,5 +34,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 await app.Services.AddDatabaseInitialization();
+
+app.UseHealthChecks("api/Health");
 
 app.Run();

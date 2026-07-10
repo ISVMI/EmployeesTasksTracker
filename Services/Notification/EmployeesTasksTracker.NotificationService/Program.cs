@@ -38,6 +38,8 @@ builder.Services.AddMassTransit(config =>
     });
 });
 
+builder.Services.AddHealthChecks();
+
 var app = builder.Build();
 
 // Configure the HTTP request pipeline.
@@ -54,5 +56,7 @@ app.UseAuthorization();
 app.MapControllers();
 
 app.MapHub<NotificationHub>("/notifications");
+
+app.UseHealthChecks("api/Health");
 
 app.Run();
