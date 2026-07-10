@@ -71,6 +71,7 @@ try
 
     builder.Services.AddExceptionHandler<GlobalExceptionHandler>();
     builder.Services.AddProblemDetails();
+    builder.Services.AddHealthChecks();
 
     var app = builder.Build();
 
@@ -90,6 +91,8 @@ try
     app.UseExceptionHandler();
 
     app.MapControllers();
+
+    app.UseHealthChecks("api/Health");
 
     await app.Services.AddDatabaseInitialization();
 
