@@ -84,6 +84,9 @@ jobs:
               sleep 2
           done
           
+      - name: Show Kafka logs
+        run: docker compose -f docker-compose-test.yml logs kafka 
+  
       - name: Tasks service logs
         run: docker compose -f docker-compose-test.yml logs tasks-tracker-service
       - name: Check Tasks Tracker
