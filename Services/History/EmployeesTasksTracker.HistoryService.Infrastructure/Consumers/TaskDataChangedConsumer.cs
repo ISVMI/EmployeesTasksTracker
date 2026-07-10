@@ -31,57 +31,63 @@ namespace EmployeesTasksTracker.HistoryService.Infrastructure.Consumers
 
         protected override async Task ExecuteAsync(CancellationToken cancellationToken)
         {
-            var config = new ConsumerConfig
-            {
-                BootstrapServers = _configuration["Kafka:Host"],
-                GroupId = "history-service",
-                AutoOffsetReset = AutoOffsetReset.Earliest,
-                AllowAutoCreateTopics = true
-            };
-
-            using var consumer = new ConsumerBuilder<string, string>(config).Build();
-
             while (!cancellationToken.IsCancellationRequested)
             {
-                try
-                {
-                    consumer.Subscribe(_configuration["Kafka:Topic"]);
-                    break;
-                }
-                catch
-                {
-                    _logger.LogWarning("Kafka not ready, retrying...");
-                    await Task.Delay(2000, cancellationToken);
-                }
-            }
+                _logger.LogInformation("Consumer alive");
 
-            while (!cancellationToken.IsCancellationRequested)
+                await Task.Delay(5000, cancellationToken);
+            }
+        /*var config = new ConsumerConfig
+        {
+            BootstrapServers = _configuration["Kafka:Host"],
+            GroupId = "history-service",
+            AutoOffsetReset = AutoOffsetReset.Earliest,
+            AllowAutoCreateTopics = true
+        };
+
+        using var consumer = new ConsumerBuilder<string, string>(config).Build();
+
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            try
             {
-                try
-                {
-                    var result = consumer.Consume(cancellationToken);
-
-                    var message = JsonSerializer.Deserialize<TaskDataChanged>(result.Message.Value);
-
-                    using var scope = _scopeFactory.CreateScope();
-
-                    var taskChanges = new TaskChanges
-                    {
-                        TaskId = message.TaskId,
-                        ChangedAt = message.ChangedAt,
-                        Changes = message.Changes.ToList()
-                    };
-
-                    await _repo.CreateTaskChangesRecord(taskChanges, cancellationToken);
-
-                    consumer.Commit(result);
-                }
-                catch (Exception ex)
-                {
-                    _logger.LogError(ex, "Kafka consume error");
-                }
-
+                consumer.Subscribe(_configuration["Kafka:Topic"]);
+                break;
             }
+            catch
+            {
+                _logger.LogWarning("Kafka not ready, retrying...");
+                await Task.Delay(2000, cancellationToken);
+            }
+        }
+
+        while (!cancellationToken.IsCancellationRequested)
+        {
+            try
+            {
+                var result = consumer.Consume(cancellationToken);
+
+                var message = JsonSerializer.Deserialize<TaskDataChanged>(result.Message.Value);
+
+                using var scope = _scopeFactory.CreateScope();
+
+                var taskChanges = new TaskChanges
+                {
+                    TaskId = message.TaskId,
+                    ChangedAt = message.ChangedAt,
+                    Changes = message.Changes.ToList()
+                };
+
+                await _repo.CreateTaskChangesRecord(taskChanges, cancellationToken);
+
+                consumer.Commit(result);
+            }
+            catch (Exception ex)
+            {
+                _logger.LogError(ex, "Kafka consume error");
+            }*/
+
+    }
         }
     }
 }
