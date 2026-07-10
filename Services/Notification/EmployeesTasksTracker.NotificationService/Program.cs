@@ -57,6 +57,6 @@ app.MapControllers();
 
 app.MapHub<NotificationHub>("/notifications");
 
-app.UseHealthChecks("api/Health");
+app.UseHealthChecks("/api/Health");
 
 app.Run();
