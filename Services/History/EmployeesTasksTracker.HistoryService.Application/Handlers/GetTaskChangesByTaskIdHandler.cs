@@ -9,9 +9,9 @@ namespace EmployeesTasksTracker.HistoryService.Application.Handlers
     public class GetTaskChangesByTaskIdHandler : IRequestHandler<GetTaskChangesByTaskIdQuery, IEnumerable<TaskChangesDTO>>
     {
         private readonly ITaskChangesRepo _repo;
-        private readonly ILogger _logger;
+        private readonly ILogger<GetTaskChangesByTaskIdHandler> _logger;
 
-        public GetTaskChangesByTaskIdHandler(ITaskChangesRepo repo, ILogger logger)
+        public GetTaskChangesByTaskIdHandler(ITaskChangesRepo repo, ILogger<GetTaskChangesByTaskIdHandler> logger)
         {
             _repo = repo;
             _logger = logger;

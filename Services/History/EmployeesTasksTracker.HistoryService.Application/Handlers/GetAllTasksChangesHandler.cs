@@ -9,9 +9,9 @@ namespace EmployeesTasksTracker.HistoryService.Application.Handlers
     internal class GetAllTasksChangesHandler : IRequestHandler<GetAllTasksChangesQuery, IEnumerable<TaskChangesDTO>>
     {
         private readonly ITaskChangesRepo _repo;
-        private readonly ILogger _logger;
+        private readonly ILogger<GetAllTasksChangesHandler> _logger;
 
-        public GetAllTasksChangesHandler(ITaskChangesRepo repo, ILogger logger)
+        public GetAllTasksChangesHandler(ITaskChangesRepo repo, ILogger<GetAllTasksChangesHandler> logger)
         {
             _repo = repo;
             _logger = logger;
