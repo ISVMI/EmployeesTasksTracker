@@ -90,4 +90,3 @@ namespace EmployeesTasksTracker.HistoryService.Infrastructure.Consumers
     }
         }
     }
-}
